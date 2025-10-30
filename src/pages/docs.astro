@@ -3,108 +3,209 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="API Documentation - DrawCanvas">
-  <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-4xl">
-      <h1 class="text-4xl font-bold text-foreground mb-2">API Documentation</h1>
-      <p class="text-muted-foreground mb-8">Learn how to configure the drawing canvas using URL parameters</p>
+    <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-4xl">
+            <h1 class="text-4xl font-bold text-foreground mb-2">API Documentation</h1>
+            <p class="text-muted-foreground mb-8">Learn how to configure the drawing canvas using URL parameters</p>
 
-      <div class="space-y-8">
-        <!-- Size Parameter -->
-        <div class="bg-card border border-border rounded-lg p-6">
-          <h2 class="text-2xl font-bold text-foreground mb-3">size</h2>
-          <p class="text-muted-foreground mb-4">Controls the default brush/eraser size in pixels.</p>
-          
-          <div class="bg-secondary rounded-lg p-4 mb-4">
-            <code class="text-sm text-foreground">?size=10</code>
-          </div>
-          
-          <div class="space-y-2">
-            <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Number (1-50)</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">5</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?size=15</code></p>
-          </div>
-        </div>
+            <div class="space-y-8">
+                <!-- Size Parameter -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">size</h2>
+                    <p class="text-muted-foreground mb-4">Controls the default brush/eraser size in pixels.</p>
 
-        <!-- Colors Parameter -->
-        <div class="bg-card border border-border rounded-lg p-6">
-          <h2 class="text-2xl font-bold text-foreground mb-3">colors</h2>
-          <p class="text-muted-foreground mb-4">Defines which colors are available in the color picker. Use comma-separated hex values or "*" for all default colors.</p>
-          
-          <div class="bg-secondary rounded-lg p-4 mb-4">
-            <code class="text-sm text-foreground">?colors=#ff0000,#00ff00,#0000ff</code>
-          </div>
-          
-          <div class="space-y-2">
-            <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Comma-separated hex colors or "*"</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">8 default colors</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Examples:</span></p>
-            <ul class="list-disc list-inside ml-4 space-y-1">
-              <li><code class="text-primary">/?colors=*</code> - All default colors</li>
-              <li><code class="text-primary">/?colors=#ff0000,#00ff00</code> - Custom colors</li>
-            </ul>
-          </div>
-        </div>
+                    <div class="bg-secondary rounded-lg p-4 mb-4">
+                        <code class="text-sm text-foreground">?size=10</code>
+                    </div>
 
-        <!-- Eraser Parameter -->
-        <div class="bg-card border border-border rounded-lg p-6">
-          <h2 class="text-2xl font-bold text-foreground mb-3">eraser</h2>
-          <p class="text-muted-foreground mb-4">Shows or hides the eraser tool button.</p>
-          
-          <div class="bg-secondary rounded-lg p-4 mb-4">
-            <code class="text-sm text-foreground">?eraser=true</code>
-          </div>
-          
-          <div class="space-y-2">
-            <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Boolean (true/false)</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">false (hidden)</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?eraser=true</code></p>
-          </div>
-        </div>
+                    <div class="space-y-2">
+                        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Number (1-50)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">5</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?size=15</code></p>
+                    </div>
+                </div>
 
-        <!-- Background Image Parameter -->
-        <div class="bg-card border border-border rounded-lg p-6">
-          <h2 class="text-2xl font-bold text-foreground mb-3">bgImage</h2>
-          <p class="text-muted-foreground mb-4">Sets a background image URL for the canvas. The image will be scaled to cover the entire canvas.</p>
-          
-          <div class="bg-secondary rounded-lg p-4 mb-4 overflow-x-auto">
-            <code class="text-sm text-foreground whitespace-nowrap">?bgImage=https://example.com/image.jpg</code>
-          </div>
-          
-          <div class="space-y-2">
-            <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">URL-encoded image URL</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">None</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Note:</span> <span class="text-foreground">Image must support CORS</span></p>
-          </div>
-        </div>
+                <!-- Colors Parameter -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">colors</h2>
+                    <p class="text-muted-foreground mb-4">Defines which colors are available in the color picker. Use comma-separated hex values or "*" for all default colors.</p>
 
-        <!-- Background Opacity Parameter -->
-        <div class="bg-card border border-border rounded-lg p-6">
-          <h2 class="text-2xl font-bold text-foreground mb-3">bgOpacity</h2>
-          <p class="text-muted-foreground mb-4">Controls the opacity of the background image. Only works when bgImage is set.</p>
-          
-          <div class="bg-secondary rounded-lg p-4 mb-4">
-            <code class="text-sm text-foreground">?bgOpacity=75</code>
-          </div>
-          
-          <div class="space-y-2">
-            <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Number (0-100)</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">50</span></p>
-            <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?bgImage=...&bgOpacity=30</code></p>
-          </div>
-        </div>
+                    <div class="bg-secondary rounded-lg p-4 mb-4">
+                        <code class="text-sm text-foreground">?colors=#ff0000,#00ff00,#0000ff</code>
+                    </div>
 
-        <!-- Complete Example -->
-        <div class="bg-primary/10 border border-primary rounded-lg p-6">
-          <h2 class="text-2xl font-bold text-foreground mb-3">Complete Example</h2>
-          <p class="text-muted-foreground mb-4">Here's a full example combining multiple parameters:</p>
-          
-          <div class="bg-secondary rounded-lg p-4 overflow-x-auto">
-            <code class="text-sm text-foreground whitespace-nowrap">
-              /?size=12&colors=#ff0000,#00ff00,#0000ff&eraser=true&bgImage=https://example.com/bg.jpg&bgOpacity=40
-            </code>
-          </div>
+                    <div class="space-y-2">
+                        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Comma-separated hex colors or "*"</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">8 default colors</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Examples:</span></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li><code class="text-primary">/?colors=*</code> - All default colors</li>
+                            <li><code class="text-primary">/?colors=#ff0000,#00ff00</code> - Custom colors</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Eraser Parameter -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">eraser</h2>
+                    <p class="text-muted-foreground mb-4">Shows or hides the eraser tool button.</p>
+
+                    <div class="bg-secondary rounded-lg p-4 mb-4">
+                        <code class="text-sm text-foreground">?eraser=true</code>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Boolean (true/false)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">false (hidden)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?eraser=true</code></p>
+                    </div>
+                </div>
+
+                <!-- Background Image Parameter -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">bgImage</h2>
+                    <p class="text-muted-foreground mb-4">Sets a background image URL for the canvas. The image will be scaled to cover the entire canvas.</p>
+
+                    <div class="bg-secondary rounded-lg p-4 mb-4 overflow-x-auto">
+                        <code class="text-sm text-foreground whitespace-nowrap">?bgImage=https://example.com/image.jpg</code>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">URL-encoded image URL</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">None</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Note:</span> <span class="text-foreground">Image must support CORS</span></p>
+                    </div>
+                </div>
+
+                <!-- Background Opacity Parameter -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">bgOpacity</h2>
+                    <p class="text-muted-foreground mb-4">Controls the opacity of the background image. Only works when bgImage is set.</p>
+
+                    <div class="bg-secondary rounded-lg p-4 mb-4">
+                        <code class="text-sm text-foreground">?bgOpacity=75</code>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Number (0-100)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">50</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?bgImage=...&bgOpacity=30</code></p>
+                    </div>
+                </div>
+
+                <!-- hideNavbar Parameter -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">hideNavbar</h2>
+                    <p class="text-muted-foreground mb-4">Hides the navigation bar for a cleaner drawing interface.</p>
+
+                    <div class="bg-secondary rounded-lg p-4 mb-4">
+                        <code class="text-sm text-foreground">?hideNavbar=true</code>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Boolean (true/false)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">false (visible)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?hideNavbar=true</code></p>
+                    </div>
+                </div>
+
+                <!-- canEditSize Parameter -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">canEditSize</h2>
+                    <p class="text-muted-foreground mb-4">Controls whether users can change the brush/eraser size.</p>
+
+                    <div class="bg-secondary rounded-lg p-4 mb-4">
+                        <code class="text-sm text-foreground">?canEditSize=false</code>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Boolean (true/false)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">true (editable)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?canEditSize=false</code></p>
+                    </div>
+                </div>
+
+                <!-- bgSize Parameter -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">bgSize</h2>
+                    <p class="text-muted-foreground mb-4">Controls the size of the background image as a percentage of the canvas.</p>
+
+                    <div class="bg-secondary rounded-lg p-4 mb-4">
+                        <code class="text-sm text-foreground">?bgSize=75</code>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">Number (10-200)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">100 (full size)</span></p>
+                        <p class="text-sm"><span class="text-muted-foreground">Example:</span> <code class="text-primary">/?bgSize=150</code></p>
+                    </div>
+                </div>
+
+                <!-- Grid Parameters -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">Grid Controls</h2>
+                    <p class="text-muted-foreground mb-4">Adds a customizable grid overlay to the canvas.</p>
+
+                    <div class="space-y-4">
+                        <!-- gridEnabled -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">gridEnabled</h3>
+                            <div class="bg-secondary rounded-lg p-4 mb-2">
+                                <code class="text-sm text-foreground">?gridEnabled=true</code>
+                            </div>
+                            <p class="text-sm text-muted-foreground">Enables or disables the grid overlay.</p>
+                        </div>
+
+                        <!-- gridColor -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">gridColor</h3>
+                            <div class="bg-secondary rounded-lg p-4 mb-2">
+                                <code class="text-sm text-foreground">?gridColor=%23ff0000</code>
+                            </div>
+                            <p class="text-sm text-muted-foreground">Sets the grid color (URL-encoded hex value).</p>
+                        </div>
+
+                        <!-- gridOpacity -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">gridOpacity</h3>
+                            <div class="bg-secondary rounded-lg p-4 mb-2">
+                                <code class="text-sm text-foreground">?gridOpacity=50</code>
+                            </div>
+                            <p class="text-sm text-muted-foreground">Sets the grid opacity (0-100).</p>
+                        </div>
+
+                        <!-- gridStyle -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">gridStyle</h3>
+                            <div class="bg-secondary rounded-lg p-4 mb-2">
+                                <code class="text-sm text-foreground">?gridStyle=dotted</code>
+                            </div>
+                            <p class="text-sm text-muted-foreground">Sets the grid line style. Options: solid, dotted, dashed, sparse</p>
+                        </div>
+
+                        <!-- gridSize -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">gridSize</h3>
+                            <div class="bg-secondary rounded-lg p-4 mb-2">
+                                <code class="text-sm text-foreground">?gridSize=30</code>
+                            </div>
+                            <p class="text-sm text-muted-foreground">Sets the grid cell size in pixels (10-100).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complete Example -->
+                <div class="bg-primary/10 border border-primary rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">Complete Example</h2>
+                    <p class="text-muted-foreground mb-4">Here's a full example combining all parameters:</p>
+
+                    <div class="bg-secondary rounded-lg p-4 overflow-x-auto">
+                        <code class="text-sm text-foreground whitespace-nowrap">
+                            /?size=12&colors=#ff0000,#00ff00,#0000ff&eraser=true&bgImage=https://example.com/bg.jpg&bgOpacity=40&hideNavbar=true&canEditSize=false&gridEnabled=true&gridColor=%23cccccc&gridOpacity=25&gridStyle=dotted&gridSize=25
+                        </code>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
+    </main>
 </Layout>

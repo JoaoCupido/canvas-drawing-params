@@ -2,278 +2,518 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="DrawCanvas - Drawing Tool">
-  <main class="min-h-screen bg-background">
-    <div class="flex flex-col h-[calc(100vh-4rem)]">
-      <!-- Toolbar -->
-      <div id="toolbar" class="bg-card border-b border-border p-4 flex flex-wrap items-center gap-4">
-        <!-- Pencil Tool -->
-        <button id="pencilBtn" class="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity">
-          Pencil
-        </button>
-        
-        <!-- Eraser Tool -->
-        <button id="eraserBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors hidden">
-          Eraser
-        </button>
-        
-        <!-- Size Control -->
-        <div class="flex items-center gap-2">
-          <label for="sizeSlider" class="text-sm text-muted-foreground">Size:</label>
-          <input type="range" id="sizeSlider" min="1" max="50" value="5" class="w-32" />
-          <span id="sizeValue" class="text-sm text-foreground w-8">5</span>
+<Layout title="DrawCanvas - Drawing Tool" hideNavbar={!!Astro.url.searchParams.get('hideNavbar')}>
+    <main class="min-h-screen bg-background">
+        <div class="flex flex-col h-[calc(100vh-4rem)]">
+            <!-- Toolbar -->
+            <div id="toolbar" class="bg-card border-b border-border p-4 flex flex-wrap items-center gap-4">
+                <!-- Pencil Tool -->
+                <button id="pencilBtn" class="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity">
+                    Pencil
+                </button>
+
+                <!-- Eraser Tool -->
+                <button id="eraserBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors hidden">
+                    Eraser
+                </button>
+
+                <!-- Size Control -->
+                <div id="sizeControl" class="flex items-center gap-2">
+                    <label for="sizeSlider" class="text-sm text-muted-foreground">Size:</label>
+                    <input type="range" id="sizeSlider" min="1" max="50" value="5" class="w-32" />
+                    <span id="sizeValue" class="text-sm text-foreground w-8">5</span>
+                </div>
+
+                <!-- Color Picker -->
+                <div id="colorPicker" class="flex items-center gap-2">
+                    <label class="text-sm text-muted-foreground">Color:</label>
+                    <div id="colorButtons" class="flex gap-2"></div>
+                </div>
+
+                <!-- Clear Button -->
+                <button id="clearBtn" class="ml-auto px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors">
+                    Clear Canvas
+                </button>
+
+                <!-- Background Opacity -->
+                <div id="opacityControl" class="flex items-center gap-2 hidden">
+                    <label for="opacitySlider" class="text-sm text-muted-foreground">BG Opacity:</label>
+                    <input type="range" id="opacitySlider" min="0" max="100" value="50" class="w-32" />
+                    <span id="opacityValue" class="text-sm text-foreground w-8">50%</span>
+                </div>
+
+                <!-- Background Image Size -->
+                <div id="bgSizeControl" class="flex items-center gap-2 hidden">
+                    <label for="bgSizeSlider" class="text-sm text-muted-foreground">BG Size:</label>
+                    <input type="range" id="bgSizeSlider" min="10" max="200" value="100" class="w-32" />
+                    <span id="bgSizeValue" class="text-sm text-foreground w-12">100%</span>
+                </div>
+
+                <!-- Grid Controls -->
+                <div id="gridControl" class="flex items-center gap-2 hidden">
+                    <label for="gridToggle" class="text-sm text-muted-foreground">Grid:</label>
+                    <input type="checkbox" id="gridToggle" class="w-4 h-4 text-primary rounded" />
+
+                    <label for="gridSize" class="text-sm text-muted-foreground ml-2">Cell Size:</label>
+                    <input type="range" id="gridSize" min="10" max="100" value="20" class="w-24" />
+                    <span id="gridSizeValue" class="text-sm text-foreground w-8">20</span>
+
+                    <label for="gridColor" class="text-sm text-muted-foreground ml-2">Color:</label>
+                    <input type="color" id="gridColor" value="#cccccc" class="w-8 h-8 rounded border border-border" />
+
+                    <label for="gridOpacity" class="text-sm text-muted-foreground ml-2">Opacity:</label>
+                    <input type="range" id="gridOpacity" min="0" max="100" value="30" class="w-24" />
+                    <span id="gridOpacityValue" class="text-sm text-foreground w-8">30%</span>
+
+                    <label for="gridStyle" class="text-sm text-muted-foreground ml-2">Style:</label>
+                    <select id="gridStyle" class="px-2 py-1 bg-secondary border border-border rounded text-sm">
+                        <option value="solid">Solid</option>
+                        <option value="dotted">Dotted</option>
+                        <option value="dashed">Dashed</option>
+                        <option value="sparse">Sparse</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="flex-1 relative overflow-hidden">
+                <canvas id="backgroundCanvas" class="absolute inset-0"></canvas>
+                <canvas id="gridCanvas" class="absolute inset-0 pointer-events-none"></canvas>
+                <canvas id="drawingCanvas" class="absolute inset-0 cursor-crosshair"></canvas>
+            </div>
         </div>
-        
-        <!-- Color Picker -->
-        <div id="colorPicker" class="flex items-center gap-2">
-          <label class="text-sm text-muted-foreground">Color:</label>
-          <div id="colorButtons" class="flex gap-2"></div>
-        </div>
-        
-        <!-- Clear Button -->
-        <button id="clearBtn" class="ml-auto px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors">
-          Clear Canvas
-        </button>
-        
-        <!-- Background Opacity -->
-        <div id="opacityControl" class="flex items-center gap-2 hidden">
-          <label for="opacitySlider" class="text-sm text-muted-foreground">BG Opacity:</label>
-          <input type="range" id="opacitySlider" min="0" max="100" value="50" class="w-32" />
-          <span id="opacityValue" class="text-sm text-foreground w-8">50%</span>
-        </div>
-      </div>
-      
-      <!-- Canvas Container -->
-      <div class="flex-1 relative overflow-hidden">
-        <canvas id="backgroundCanvas" class="absolute inset-0"></canvas>
-        <canvas id="drawingCanvas" class="absolute inset-0 cursor-crosshair"></canvas>
-      </div>
-    </div>
-  </main>
+    </main>
 </Layout>
 
 <script>
-  // Parse URL parameters
-  const urlParams = new URLSearchParams(window.location.search);
-  const sizeParam = urlParams.get('size');
-  const colorsParam = urlParams.get('colors');
-  const eraserParam = urlParams.get('eraser');
-  const bgImageParam = urlParams.get('bgImage');
-  const bgOpacityParam = urlParams.get('bgOpacity');
+    // Parse URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const sizeParam = urlParams.get('size');
+    const colorsParam = urlParams.get('colors');
+    const eraserParam = urlParams.get('eraser');
+    const bgImageParam = urlParams.get('bgImage');
+    const bgOpacityParam = urlParams.get('bgOpacity');
+    const hideNavbarParam = urlParams.get('hideNavbar');
+    const canEditSizeParam = urlParams.get('canEditSize');
+    const gridColorParam = urlParams.get('gridColor');
+    const gridOpacityParam = urlParams.get('gridOpacity');
+    const gridStyleParam = urlParams.get('gridStyle');
+    const gridSizeParam = urlParams.get('gridSize');
+    const gridEnabledParam = urlParams.get('gridEnabled');
+    const bgImageSizeParam = urlParams.get('bgImageSize');
 
-  // Canvas setup
-  const drawingCanvas = document.getElementById('drawingCanvas') as HTMLCanvasElement;
-  const backgroundCanvas = document.getElementById('backgroundCanvas') as HTMLCanvasElement;
-  const drawingCtx = drawingCanvas.getContext('2d')!;
-  const backgroundCtx = backgroundCanvas.getContext('2d')!;
+    // Canvas setup
+    const drawingCanvas = document.getElementById('drawingCanvas') as HTMLCanvasElement;
+    const backgroundCanvas = document.getElementById('backgroundCanvas') as HTMLCanvasElement;
+    const gridCanvas = document.getElementById('gridCanvas') as HTMLCanvasElement;
+    const drawingCtx = drawingCanvas.getContext('2d');
+    const backgroundCtx = backgroundCanvas.getContext('2d');
+    const gridCtx = gridCanvas.getContext('2d');
 
-  function resizeCanvas() {
-    const container = drawingCanvas.parentElement!;
-    drawingCanvas.width = container.clientWidth;
-    drawingCanvas.height = container.clientHeight;
-    backgroundCanvas.width = container.clientWidth;
-    backgroundCanvas.height = container.clientHeight;
-    
-    // Redraw background if exists
-    if (bgImageParam) {
-      loadBackgroundImage();
+    function resizeCanvas() {
+        const container = drawingCanvas.parentElement;
+        drawingCanvas.width = container.clientWidth;
+        drawingCanvas.height = container.clientHeight;
+        backgroundCanvas.width = container.clientWidth;
+        backgroundCanvas.height = container.clientHeight;
+        gridCanvas.width = container.clientWidth;
+        gridCanvas.height = container.clientHeight;
+
+        // Redraw background if exists
+        if (bgImageParam) {
+            loadBackgroundImage();
+        }
+
+        // Redraw grid if enabled
+        if (gridEnabledParam) {
+            drawGrid();
+        }
     }
-  }
 
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+    // Drawing state
+    let isDrawing = false;
+    let currentColor = '#ffffff';
+    let currentSize = parseInt(sizeParam || '5');
+    let currentTool = 'pencil';
+    let bgOpacity = parseInt(bgOpacityParam || '50') / 100;
+    let bgImageSize = parseInt(bgImageSizeParam || '100');
 
-  // Drawing state
-  let isDrawing = false;
-  let currentColor = '#ffffff';
-  let currentSize = parseInt(sizeParam || '5');
-  let currentTool = 'pencil';
-  let bgOpacity = parseInt(bgOpacityParam || '50') / 100;
+    // Grid state
+    let gridEnabled = gridEnabledParam === 'true';
+    let gridColor = gridColorParam || '#cccccc';
+    let gridOpacity = parseInt(gridOpacityParam || '30') / 100;
+    let gridStyle = gridStyleParam || 'solid';
+    let gridCellSize = parseInt(gridSizeParam || '20');
 
-  // Available colors
-  const defaultColors = ['#ffffff', '#000000', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
-  let availableColors: string[] = [];
+    // Available colors
+    const defaultColors = ['#ffffff', '#000000', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+    let availableColors = [];
 
-  if (colorsParam === '*') {
-    availableColors = defaultColors;
-  } else if (colorsParam) {
-    availableColors = colorsParam.split(',').map(c => c.trim());
-  } else {
-    availableColors = defaultColors;
-  }
-
-  // Setup color buttons
-  const colorButtons = document.getElementById('colorButtons')!;
-  availableColors.forEach((color, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'w-8 h-8 rounded-lg border-2 border-border hover:scale-110 transition-transform';
-    btn.style.backgroundColor = color;
-    btn.onclick = () => {
-      currentColor = color;
-      currentTool = 'pencil';
-      updateToolButtons();
-    };
-    if (index === 0) {
-      btn.classList.add('ring-2', 'ring-primary');
-      currentColor = color;
-    }
-    colorButtons.appendChild(btn);
-  });
-
-  // Show/hide eraser based on URL param
-  const eraserBtn = document.getElementById('eraserBtn')!;
-  if (eraserParam === 'true') {
-    eraserBtn.classList.remove('hidden');
-  }
-
-  // Tool buttons
-  const pencilBtn = document.getElementById('pencilBtn')!;
-  pencilBtn.onclick = () => {
-    currentTool = 'pencil';
-    updateToolButtons();
-  };
-
-  eraserBtn.onclick = () => {
-    currentTool = 'eraser';
-    updateToolButtons();
-  };
-
-  function updateToolButtons() {
-    if (currentTool === 'pencil') {
-      pencilBtn.classList.add('bg-primary', 'text-primary-foreground');
-      pencilBtn.classList.remove('bg-secondary', 'text-secondary-foreground');
-      eraserBtn.classList.remove('bg-primary', 'text-primary-foreground');
-      eraserBtn.classList.add('bg-secondary', 'text-secondary-foreground');
+    if (colorsParam === '*') {
+        availableColors = defaultColors;
+    } else if (colorsParam) {
+        availableColors = colorsParam.split(',').map(c => c.trim());
     } else {
-      eraserBtn.classList.add('bg-primary', 'text-primary-foreground');
-      eraserBtn.classList.remove('bg-secondary', 'text-secondary-foreground');
-      pencilBtn.classList.remove('bg-primary', 'text-primary-foreground');
-      pencilBtn.classList.add('bg-secondary', 'text-secondary-foreground');
+        availableColors = defaultColors;
     }
-  }
 
-  // Size slider
-  const sizeSlider = document.getElementById('sizeSlider') as HTMLInputElement;
-  const sizeValue = document.getElementById('sizeValue')!;
-  sizeSlider.value = currentSize.toString();
-  sizeValue.textContent = currentSize.toString();
+    // Setup color buttons
+    const colorButtons = document.getElementById('colorButtons');
+    let selectedColorButton = null;
 
-  sizeSlider.oninput = () => {
-    currentSize = parseInt(sizeSlider.value);
+    availableColors.forEach((color, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-8 h-8 rounded-lg border-2 border-border hover:scale-110 transition-transform';
+        btn.style.backgroundColor = color;
+        btn.onclick = () => {
+            // Remove ring from previously selected button
+            if (selectedColorButton) {
+                selectedColorButton.classList.remove('ring-2', 'ring-primary');
+            }
+
+            // Add ring to newly selected button
+            btn.classList.add('ring-2', 'ring-primary');
+            selectedColorButton = btn;
+
+            currentColor = color;
+            currentTool = 'pencil';
+            updateToolButtons();
+        };
+
+        // Set initial selection
+        if (index === 0) {
+            btn.classList.add('ring-2', 'ring-primary');
+            selectedColorButton = btn;
+            currentColor = color;
+        }
+
+        colorButtons.appendChild(btn);
+    });
+
+    // Show/hide eraser based on URL param
+    const eraserBtn = document.getElementById('eraserBtn');
+    if (eraserParam === 'true') {
+        eraserBtn.classList.remove('hidden');
+    }
+
+    // Show/hide size control based on URL param
+    const sizeControl = document.getElementById('sizeControl');
+    if (canEditSizeParam === 'false' || !canEditSizeParam) {
+        sizeControl.classList.add('hidden');
+    }
+
+    // Show grid controls if grid is enabled or any grid parameter is set
+    const gridControl = document.getElementById('gridControl');
+    if (gridEnabled || gridColorParam || gridStyleParam || gridSizeParam) {
+        gridControl.classList.remove('hidden');
+    }
+
+    // Tool buttons
+    const pencilBtn = document.getElementById('pencilBtn');
+    pencilBtn.onclick = () => {
+        currentTool = 'pencil';
+        updateToolButtons();
+    };
+
+    eraserBtn.onclick = () => {
+        currentTool = 'eraser';
+        updateToolButtons();
+    };
+
+    function updateToolButtons() {
+        if (currentTool === 'pencil') {
+            pencilBtn.classList.add('bg-primary', 'text-primary-foreground');
+            pencilBtn.classList.remove('bg-secondary', 'text-secondary-foreground');
+            eraserBtn.classList.remove('bg-primary', 'text-primary-foreground');
+            eraserBtn.classList.add('bg-secondary', 'text-secondary-foreground');
+        } else {
+            eraserBtn.classList.add('bg-primary', 'text-primary-foreground');
+            eraserBtn.classList.remove('bg-secondary', 'text-secondary-foreground');
+            pencilBtn.classList.remove('bg-primary', 'text-primary-foreground');
+            pencilBtn.classList.add('bg-secondary', 'text-secondary-foreground');
+        }
+    }
+
+    // Size slider
+    const sizeSlider = document.getElementById('sizeSlider') as HTMLInputElement;
+    const sizeValue = document.getElementById('sizeValue') as HTMLElement;
+    sizeSlider.value = currentSize.toString();
     sizeValue.textContent = currentSize.toString();
-  };
 
-  // Opacity slider
-  const opacitySlider = document.getElementById('opacitySlider') as HTMLInputElement;
-  const opacityValue = document.getElementById('opacityValue')!;
-  const opacityControl = document.getElementById('opacityControl')!;
-
-  if (bgImageParam) {
-    opacityControl.classList.remove('hidden');
-    opacitySlider.value = (bgOpacity * 100).toString();
-    opacityValue.textContent = `${Math.round(bgOpacity * 100)}%`;
-  }
-
-  opacitySlider.oninput = () => {
-    bgOpacity = parseInt(opacitySlider.value) / 100;
-    opacityValue.textContent = `${opacitySlider.value}%`;
-    loadBackgroundImage();
-  };
-
-  // Clear button
-  const clearBtn = document.getElementById('clearBtn')!;
-  clearBtn.onclick = () => {
-    drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-  };
-
-  // Load background image
-  function loadBackgroundImage() {
-    if (!bgImageParam) return;
-    
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      backgroundCtx.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
-      backgroundCtx.globalAlpha = bgOpacity;
-      
-      // Calculate scaling to cover canvas
-      const scale = Math.max(
-        backgroundCanvas.width / img.width,
-        backgroundCanvas.height / img.height
-      );
-      const x = (backgroundCanvas.width - img.width * scale) / 2;
-      const y = (backgroundCanvas.height - img.height * scale) / 2;
-      
-      backgroundCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
-      backgroundCtx.globalAlpha = 1;
+    sizeSlider.oninput = () => {
+        currentSize = parseInt(sizeSlider.value);
+        sizeValue.textContent = currentSize.toString();
     };
-    img.src = bgImageParam;
-  }
 
-  loadBackgroundImage();
+    // Opacity slider
+    const opacitySlider = document.getElementById('opacitySlider') as HTMLInputElement;
+    const opacityValue = document.getElementById('opacityValue') as HTMLElement;
+    const opacityControl = document.getElementById('opacityControl');
 
-  // Drawing functions
-  let lastX = 0;
-  let lastY = 0;
-
-  function startDrawing(e: MouseEvent | Touch) {
-    isDrawing = true;
-    const rect = drawingCanvas.getBoundingClientRect();
-    lastX = e.clientX - rect.left;
-    lastY = e.clientY - rect.top;
-  }
-
-  function draw(e: MouseEvent | Touch) {
-    if (!isDrawing) return;
-
-    const rect = drawingCanvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    drawingCtx.beginPath();
-    drawingCtx.moveTo(lastX, lastY);
-    drawingCtx.lineTo(x, y);
-    
-    if (currentTool === 'eraser') {
-      drawingCtx.globalCompositeOperation = 'destination-out';
-      drawingCtx.strokeStyle = 'rgba(0,0,0,1)';
-    } else {
-      drawingCtx.globalCompositeOperation = 'source-over';
-      drawingCtx.strokeStyle = currentColor;
+    if (bgImageParam) {
+        opacityControl.classList.remove('hidden');
+        opacitySlider.value = (bgOpacity * 100).toString();
+        opacityValue.textContent = `${Math.round(bgOpacity * 100)}%`;
     }
-    
-    drawingCtx.lineWidth = currentSize;
-    drawingCtx.lineCap = 'round';
-    drawingCtx.lineJoin = 'round';
-    drawingCtx.stroke();
 
-    lastX = x;
-    lastY = y;
-  }
+    opacitySlider.oninput = () => {
+        bgOpacity = parseInt(opacitySlider.value) / 100;
+        opacityValue.textContent = `${opacitySlider.value}%`;
+        loadBackgroundImage();
+    };
 
-  function stopDrawing() {
-    isDrawing = false;
-  }
+    // Add bgSize control setup
+    const bgSizeSlider = document.getElementById('bgSizeSlider') as HTMLInputElement;
+    const bgSizeValue = document.getElementById('bgSizeValue') as HTMLElement;
+    const bgSizeControl = document.getElementById('bgSizeControl');
 
-  // Mouse events
-  drawingCanvas.addEventListener('mousedown', (e) => startDrawing(e));
-  drawingCanvas.addEventListener('mousemove', (e) => draw(e));
-  drawingCanvas.addEventListener('mouseup', stopDrawing);
-  drawingCanvas.addEventListener('mouseout', stopDrawing);
+    if (bgImageParam) {
+        bgSizeControl.classList.remove('hidden');
+        bgSizeSlider.value = bgImageSize.toString();
+        bgSizeValue.textContent = `${bgImageSize}%`;
+    }
 
-  // Touch events
-  drawingCanvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    startDrawing(e.touches[0]);
-  });
+    bgSizeSlider.oninput = () => {
+        bgImageSize = parseInt(bgSizeSlider.value);
+        bgSizeValue.textContent = `${bgImageSize}%`;
+        loadBackgroundImage();
+    };
 
-  drawingCanvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    draw(e.touches[0]);
-  });
+    // Grid controls
+    const gridToggle = document.getElementById('gridToggle') as HTMLInputElement;
+    const gridSizeSlider = document.getElementById('gridSize') as HTMLInputElement;
+    const gridSizeValue = document.getElementById('gridSizeValue') as HTMLElement;
+    const gridColorPicker = document.getElementById('gridColor') as HTMLInputElement;
+    const gridOpacitySlider = document.getElementById('gridOpacity') as HTMLInputElement;
+    const gridOpacityValue = document.getElementById('gridOpacityValue') as HTMLElement;
+    const gridStyleSelect = document.getElementById('gridStyle') as HTMLSelectElement;
 
-  drawingCanvas.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    stopDrawing();
-  });
+    // Initialize grid controls
+    gridToggle.checked = gridEnabled;
+    gridSizeSlider.value = gridCellSize.toString();
+    gridSizeValue.textContent = gridCellSize.toString();
+    gridColorPicker.value = gridColor;
+    gridOpacitySlider.value = (gridOpacity * 100).toString();
+    gridOpacityValue.textContent = `${Math.round(gridOpacity * 100)}%`;
+    gridStyleSelect.value = gridStyle;
+
+    // Grid event listeners
+    gridToggle.onchange = () => {
+        gridEnabled = gridToggle.checked;
+        drawGrid();
+    };
+
+    gridSizeSlider.oninput = () => {
+        gridCellSize = parseInt(gridSizeSlider.value);
+        gridSizeValue.textContent = gridCellSize.toString();
+        drawGrid();
+    };
+
+    gridColorPicker.oninput = () => {
+        gridColor = gridColorPicker.value;
+        drawGrid();
+    };
+
+    gridOpacitySlider.oninput = () => {
+        gridOpacity = parseInt(gridOpacitySlider.value) / 100;
+        gridOpacityValue.textContent = `${gridOpacitySlider.value}%`;
+        drawGrid();
+    };
+
+    gridStyleSelect.onchange = () => {
+        gridStyle = gridStyleSelect.value;
+        drawGrid();
+    };
+
+    // Clear button
+    const clearBtn = document.getElementById('clearBtn');
+    clearBtn.onclick = () => {
+        drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+    };
+
+    // Load background image
+    function loadBackgroundImage() {
+        if (!bgImageParam) return;
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            backgroundCtx.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+            backgroundCtx.globalAlpha = bgOpacity;
+
+            // Calculate scaling based on bgSize percentage
+            const scale = Math.max(
+                backgroundCanvas.width / img.width,
+                backgroundCanvas.height / img.height
+            ) * (bgImageSize / 100);
+
+            const x = (backgroundCanvas.width - img.width * scale) / 2;
+            const y = (backgroundCanvas.height - img.height * scale) / 2;
+
+            backgroundCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            backgroundCtx.globalAlpha = 1;
+        };
+        img.src = bgImageParam;
+    }
+
+    // Draw grid function
+    function drawGrid() {
+        gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+
+        if (!gridEnabledParam) return;
+
+        gridCtx.strokeStyle = gridColor;
+        gridCtx.globalAlpha = gridOpacity;
+        gridCtx.lineWidth = 1;
+
+        const width = gridCanvas.width;
+        const height = gridCanvas.height;
+
+        switch (gridStyle) {
+            case 'solid':
+                drawSolidGrid(width, height);
+                break;
+            case 'dotted':
+                drawDottedGrid(width, height);
+                break;
+            case 'dashed':
+                drawDashedGrid(width, height);
+                break;
+            case 'sparse':
+                drawSparseGrid(width, height);
+                break;
+        }
+
+        gridCtx.globalAlpha = 1;
+    }
+
+    function drawSolidGrid(width, height) {
+        gridCtx.beginPath();
+        for (let x = 0; x <= width; x += gridCellSize) {
+            gridCtx.moveTo(x, 0);
+            gridCtx.lineTo(x, height);
+        }
+        for (let y = 0; y <= height; y += gridCellSize) {
+            gridCtx.moveTo(0, y);
+            gridCtx.lineTo(width, y);
+        }
+        gridCtx.stroke();
+    }
+
+    function drawDottedGrid(width, height) {
+        gridCtx.fillStyle = gridColor;
+        for (let x = 0; x <= width; x += gridCellSize) {
+            for (let y = 0; y <= height; y += gridCellSize) {
+                gridCtx.beginPath();
+                gridCtx.arc(x, y, 1, 0, Math.PI * 2);
+                gridCtx.fill();
+            }
+        }
+    }
+
+    function drawDashedGrid(width, height) {
+        const dashLength = 4;
+        const gapLength = 4;
+
+        gridCtx.setLineDash([dashLength, gapLength]);
+
+        gridCtx.beginPath();
+        for (let x = 0; x <= width; x += gridCellSize) {
+            gridCtx.moveTo(x, 0);
+            gridCtx.lineTo(x, height);
+        }
+        for (let y = 0; y <= height; y += gridCellSize) {
+            gridCtx.moveTo(0, y);
+            gridCtx.lineTo(width, y);
+        }
+        gridCtx.stroke();
+
+        gridCtx.setLineDash([]);
+    }
+
+    function drawSparseGrid(width, height) {
+        const sparseFactor = 4; // Draw every 4th line
+
+        gridCtx.beginPath();
+        for (let x = 0; x <= width; x += gridCellSize * sparseFactor) {
+            gridCtx.moveTo(x, 0);
+            gridCtx.lineTo(x, height);
+        }
+        for (let y = 0; y <= height; y += gridCellSize * sparseFactor) {
+            gridCtx.moveTo(0, y);
+            gridCtx.lineTo(width, y);
+        }
+        gridCtx.stroke();
+    }
+
+    loadBackgroundImage();
+    drawGrid();
+
+    // Drawing functions
+    let lastX = 0;
+    let lastY = 0;
+
+    function startDrawing(e) {
+        isDrawing = true;
+        const rect = drawingCanvas.getBoundingClientRect();
+        lastX = e.clientX - rect.left;
+        lastY = e.clientY - rect.top;
+    }
+
+    function draw(e) {
+        if (!isDrawing) return;
+
+        const rect = drawingCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        drawingCtx.beginPath();
+        drawingCtx.moveTo(lastX, lastY);
+        drawingCtx.lineTo(x, y);
+
+        if (currentTool === 'eraser') {
+            drawingCtx.globalCompositeOperation = 'destination-out';
+            drawingCtx.strokeStyle = 'rgba(0,0,0,1)';
+        } else {
+            drawingCtx.globalCompositeOperation = 'source-over';
+            drawingCtx.strokeStyle = currentColor;
+        }
+
+        drawingCtx.lineWidth = currentSize;
+        drawingCtx.lineCap = 'round';
+        drawingCtx.lineJoin = 'round';
+        drawingCtx.stroke();
+
+        lastX = x;
+        lastY = y;
+    }
+
+    function stopDrawing() {
+        isDrawing = false;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Mouse events
+    drawingCanvas.addEventListener('mousedown', (e) => startDrawing(e));
+    drawingCanvas.addEventListener('mousemove', (e) => draw(e));
+    drawingCanvas.addEventListener('mouseup', stopDrawing);
+    drawingCanvas.addEventListener('mouseout', stopDrawing);
+
+    // Touch events
+    drawingCanvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startDrawing(e.touches[0]);
+    });
+
+    drawingCanvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        draw(e.touches[0]);
+    });
+
+    drawingCanvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        stopDrawing();
+    });
 </script>
