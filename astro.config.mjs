@@ -1,8 +1,10 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  integrations: [tailwind()],
-  site: 'https://yourusername.github.io',
-  base: '/your-repo-name',
+    vite: {
+        plugins: [tailwindcss()],
+    },
+  site: 'https://joaocupido.github.io',
+  base: '/canvas-drawing-params',
 });
