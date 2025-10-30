@@ -1,0 +1,34 @@
+---
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.jpg" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-background text-foreground">
+    <nav class="border-b border-border bg-card">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <div class="flex items-center gap-8">
+            <a href="/" class="text-xl font-bold text-primary">DrawCanvas</a>
+            <div class="hidden md:flex gap-6">
+              <a href="/" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Draw</a>
+              <a href="/docs" class="text-sm text-muted-foreground hover:text-foreground transition-colors">API Docs</a>
+              <a href="/generate" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Generate URL</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/globals.css';
+</style>
