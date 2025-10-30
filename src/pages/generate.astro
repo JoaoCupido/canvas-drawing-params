@@ -1,31 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import FormInput from '../components/FormInput.astro';
 ---
 
 <Layout title="Generate URL - DrawCanvas">
     <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-4xl">
+        <div class="min-h-screen mx-auto max-w-4xl">
             <h1 class="text-4xl font-bold text-foreground mb-2">Generate Canvas URL</h1>
             <p class="text-muted-foreground mb-8">Configure your drawing canvas and generate a shareable URL</p>
 
             <div class="bg-card border border-border rounded-lg p-6 mb-8">
                 <form id="urlForm" class="space-y-6">
-                    <!-- Brush Size -->
-                    <div>
-                        <label for="sizeInput" class="block text-sm font-medium text-foreground mb-2">
-                            Brush Size (1-50)
-                        </label>
-                        <input
-                                type="number"
-                                id="sizeInput"
-                                min="1"
-                                max="50"
-                                value="5"
-                                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                    </div>
+                    <FormInput
+                            id="sizeInput"
+                            label="Brush Size (1-50)"
+                            type="number"
+                            value="5"
+                            min="1"
+                            max="50"
+                    />
 
-                    <!-- Colors -->
+                    <!-- Colors Section -->
                     <div>
                         <label class="block text-sm font-medium text-foreground mb-2">
                             Available Colors
@@ -40,83 +35,117 @@ import Layout from '../layouts/Layout.astro';
                                 <span class="text-foreground">Custom colors</span>
                             </label>
                         </div>
-                        <input
-                                type="text"
+                        <FormInput
                                 id="customColors"
+                                type="text"
                                 placeholder="#ff0000,#00ff00,#0000ff"
-                                disabled
-                                class="mt-2 w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+                                disabled={true}
+                                note="Enter comma-separated hex colors"
                         />
-                        <p class="text-xs text-muted-foreground mt-1">Enter comma-separated hex colors</p>
                     </div>
 
-                    <!-- Eraser -->
+                    <!-- Input Controls Section -->
+                    <div class="border-t border-border pt-6">
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Input Controls</h3>
+
+                        <!-- Eraser Input -->
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="eraserInputCheck" checked class="text-primary" />
+                                <span class="text-foreground font-medium">Show Eraser Tool</span>
+                            </label>
+                        </div>
+
+                        <!-- Cursor Size Input -->
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="cursorSizeInputCheck" checked class="text-primary" />
+                                <span class="text-foreground font-medium">Show Cursor Size Control</span>
+                            </label>
+                        </div>
+
+                        <!-- Undo/Redo Input -->
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="undoRedoInputCheck" checked class="text-primary" />
+                                <span class="text-foreground font-medium">Show Undo/Redo Controls</span>
+                            </label>
+                        </div>
+
+                        <!-- Background Inputs -->
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="backgroundInputsCheck" checked class="text-primary" />
+                                <span class="text-foreground font-medium">Show Background Controls</span>
+                            </label>
+                        </div>
+
+                        <!-- Grid Inputs -->
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="gridInputsCheck" checked class="text-primary" />
+                                <span class="text-foreground font-medium">Show Grid Controls</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar Position -->
                     <div>
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" id="eraserCheck" class="text-primary" />
-                            <span class="text-foreground font-medium">Enable Eraser Tool</span>
+                        <label class="block text-sm font-medium text-foreground mb-2">
+                            Toolbar Position
                         </label>
+                        <select
+                                id="toolbarPositionSelect"
+                                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                        >
+                            <option value="up">Top</option>
+                            <option value="down">Bottom</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </div>
+
+                    <!-- Background Color -->
+                    <div>
+                        <label for="bgColorInput" class="block text-sm font-medium text-foreground mb-2">
+                            Background Color
+                        </label>
+                        <input
+                                type="color"
+                                id="bgColorInput"
+                                value="#ffffff"
+                                class="w-20 h-10 rounded border border-border"
+                        />
                     </div>
 
                     <!-- Background Image -->
-                    <div>
-                        <label for="bgImageInput" class="block text-sm font-medium text-foreground mb-2">
-                            Background Image URL
-                        </label>
-                        <input
-                                type="url"
-                                id="bgImageInput"
-                                placeholder="https://example.com/image.jpg"
-                                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                        <p class="text-xs text-muted-foreground mt-1">Optional: Add a background image</p>
-                    </div>
+                    <FormInput
+                            id="bgImageInput"
+                            label="Background Image URL"
+                            type="url"
+                            placeholder="https://example.com/image.jpg"
+                            note="Optional: Add a background image"
+                    />
 
                     <!-- Background Opacity -->
-                    <div>
-                        <label for="bgOpacityInput" class="block text-sm font-medium text-foreground mb-2">
-                            Background Opacity (0-100)
-                        </label>
-                        <input
-                                type="number"
-                                id="bgOpacityInput"
-                                min="0"
-                                max="100"
-                                value="50"
-                                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                    </div>
+                    <FormInput
+                            id="bgOpacityInput"
+                            label="Background Opacity (0-100)"
+                            type="number"
+                            value="50"
+                            min="0"
+                            max="100"
+                    />
 
                     <!-- Background Size -->
-                    <div>
-                        <label for="bgImageSizeInput" class="block text-sm font-medium text-foreground mb-2">
-                            Background Size (10-200%)
-                        </label>
-                        <input
-                                type="number"
-                                id="bgImageSizeInput"
-                                min="10"
-                                max="200"
-                                value="100"
-                                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                    </div>
-
-                    <!-- Hide Navbar -->
-                    <div>
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" id="hideNavbarCheck" class="text-primary" />
-                            <span class="text-foreground font-medium">Hide Navigation Bar</span>
-                        </label>
-                    </div>
-
-                    <!-- Can Edit Size -->
-                    <div>
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" id="canEditSizeCheck" checked class="text-primary" />
-                            <span class="text-foreground font-medium">Allow Size Editing</span>
-                        </label>
-                    </div>
+                    <FormInput
+                            id="bgImageSizeInput"
+                            label="Background Size (10-200%)"
+                            type="number"
+                            value="100"
+                            min="10"
+                            max="200"
+                    />
 
                     <!-- Grid Controls -->
                     <div class="border-t border-border pt-6">
@@ -144,19 +173,14 @@ import Layout from '../layouts/Layout.astro';
                         </div>
 
                         <!-- Grid Opacity -->
-                        <div class="mb-4">
-                            <label for="gridOpacityInput" class="block text-sm font-medium text-foreground mb-2">
-                                Grid Opacity (0-100)
-                            </label>
-                            <input
-                                    type="number"
-                                    id="gridOpacityInput"
-                                    min="0"
-                                    max="100"
-                                    value="30"
-                                    class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                            />
-                        </div>
+                        <FormInput
+                                id="gridOpacityInput"
+                                label="Grid Opacity (0-100)"
+                                type="number"
+                                value="30"
+                                min="0"
+                                max="100"
+                        />
 
                         <!-- Grid Style -->
                         <div class="mb-4">
@@ -175,19 +199,14 @@ import Layout from '../layouts/Layout.astro';
                         </div>
 
                         <!-- Grid Size -->
-                        <div>
-                            <label for="gridSizeInput" class="block text-sm font-medium text-foreground mb-2">
-                                Grid Cell Size (10-100)
-                            </label>
-                            <input
-                                    type="number"
-                                    id="gridSizeInput"
-                                    min="10"
-                                    max="100"
-                                    value="20"
-                                    class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                            />
-                        </div>
+                        <FormInput
+                                id="gridSizeInput"
+                                label="Grid Cell Size (10-100)"
+                                type="number"
+                                value="20"
+                                min="10"
+                                max="100"
+                        />
                     </div>
 
                     <!-- Generate Button -->
@@ -227,119 +246,6 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </div>
     </main>
+
+    <script is:inline src="/canvas-drawing-params/generate-script.js"></script>
 </Layout>
-
-<script>
-    const form = document.getElementById('urlForm');
-    const resultSection = document.getElementById('resultSection');
-    const generatedUrlEl = document.getElementById('generatedUrl');
-    const copyBtn = document.getElementById('copyBtn');
-    const openBtn = document.getElementById('openBtn');
-    const customColorsInput = document.getElementById('customColors');
-    const colorModeRadios = document.querySelectorAll('input[name="colorMode"]');
-
-    // Enable/disable custom colors input
-    colorModeRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            const target = e.target;
-            customColorsInput.disabled = target.value === 'all';
-        });
-    });
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const size = (document.getElementById('sizeInput') as HTMLInputElement).value;
-        const colorMode = (document.querySelector('input[name="colorMode"]:checked') as HTMLInputElement).value;
-        const customColors = customColorsInput.value;
-        const eraserEnabled = (document.getElementById('eraserCheck') as HTMLInputElement).checked;
-
-        const bgImage = (document.getElementById('bgImageInput') as HTMLInputElement).value;
-        const bgOpacity = (document.getElementById('bgOpacityInput') as HTMLInputElement).value;
-        const bgImageSize = (document.getElementById('bgImageSizeInput') as HTMLInputElement).value;
-
-        const hideNavbar = (document.getElementById('hideNavbarCheck') as HTMLInputElement).checked;
-        const canEditSize = (document.getElementById('canEditSizeCheck') as HTMLInputElement).checked;
-        const gridEnabled = (document.getElementById('gridEnabledCheck') as HTMLInputElement).checked;
-        const gridColor = (document.getElementById('gridColorInput') as HTMLInputElement).value;
-        const gridOpacity = (document.getElementById('gridOpacityInput') as HTMLInputElement).value;
-        const gridStyle = (document.getElementById('gridStyleSelect') as HTMLInputElement).value;
-        const gridSize = (document.getElementById('gridSizeInput') as HTMLInputElement).value;
-
-        // Build URL parameters
-        const params = new URLSearchParams();
-
-        if (size && size !== '5') {
-            params.append('size', size);
-        }
-
-        if (colorMode === 'all') {
-            params.append('colors', '*');
-        } else if (customColors) {
-            params.append('colors', customColors);
-        }
-
-        if (eraserEnabled) {
-            params.append('eraser', 'true');
-        }
-
-        if (bgImage) {
-            params.append('bgImage', bgImage);
-            if (bgOpacity && bgOpacity !== '50') {
-                params.append('bgOpacity', bgOpacity);
-            }
-            if (bgImage && bgImageSize && bgImageSize !== '100') {
-                params.append('bgImageSize', bgImageSize);
-            }
-        }
-
-        // New parameters
-        if (hideNavbar) {
-            params.append('hideNavbar', 'true');
-        }
-
-        if (!canEditSize) {
-            params.append('canEditSize', 'false');
-        }
-
-        if (gridEnabled) {
-            params.append('gridEnabled', 'true');
-            params.append('gridColor', encodeURIComponent(gridColor));
-            if (gridOpacity && gridOpacity !== '30') {
-                params.append('gridOpacity', gridOpacity);
-            }
-            if (gridStyle && gridStyle !== 'solid') {
-                params.append('gridStyle', gridStyle);
-            }
-            if (gridSize && gridSize !== '20') {
-                params.append('gridSize', gridSize);
-            }
-        }
-
-        // Generate URL
-        const baseUrl = window.location.origin + window.location.pathname.replace('/generate', '/');
-        const fullUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
-
-        // Display result
-        generatedUrlEl.textContent = fullUrl;
-        openBtn.href = fullUrl;
-        resultSection.classList.remove('hidden');
-
-        // Scroll to result
-        resultSection.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // Copy to clipboard
-    copyBtn.addEventListener('click', async () => {
-        const url = generatedUrlEl.textContent || '';
-        try {
-            await navigator.clipboard.writeText(url);
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy URL';
-            }, 2000);
-        } catch (err) {
-            console.error('Failed to copy:', err);
-        }
-    });
-</script>

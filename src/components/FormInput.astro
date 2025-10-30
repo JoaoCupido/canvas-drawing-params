@@ -1,0 +1,30 @@
+---
+export interface FormInputProps {
+    id: string;
+    label: string;
+    type: string;
+    value?: string | number;
+    placeholder?: string;
+    min?: number;
+    max?: number;
+    disabled?: boolean;
+    note?: string;
+}
+---
+
+<div>
+    <label for={Astro.props.id} class="block text-sm font-medium text-foreground mb-2">
+        {Astro.props.label}
+    </label>
+    <input
+            type={Astro.props.type}
+            id={Astro.props.id}
+            value={Astro.props.value}
+            placeholder={Astro.props.placeholder}
+            min={Astro.props.min}
+            max={Astro.props.max}
+            disabled={Astro.props.disabled}
+            class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+    />
+    {Astro.props.note && <p class="text-xs text-muted-foreground mt-1">{Astro.props.note}</p>}
+</div>

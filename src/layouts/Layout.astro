@@ -1,5 +1,6 @@
 ---
-const { title, hideNavbar = false } = Astro.props;
+import Navbar from "../components/Navbar.astro";
+const { title, hideNavbar } = Astro.props;
 import "../styles/globals.css";
 ---
 
@@ -11,23 +12,8 @@ import "../styles/globals.css";
     <link rel="icon" type="image/svg+xml" href="/canvas-drawing-params/favicon.jpg" />
     <title>{title}</title>
 </head>
-<body class="bg-background text-foreground">
-{!hideNavbar && (
-        <nav class="border-b border-border bg-card">
-            <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
-                <div class="flex h-16 items-center justify-start w-full">
-                    <div class="flex items-center gap-8">
-                        <a href="/canvas-drawing-params" class="text-xl font-bold text-primary">DrawCanvas</a>
-                        <div class="hidden md:flex gap-6">
-                            <a href="/canvas-drawing-params" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Draw</a>
-                            <a href="/canvas-drawing-params/docs" class="text-sm text-muted-foreground hover:text-foreground transition-colors">API Docs</a>
-                            <a href="/canvas-drawing-params/generate" class="text-sm text-muted-foreground hover:text-foreground transition-colors">Generate URL</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
-)}
+<body class="min-h-screen bg-background text-foreground">
+{!hideNavbar && <Navbar />}
 <slot />
 </body>
 </html>

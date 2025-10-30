@@ -1,0 +1,36 @@
+---
+export interface Parameter {
+    name: string;
+    description: string;
+    type: string;
+    defaultValue: string;
+    examples: string[];
+    codeExample?: string;
+}
+---
+
+<div class="bg-card border border-border rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-foreground mb-3">{Astro.props.name}</h2>
+    <p class="text-muted-foreground mb-4">{Astro.props.description}</p>
+
+    {Astro.props.codeExample && (
+            <div class="bg-secondary rounded-lg p-4 mb-4 overflow-x-auto">
+                <code class="text-sm text-foreground whitespace-nowrap">{Astro.props.codeExample}</code>
+            </div>
+    )}
+
+    <div class="space-y-2">
+        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">{Astro.props.type}</span></p>
+        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">{Astro.props.defaultValue}</span></p>
+        {Astro.props.examples.length > 0 && (
+                <>
+                    <p class="text-sm"><span class="text-muted-foreground">Examples:</span></p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        {Astro.props.examples.map(example => (
+                                <li><code class="text-primary">{example}</code></li>
+                        ))}
+                    </ul>
+                </>
+        )}
+    </div>
+</div>
