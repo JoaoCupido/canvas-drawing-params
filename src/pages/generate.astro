@@ -144,6 +144,17 @@ import FormInput from '../components/FormInput.astro';
                                 className="mb-4"
                         />
 
+                        <!-- Coloring Book Image Option -->
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="coloringBookImageCheck" class="text-primary" />
+                                <span class="text-foreground font-medium">Coloring Book Image (transparent background)</span>
+                            </label>
+                            <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                Converts white background to transparent, keeping black lines for coloring
+                            </p>
+                        </div>
+
                         <!-- Background Opacity -->
                         <FormInput
                                 id="bgOpacityInput"

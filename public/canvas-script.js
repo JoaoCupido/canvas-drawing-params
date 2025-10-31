@@ -51,6 +51,7 @@ class CanvasManager {
             x: parseInt(this.urlParams.get('bgImagePosX') || '50'),
             y: parseInt(this.urlParams.get('bgImagePosY') || '50')
         };
+        this.isColoringBookImage = this.urlParams.get('isColoringBookImage') === 'true';
 
         // Grid state
         this.gridEnabled = this.urlParams.get('gridEnabled') === 'true';
@@ -631,7 +632,6 @@ class CanvasManager {
     loadBackgroundImage() {
         const bgImageParam = this.urlParams.get('bgImage');
         if (!bgImageParam) {
-            // Clear bgImageCanvas if no background image
             this.bgImageCtx.clearRect(0, 0, this.bgImageCanvas.width, this.bgImageCanvas.height);
             return;
         }
@@ -642,21 +642,81 @@ class CanvasManager {
             this.bgImageCtx.clearRect(0, 0, this.bgImageCanvas.width, this.bgImageCanvas.height);
             this.bgImageCtx.globalAlpha = this.bgOpacity;
 
-            // Calculate scaling based on bgSize percentage
-            const scale = Math.max(
-                this.bgImageCanvas.width / img.width,
-                this.bgImageCanvas.height / img.height
-            ) * (this.bgImageSize / 100);
+            if (this.isColoringBookImage) {
+                this.processColoringBookImage(img);
+            } else {
+                this.drawRegularBackgroundImage(img);
+            }
 
-            // Calculate position based on percentage (0-100%)
-            // 0% = left/top aligned, 50% = centered, 100% = right/bottom aligned
-            const x = (this.bgImageCanvas.width - img.width * scale) * (this.bgImagePosition.x / 100);
-            const y = (this.bgImageCanvas.height - img.height * scale) * (this.bgImagePosition.y / 100);
-
-            this.bgImageCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
             this.bgImageCtx.globalAlpha = 1;
         };
         img.src = bgImageParam;
+    }
+
+    processColoringBookImage(img) {
+        // Create a temporary canvas to process the image
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+
+        tempCanvas.width = img.width;
+        tempCanvas.height = img.height;
+
+        // Draw the original image
+        tempCtx.drawImage(img, 0, 0);
+
+        // Get image data for processing
+        const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        const data = imageData.data;
+
+        // Process pixels: convert white to transparent, keep other colors as black
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+
+            // Check if pixel is "white" (adjust threshold as needed)
+            const isWhite = r > 200 && g > 200 && b > 200 && a > 50;
+
+            if (isWhite) {
+                // Make white pixels transparent
+                data[i + 3] = 0;
+            } else {
+                // Convert non-white pixels to black
+                data[i] = 0;     // R
+                data[i + 1] = 0; // G
+                data[i + 2] = 0; // B
+                // Keep original alpha for non-white pixels
+            }
+        }
+
+        // Put processed image data back
+        tempCtx.putImageData(imageData, 0, 0);
+
+        // Calculate scaling and position
+        const scale = Math.max(
+            this.bgImageCanvas.width / tempCanvas.width,
+            this.bgImageCanvas.height / tempCanvas.height
+        ) * (this.bgImageSize / 100);
+
+        const x = (this.bgImageCanvas.width - tempCanvas.width * scale) * (this.bgImagePosition.x / 100);
+        const y = (this.bgImageCanvas.height - tempCanvas.height * scale) * (this.bgImagePosition.y / 100);
+
+        // Draw processed image to background canvas
+        this.bgImageCtx.drawImage(tempCanvas, x, y, tempCanvas.width * scale, tempCanvas.height * scale);
+    }
+
+    drawRegularBackgroundImage(img) {
+        // Original background image drawing logic
+        const scale = Math.max(
+            this.bgImageCanvas.width / img.width,
+            this.bgImageCanvas.height / img.height
+        ) * (this.bgImageSize / 100);
+
+        const x = (this.bgImageCanvas.width - img.width * scale) * (this.bgImagePosition.x / 100);
+        const y = (this.bgImageCanvas.height - img.height * scale) * (this.bgImagePosition.y / 100);
+
+        this.bgImageCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
     }
 
     drawGrid() {
