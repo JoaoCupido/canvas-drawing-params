@@ -47,6 +47,10 @@ class CanvasManager {
         this.bgOpacity = parseInt(this.urlParams.get('bgOpacity') || '50') / 100;
         this.bgImageSize = parseInt(this.urlParams.get('bgImageSize') || '100');
         this.bgColor = this.urlParams.get('bgColor')?.replace("%23", "#") || '#ffffff';
+        this.bgImagePosition = {
+            x: parseInt(this.urlParams.get('bgImagePosX') || '50'),
+            y: parseInt(this.urlParams.get('bgImagePosY') || '50')
+        };
 
         // Grid state
         this.gridEnabled = this.urlParams.get('gridEnabled') === 'true';
@@ -445,6 +449,40 @@ class CanvasManager {
             this.loadBackgroundImage();
         };
 
+        // Background Position X
+        this.bgPosXSlider = document.getElementById('bgPosXSlider');
+        this.bgPosXValue = document.getElementById('bgPosXValue');
+        this.bgPosXControl = document.getElementById('bgPosXControl');
+
+        if (this.urlParams.get('bgImage') && this.showInputs.backgroundInputs) {
+            this.bgPosXControl.classList.remove('hidden');
+            this.bgPosXSlider.value = this.bgImagePosition.x.toString();
+            this.bgPosXValue.textContent = `${this.bgImagePosition.x}%`;
+        }
+
+        this.bgPosXSlider.oninput = () => {
+            this.bgImagePosition.x = parseInt(this.bgPosXSlider.value);
+            this.bgPosXValue.textContent = `${this.bgImagePosition.x}%`;
+            this.loadBackgroundImage();
+        };
+
+        // Background Position Y
+        this.bgPosYSlider = document.getElementById('bgPosYSlider');
+        this.bgPosYValue = document.getElementById('bgPosYValue');
+        this.bgPosYControl = document.getElementById('bgPosYControl');
+
+        if (this.urlParams.get('bgImage') && this.showInputs.backgroundInputs) {
+            this.bgPosYControl.classList.remove('hidden');
+            this.bgPosYSlider.value = this.bgImagePosition.y.toString();
+            this.bgPosYValue.textContent = `${this.bgImagePosition.y}%`;
+        }
+
+        this.bgPosYSlider.oninput = () => {
+            this.bgImagePosition.y = parseInt(this.bgPosYSlider.value);
+            this.bgPosYValue.textContent = `${this.bgImagePosition.y}%`;
+            this.loadBackgroundImage();
+        };
+
         // Clear button
         /*
         const clearBtn = document.getElementById('clearBtn');
@@ -594,8 +632,10 @@ class CanvasManager {
                 this.bgImageCanvas.height / img.height
             ) * (this.bgImageSize / 100);
 
-            const x = (this.bgImageCanvas.width - img.width * scale) / 2;
-            const y = (this.bgImageCanvas.height - img.height * scale) / 2;
+            // Calculate position based on percentage (0-100%)
+            // 0% = left/top aligned, 50% = centered, 100% = right/bottom aligned
+            const x = (this.bgImageCanvas.width - img.width * scale) * (this.bgImagePosition.x / 100);
+            const y = (this.bgImageCanvas.height - img.height * scale) * (this.bgImagePosition.y / 100);
 
             this.bgImageCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
             this.bgImageCtx.globalAlpha = 1;

@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Skull } from '@lucide/astro';
+import { Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from 'lucide-astro';
 ---
 
 <Layout title="DrawCanvas - Drawing Tool" hideNavbar={true}>
@@ -84,7 +84,21 @@ import { Skull } from '@lucide/astro';
                         <div id="bgSizeControl" class="flex items-center gap-2 hidden">
                             <label for="bgSizeSlider" class="text-sm text-muted-foreground">BG Image Size:</label>
                             <input type="range" id="bgSizeSlider" min="10" max="200" value="100" class="w-32" />
-                            <span id="bgSizeValue" class="text-sm text-foreground w-12">100%</span>
+                            <span id="bgSizeValue" class="text-sm text-foreground w-8">100%</span>
+                        </div>
+
+                        <!-- Background Position X -->
+                        <div id="bgPosXControl" class="flex items-center gap-2 hidden">
+                            <label for="bgPosXSlider" class="text-sm text-muted-foreground">BG Pos X:</label>
+                            <input type="range" id="bgPosXSlider" min="0" max="100" value="50" class="w-32" />
+                            <span id="bgPosXValue" class="text-sm text-foreground w-8">50%</span>
+                        </div>
+
+                        <!-- Background Position Y -->
+                        <div id="bgPosYControl" class="flex items-center gap-2 hidden">
+                            <label for="bgPosYSlider" class="text-sm text-muted-foreground">BG Pos Y:</label>
+                            <input type="range" id="bgPosYSlider" min="0" max="100" value="50" class="w-32" />
+                            <span id="bgPosYValue" class="text-sm text-foreground w-8">50%</span>
                         </div>
                     </div>
 

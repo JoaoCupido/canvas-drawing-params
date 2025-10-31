@@ -147,6 +147,28 @@ import FormInput from '../components/FormInput.astro';
                             max="200"
                     />
 
+                    <!-- Background Position X -->
+                    <FormInput
+                            id="bgPosXInput"
+                            label="Background Position X (0-100%)"
+                            type="number"
+                            value="50"
+                            min="0"
+                            max="100"
+                            note="0% = left, 50% = center, 100% = right"
+                    />
+
+                    <!-- Background Position Y -->
+                    <FormInput
+                            id="bgPosYInput"
+                            label="Background Position Y (0-100%)"
+                            type="number"
+                            value="50"
+                            min="0"
+                            max="100"
+                            note="0% = top, 50% = center, 100% = bottom"
+                    />
+
                     <!-- Grid Controls -->
                     <div class="border-t border-border pt-6">
                         <h3 class="text-lg font-semibold text-foreground mb-4">Grid Settings</h3>

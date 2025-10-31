@@ -65,6 +65,24 @@ import ParameterDoc from '../components/ParameterDoc.astro';
                 />
 
                 <ParameterDoc
+                        name="bgImagePosX"
+                        description="Horizontal position of the background image (0-100%). 0% = left, 50% = center, 100% = right."
+                        type="Number (0-100)"
+                        defaultValue="50"
+                        examples={["/?bgImage=...&bgImagePosX=25"]}
+                        codeExample="?bgImagePosX=75"
+                />
+
+                <ParameterDoc
+                        name="bgImagePosY"
+                        description="Vertical position of the background image (0-100%). 0% = top, 50% = center, 100% = bottom."
+                        type="Number (0-100)"
+                        defaultValue="50"
+                        examples={["/?bgImage=...&bgImagePosY=75"]}
+                        codeExample="?bgImagePosY=25"
+                />
+
+                <ParameterDoc
                         name="bgColor"
                         description="Sets the background color of the canvas. Use URL-encoded hex value."
                         type="URL-encoded hex color"

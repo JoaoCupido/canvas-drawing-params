@@ -34,10 +34,14 @@ function getFormData() {
         colorMode: document.querySelector('input[name="colorMode"]:checked').value,
         customColors: customColorsInput.value,
         toolbarPosition: document.getElementById('toolbarPositionSelect').value,
+
         bgColor: document.getElementById('bgColorInput').value,
         bgImage: document.getElementById('bgImageInput').value,
         bgOpacity: document.getElementById('bgOpacityInput').value,
         bgImageSize: document.getElementById('bgImageSizeInput').value,
+        bgPosX: document.getElementById('bgPosXInput').value,
+        bgPosY: document.getElementById('bgPosYInput').value,
+
         gridEnabled: document.getElementById('gridEnabledCheck').checked,
         gridColor: document.getElementById('gridColorInput').value,
         gridOpacity: document.getElementById('gridOpacityInput').value,
@@ -74,6 +78,10 @@ function buildURLParams(data) {
         params.append('bgImage', data.bgImage);
         if (data.bgOpacity && data.bgOpacity !== '50') params.append('bgOpacity', data.bgOpacity);
         if (data.bgImageSize && data.bgImageSize !== '100') params.append('bgImageSize', data.bgImageSize);
+
+        // Add position parameters if not default (50%)
+        if (data.bgPosX && data.bgPosX !== '50') params.append('bgImagePosX', data.bgPosX);
+        if (data.bgPosY && data.bgPosY !== '50') params.append('bgImagePosY', data.bgPosY);
     }
 
     if (data.gridEnabled) {
