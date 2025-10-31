@@ -5,18 +5,29 @@ const copyBtn = document.getElementById('copyBtn');
 const openBtn = document.getElementById('openBtn');
 const customColorsInput = document.getElementById('customColors');
 const colorModeRadios = document.querySelectorAll('input[name="colorMode"]');
+const hideToolbarCheck = document.getElementById('hideToolbarCheck');
+const toolbarPositionGroup = document.getElementById('toolbarPositionGroup');
 
 // Enable/disable custom colors input
 colorModeRadios.forEach(radio => {
     radio.addEventListener('change', (e) => {
         customColorsInput.disabled = e.target.value === 'all';
+        generateURL();
     });
 });
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
+// Toggle toolbar position visibility
+hideToolbarCheck.addEventListener('change', (e) => {
+    toolbarPositionGroup.style.display = e.target.checked ? 'none' : 'block';
     generateURL();
 });
+
+// Add event listeners to all form inputs
+form.addEventListener('input', generateURL);
+form.addEventListener('change', generateURL);
+
+// Initial generation
+document.addEventListener('DOMContentLoaded', generateURL);
 
 copyBtn.addEventListener('click', copyToClipboard);
 
@@ -34,6 +45,7 @@ function getFormData() {
         colorMode: document.querySelector('input[name="colorMode"]:checked').value,
         customColors: customColorsInput.value,
         toolbarPosition: document.getElementById('toolbarPositionSelect').value,
+        hideToolbar: document.getElementById('hideToolbarCheck').checked,
 
         bgColor: document.getElementById('bgColorInput').value,
         bgImage: document.getElementById('bgImageInput').value,
@@ -64,9 +76,14 @@ function buildURLParams(data) {
     if (data.colorMode === 'all') params.append('colors', '*');
     else if (data.customColors) params.append('colors', data.customColors);
 
-    // Toolbar position (only include if not default 'up')
-    if (data.toolbarPosition && data.toolbarPosition !== 'up') {
+    // Toolbar position (only include if not default 'up' AND not hiding toolbar)
+    if (!data.hideToolbar && data.toolbarPosition && data.toolbarPosition !== 'up') {
         params.append('toolbarPosition', data.toolbarPosition);
+    }
+
+    // Hide toolbar parameter
+    if (data.hideToolbar) {
+        params.append('hideToolbar', 'true');
     }
 
     // Background color (always include if not default white)
@@ -116,8 +133,6 @@ function constructFullURL(params) {
 function displayResult(url) {
     generatedUrlEl.textContent = url;
     openBtn.href = url;
-    resultSection.classList.remove('hidden');
-    resultSection.scrollIntoView({ behavior: 'smooth' });
 }
 
 async function copyToClipboard() {

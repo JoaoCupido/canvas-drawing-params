@@ -61,6 +61,7 @@ class CanvasManager {
 
         // Toolbar position
         this.toolbarPosition = this.urlParams.get('toolbarPosition') || 'up';
+        this.hideToolbar = this.urlParams.get('hideToolbar') === 'true';
 
         // Show inputs configuration
         this.setupShowInputs();
@@ -110,6 +111,18 @@ class CanvasManager {
         this.setupSliders();
         this.setupGridControls();
         this.setupUndoRedo();
+
+        // Apply hideToolbar setting
+        if (this.hideToolbar) {
+            this.hideToolbarUI();
+        }
+    }
+
+    hideToolbarUI() {
+        const toolbar = document.getElementById('toolbar');
+        if (toolbar) {
+            toolbar.style.display = 'none';
+        }
     }
 
     setupTabs() {

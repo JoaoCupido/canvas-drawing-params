@@ -9,10 +9,11 @@ export interface FormInputProps {
     max?: number;
     disabled?: boolean;
     note?: string;
+    className?: string;
 }
 ---
 
-<div>
+<div class={Astro.props.className}>
     <label for={Astro.props.id} class="block text-sm font-medium text-foreground mb-2">
         {Astro.props.label}
     </label>
