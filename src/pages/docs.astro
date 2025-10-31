@@ -29,6 +29,15 @@ import ParameterDoc from '../components/ParameterDoc.astro';
                 />
 
                 <ParameterDoc
+                        name="hideToolbar"
+                        description="When set to true, hides the entire toolbar for a minimal interface. Useful for kiosk mode or simplified drawing experience."
+                        type="Boolean (true/false)"
+                        defaultValue="false"
+                        examples={["/?hideToolbar=true"]}
+                        codeExample="?hideToolbar=true"
+                />
+
+                <ParameterDoc
                         name="toolbarPosition"
                         description="Sets the position of the toolbar. Options: up, down, left, right."
                         type="String (up, down, left, right)"
