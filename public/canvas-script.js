@@ -221,6 +221,7 @@ class CanvasManager {
 
     setupColorButtons() {
         const colorPicker = document.getElementById('colorPicker');
+        const toolDiv = document.getElementById('toolDiv');
 
         const colorButtons = document.getElementById('colorButtons');
         colorButtons.innerHTML = '';
@@ -231,10 +232,12 @@ class CanvasManager {
             case 'down':
                 colorPicker.classList.add("flex-row")
                 colorButtons.classList.add("grid", "grid-rows-2", "grid-flow-col");
+                toolDiv.classList.add("grid", "grid-rows-2", "grid-flow-col");
                 break;
             case 'left':
             case 'right':
                 colorButtons.classList.add("grid", "grid-cols-2");
+                toolDiv.classList.add("grid", "grid-cols-2");
                 break;
         }
 

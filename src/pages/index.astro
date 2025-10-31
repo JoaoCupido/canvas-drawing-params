@@ -1,23 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from 'lucide-astro';
+import { Skull, Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from '@lucide/astro';
 ---
 
 <Layout title="DrawCanvas - Drawing Tool" hideNavbar={true}>
     <main class="min-h-screen bg-background">
         <div class="min-h-screen relative h-screen w-screen">
             <!-- Floating Toolbar -->
-            <div id="toolbar" class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-card border border-border rounded-lg shadow-lg max-w-[95vw] z-50">
+            <div id="toolbar" class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-card border border-border rounded-lg shadow-lg max-w-[95vw] z-50">
                 <!-- Tab Navigation -->
                 <div id="tabNavigation" class="flex flex-wrap border-b border-border">
-                    <button id="generalTab" class="px-4 py-2 font-medium text-primary border-b-2 border-primary transition-colors">
-                        General
+                    <button id="generalTab" class="px-4 py-2 font-medium text-primary border-b-2 border-primary transition-colors flex items-center gap-2">
+                        <Settings class="w-4 h-4" />
                     </button>
-                    <button id="backgroundTab" class="px-4 py-2 font-medium text-muted-foreground hover:text-foreground transition-colors">
-                        Background
+                    <button id="backgroundTab" class="px-4 py-2 font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
+                        <Image class="w-4 h-4" />
                     </button>
-                    <button id="gridTab" class="px-4 py-2 font-medium text-muted-foreground hover:text-foreground transition-colors">
-                        Grid
+                    <button id="gridTab" class="px-4 py-2 font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
+                        <Grid class="w-4 h-4" />
                     </button>
                 </div>
 
@@ -25,23 +25,25 @@ import { Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from 'luc
                 <div id="tabContent" class="px-4">
                     <!-- General Inputs Tab -->
                     <div id="generalContent" class="tab-content flex flex-wrap items-center gap-4">
-                        <!-- Pencil Tool -->
-                        <button id="pencilBtn" class="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity">
-                            Pencil
-                        </button>
+                        <div id="toolDiv" class="flex items-center gap-2">
+                            <!-- Pencil Tool -->
+                            <button id="pencilBtn" class="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
+                                <Pencil class="w-4 h-4" />
+                            </button>
 
-                        <!-- Eraser Tool -->
-                        <button id="eraserBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors hidden">
-                            Eraser
-                        </button>
+                            <!-- Eraser Tool -->
+                            <button id="eraserBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors hidden flex items-center gap-2">
+                                <Eraser class="w-4 h-4" />
+                            </button>
+                        </div>
 
                         <!-- Undo/Redo Buttons -->
-                        <div id="undoRedoControls" class="flex gap-2 hidden">
-                            <button id="undoBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                                Undo
+                        <div id="undoRedoControls" class="flex gap-0 hidden">
+                            <button id="undoBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 rounded-r-none" disabled>
+                                <Undo2 class="w-4 h-4" />
                             </button>
-                            <button id="redoBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                                Redo
+                            <button id="redoBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 rounded-l-none" disabled>
+                                <Redo2 class="w-4 h-4" />
                             </button>
                         </div>
 
@@ -49,7 +51,7 @@ import { Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from 'luc
                         <div id="sizeControl" class="flex items-center gap-2">
                             <label for="sizeSlider" class="text-sm text-muted-foreground">Size:</label>
                             <input type="range" id="sizeSlider" min="1" max="50" value="5" class="w-32" />
-                            <span id="sizeValue" class="text-sm text-foreground w-8">5</span>
+                            <span id="sizeValue" class="text-sm text-foreground ">5</span>
                         </div>
 
                         <!-- Color Picker -->
@@ -59,7 +61,8 @@ import { Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from 'luc
 
                         <!-- Clear Button -->
                         {/*
-                          <button id="clearBtn" class="ml-auto px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors">
+                          <button id="clearBtn" class="ml-auto px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors flex items-center gap-2">
+                            <Trash2 class="w-4 h-4" />
                             Clear Canvas
                           </button>
                         */}
@@ -70,35 +73,35 @@ import { Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from 'luc
                         <!-- Background Color -->
                         <div id="bgColorControl" class="flex items-center gap-2 hidden">
                             <label for="bgColorPicker" class="text-sm text-muted-foreground">BG Color:</label>
-                            <input type="color" id="bgColorPicker" value="#ffffff" class="w-8 h-8 rounded border border-border" />
+                            <input type="color" id="bgColorPicker" value="#ffffff" class=" h-8 rounded border border-border" />
                         </div>
 
                         <!-- Background Opacity -->
                         <div id="opacityControl" class="flex items-center gap-2 hidden">
                             <label for="opacitySlider" class="text-sm text-muted-foreground">BG Image Opacity:</label>
                             <input type="range" id="opacitySlider" min="0" max="100" value="50" class="w-32" />
-                            <span id="opacityValue" class="text-sm text-foreground w-8">50%</span>
+                            <span id="opacityValue" class="text-sm text-foreground ">50%</span>
                         </div>
 
                         <!-- Background Image Size -->
                         <div id="bgSizeControl" class="flex items-center gap-2 hidden">
                             <label for="bgSizeSlider" class="text-sm text-muted-foreground">BG Image Size:</label>
                             <input type="range" id="bgSizeSlider" min="10" max="200" value="100" class="w-32" />
-                            <span id="bgSizeValue" class="text-sm text-foreground w-8">100%</span>
+                            <span id="bgSizeValue" class="text-sm text-foreground ">100%</span>
                         </div>
 
                         <!-- Background Position X -->
                         <div id="bgPosXControl" class="flex items-center gap-2 hidden">
                             <label for="bgPosXSlider" class="text-sm text-muted-foreground">BG Pos X:</label>
                             <input type="range" id="bgPosXSlider" min="0" max="100" value="50" class="w-32" />
-                            <span id="bgPosXValue" class="text-sm text-foreground w-8">50%</span>
+                            <span id="bgPosXValue" class="text-sm text-foreground ">50%</span>
                         </div>
 
                         <!-- Background Position Y -->
                         <div id="bgPosYControl" class="flex items-center gap-2 hidden">
                             <label for="bgPosYSlider" class="text-sm text-muted-foreground">BG Pos Y:</label>
                             <input type="range" id="bgPosYSlider" min="0" max="100" value="50" class="w-32" />
-                            <span id="bgPosYValue" class="text-sm text-foreground w-8">50%</span>
+                            <span id="bgPosYValue" class="text-sm text-foreground ">50%</span>
                         </div>
                     </div>
 
@@ -114,20 +117,20 @@ import { Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from 'luc
                         <div id="gridSizeDiv" class="hidden flex items-center gap-2">
                             <label for="gridSize" class="text-sm text-muted-foreground">Cell Size:</label>
                             <input type="range" id="gridSize" min="10" max="100" value="20" class="w-24" />
-                            <span id="gridSizeValue" class="text-sm text-foreground w-8">20</span>
+                            <span id="gridSizeValue" class="text-sm text-foreground ">20</span>
                         </div>
 
                         <!-- Grid Color -->
                         <div id="gridColorDiv" class="hidden flex items-center gap-2">
                             <label for="gridColor" class="text-sm text-muted-foreground">Color:</label>
-                            <input type="color" id="gridColor" value="#cccccc" class="w-8 h-8 rounded border border-border" />
+                            <input type="color" id="gridColor" value="#cccccc" class=" h-8 rounded border border-border" />
                         </div>
 
                         <!-- Grid Opacity -->
                         <div id="gridOpacityDiv" class="hidden flex items-center gap-2">
                             <label for="gridOpacity" class="text-sm text-muted-foreground">Opacity:</label>
                             <input type="range" id="gridOpacity" min="0" max="100" value="30" class="w-24" />
-                            <span id="gridOpacityValue" class="text-sm text-foreground w-8">30%</span>
+                            <span id="gridOpacityValue" class="text-sm text-foreground ">30%</span>
                         </div>
 
                         <!-- Grid Style -->
