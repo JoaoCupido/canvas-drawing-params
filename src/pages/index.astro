@@ -1,14 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Skull } from '@lucide/astro';
 ---
 
 <Layout title="DrawCanvas - Drawing Tool" hideNavbar={true}>
     <main class="min-h-screen bg-background">
-        <div class="min-h-screen flex flex-col h-[calc(100vh-4rem)]">
-            <!-- Toolbar -->
-            <div id="toolbar" class="bg-card border-b border-border">
+        <div class="min-h-screen relative h-screen w-screen">
+            <!-- Floating Toolbar -->
+            <div id="toolbar" class="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-card border border-border rounded-lg shadow-lg max-w-[95vw] z-50">
                 <!-- Tab Navigation -->
-                <div class="flex border-b border-border mb-4">
+                <div id="tabNavigation" class="flex flex-wrap border-b border-border">
                     <button id="generalTab" class="px-4 py-2 font-medium text-primary border-b-2 border-primary transition-colors">
                         General
                     </button>
@@ -21,9 +22,9 @@ import Layout from '../layouts/Layout.astro';
                 </div>
 
                 <!-- Tab Content -->
-                <div class="space-y-4 px-4 min-h-10 mb-4">
+                <div id="tabContent" class="px-4">
                     <!-- General Inputs Tab -->
-                    <div id="generalContent" class="tab-content flex flex-wrap items-center gap-4 min-h-10">
+                    <div id="generalContent" class="tab-content flex flex-wrap items-center gap-4">
                         <!-- Pencil Tool -->
                         <button id="pencilBtn" class="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity">
                             Pencil
@@ -53,18 +54,19 @@ import Layout from '../layouts/Layout.astro';
 
                         <!-- Color Picker -->
                         <div id="colorPicker" class="flex items-center gap-2">
-                            <label for="colorButtons" class="text-sm text-muted-foreground">Color:</label>
-                            <div id="colorButtons" class="flex gap-2"></div>
+                            <div id="colorButtons" class="grid gap-2"></div>
                         </div>
 
                         <!-- Clear Button -->
-                        <button id="clearBtn" class="ml-auto px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors">
+                        {/*
+                          <button id="clearBtn" class="ml-auto px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors">
                             Clear Canvas
-                        </button>
+                          </button>
+                        */}
                     </div>
 
                     <!-- Background Inputs Tab -->
-                    <div id="backgroundContent" class="tab-content hidden flex flex-wrap items-center gap-4 min-h-10">
+                    <div id="backgroundContent" class="tab-content hidden flex flex-wrap items-center gap-4">
                         <!-- Background Color -->
                         <div id="bgColorControl" class="flex items-center gap-2 hidden">
                             <label for="bgColorPicker" class="text-sm text-muted-foreground">BG Color:</label>
@@ -73,21 +75,21 @@ import Layout from '../layouts/Layout.astro';
 
                         <!-- Background Opacity -->
                         <div id="opacityControl" class="flex items-center gap-2 hidden">
-                            <label for="opacitySlider" class="text-sm text-muted-foreground">BG Opacity:</label>
+                            <label for="opacitySlider" class="text-sm text-muted-foreground">BG Image Opacity:</label>
                             <input type="range" id="opacitySlider" min="0" max="100" value="50" class="w-32" />
                             <span id="opacityValue" class="text-sm text-foreground w-8">50%</span>
                         </div>
 
                         <!-- Background Image Size -->
                         <div id="bgSizeControl" class="flex items-center gap-2 hidden">
-                            <label for="bgSizeSlider" class="text-sm text-muted-foreground">BG Size:</label>
+                            <label for="bgSizeSlider" class="text-sm text-muted-foreground">BG Image Size:</label>
                             <input type="range" id="bgSizeSlider" min="10" max="200" value="100" class="w-32" />
                             <span id="bgSizeValue" class="text-sm text-foreground w-12">100%</span>
                         </div>
                     </div>
 
                     <!-- Grid Inputs Tab -->
-                    <div id="gridContent" class="tab-content hidden flex flex-wrap items-center gap-4 min-h-10">
+                    <div id="gridContent" class="tab-content hidden flex flex-wrap items-center gap-4">
                         <!-- Grid Toggle -->
                         <div id="gridToggleDiv" class="hidden flex items-center gap-2">
                             <label for="gridToggle" class="text-sm text-muted-foreground">Grid:</label>
@@ -128,12 +130,12 @@ import Layout from '../layouts/Layout.astro';
                 </div>
             </div>
 
-            <!-- Canvas Container -->
-            <div class="flex-1 relative overflow-hidden">
+            <!-- Canvas Container - Full Screen -->
+            <div class="absolute inset-0">
                 <canvas id="bgColorCanvas" class="absolute inset-0"></canvas>
                 <canvas id="bgImageCanvas" class="absolute inset-0"></canvas>
                 <canvas id="gridCanvas" class="absolute inset-0 pointer-events-none"></canvas>
-                <canvas id="drawingCanvas" class="absolute inset-0 cursor-crosshair"></canvas>
+                <canvas id="drawingCanvas" class="absolute inset-0"></canvas>
             </div>
         </div>
     </main>

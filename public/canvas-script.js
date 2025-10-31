@@ -119,29 +119,25 @@ class CanvasManager {
 
         this.generalTab.onclick = () => this.switchTab('general');
 
-        // Only set up background tab if background inputs are enabled
         if (this.showInputs.backgroundInputs) {
             this.backgroundTab.onclick = () => this.switchTab('background');
         } else {
             this.backgroundTab.style.display = 'none';
         }
 
-        // Only set up grid tab if grid inputs are enabled
         if (this.showInputs.gridInputs) {
             this.gridTab.onclick = () => this.switchTab('grid');
         } else {
             this.gridTab.style.display = 'none';
         }
 
-        // Set initial tab
         this.switchTab('general');
     }
 
     switchTab(tabName) {
-        // Reset all tabs
         [this.generalTab, this.backgroundTab, this.gridTab].forEach(tab => {
             if (tab.style.display !== 'none') {
-                tab.classList.remove('text-primary', 'border-b-2', 'border-primary');
+                tab.classList.remove('text-primary', 'border-b-2', 'border-primary', 'border-r-2');
                 tab.classList.add('text-muted-foreground');
             }
         });
@@ -150,25 +146,36 @@ class CanvasManager {
             content.classList.add('hidden');
         });
 
-        // Activate selected tab
+        const isVertical = this.toolbarPosition === 'left' || this.toolbarPosition === 'right';
+        const borderClass = isVertical ? 'border-b-2' : 'border-b-2';
+
         switch(tabName) {
             case 'general':
-                this.generalTab.classList.add('text-primary', 'border-b-2', 'border-primary');
+                this.generalTab.classList.add('text-primary', borderClass, 'border-primary');
                 this.generalTab.classList.remove('text-muted-foreground');
                 this.generalContent.classList.remove('hidden');
+                if (isVertical) {
+                    this.generalContent.classList.add('flex', 'flex-col');
+                }
                 break;
             case 'background':
                 if (this.showInputs.backgroundInputs) {
-                    this.backgroundTab.classList.add('text-primary', 'border-b-2', 'border-primary');
+                    this.backgroundTab.classList.add('text-primary', borderClass, 'border-primary');
                     this.backgroundTab.classList.remove('text-muted-foreground');
                     this.backgroundContent.classList.remove('hidden');
+                    if (isVertical) {
+                        this.backgroundContent.classList.add('flex', 'flex-col');
+                    }
                 }
                 break;
             case 'grid':
                 if (this.showInputs.gridInputs) {
-                    this.gridTab.classList.add('text-primary', 'border-b-2', 'border-primary');
+                    this.gridTab.classList.add('text-primary', borderClass, 'border-primary');
                     this.gridTab.classList.remove('text-muted-foreground');
                     this.gridContent.classList.remove('hidden');
+                    if (isVertical) {
+                        this.gridContent.classList.add('flex', 'flex-col');
+                    }
                 }
                 break;
         }
@@ -176,36 +183,56 @@ class CanvasManager {
 
     applyToolbarPosition() {
         const toolbar = document.getElementById('toolbar');
-        const mainContainer = document.querySelector('main > div');
+        const tabContent = document.getElementById('tabContent');
+        const tabNavigation = document.getElementById('tabNavigation');
 
-        // Remove existing classes
-        toolbar.classList.remove('border-b', 'border-r', 'border-l', 'border-t');
-        mainContainer.classList.remove('flex-col', 'flex-col-reverse', 'flex-row', 'flex-row-reverse');
+        // Remove all position and orientation classes
+        toolbar.classList.remove('top-4', 'bottom-4', 'left-4', 'right-4', 'left-1/2', 'transform', '-translate-x-1/2', '-translate-y-1/2', 'max-w-[95vw]', 'max-h-[95vh]', 'w-auto', 'h-auto');
+        tabNavigation.classList.remove('flex-col', 'border-b', 'border-r');
+        tabContent.classList.remove('px-4', 'py-3', 'px-3', 'py-4');
 
         switch(this.toolbarPosition) {
             case 'up':
-                toolbar.classList.add('border-b');
-                mainContainer.classList.add('flex-col');
+                toolbar.classList.add('top-4', 'left-1/2', 'transform', '-translate-x-1/2', 'max-w-[95vw]', 'w-full');
+                tabNavigation.classList.add('border-b');
+                tabContent.classList.add('px-4', 'py-3');
                 break;
             case 'down':
-                toolbar.classList.add('border-t');
-                mainContainer.classList.add('flex-col-reverse');
+                toolbar.classList.add('bottom-4', 'left-1/2', 'transform', '-translate-x-1/2', 'max-w-[95vw]', 'w-full');
+                tabNavigation.classList.add('border-b');
+                tabContent.classList.add('px-4', 'py-3');
                 break;
             case 'left':
-                toolbar.classList.add('border-r');
-                mainContainer.classList.add('flex-row');
+                toolbar.classList.add('left-4', 'top-1/2', 'transform', '-translate-y-1/2', 'max-h-[95vh]', 'h-full');
+                tabNavigation.classList.add('flex-row', 'border-b');
+                tabContent.classList.add('px-3', 'py-4');
                 break;
             case 'right':
-                toolbar.classList.add('border-l');
-                mainContainer.classList.add('flex-row-reverse');
+                toolbar.classList.add('right-4', 'top-1/2', 'transform', '-translate-y-1/2', 'max-h-[95vh]', 'h-full');
+                tabNavigation.classList.add('flex-row', 'border-b');
+                tabContent.classList.add('px-3', 'py-4');
                 break;
         }
     }
 
     setupColorButtons() {
+        const colorPicker = document.getElementById('colorPicker');
+
         const colorButtons = document.getElementById('colorButtons');
         colorButtons.innerHTML = '';
         this.selectedColorButton = null;
+
+        switch(this.toolbarPosition) {
+            case 'up':
+            case 'down':
+                colorPicker.classList.add("flex-row")
+                colorButtons.classList.add("grid", "grid-rows-2", "grid-flow-col");
+                break;
+            case 'left':
+            case 'right':
+                colorButtons.classList.add("grid", "grid-cols-2");
+                break;
+        }
 
         this.availableColors.forEach((color, index) => {
             const btn = document.createElement('button');
@@ -419,10 +446,18 @@ class CanvasManager {
         };
 
         // Clear button
-        document.getElementById('clearBtn').onclick = () => {
+        /*
+        const clearBtn = document.getElementById('clearBtn');
+        if (this.toolbarPosition === 'left' || this.toolbarPosition === 'right') {
+            clearBtn.classList.remove("ml-auto");
+            clearBtn.classList.add("mt-auto");
+        }
+        clearBtn.onclick = () => {
             this.saveState();
             this.drawingCtx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
         };
+
+         */
     }
 
     setupGridControls() {
