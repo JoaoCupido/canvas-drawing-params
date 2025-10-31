@@ -98,7 +98,7 @@ function buildURLParams(data) {
         if (data.bgImageSize && data.bgImageSize !== '100') params.append('bgImageSize', data.bgImageSize);
 
         // Add position parameters if not default (50%)
-        if (data.bgPosX && data.bgPosX !== '50') params.append('bgImagePosX', data.bgPosX)
+        if (data.bgPosX && data.bgPosX !== '50') params.append('bgImagePosX', data.bgPosX);
         if (data.bgPosY && data.bgPosY !== '50') params.append('bgImagePosY', data.bgPosY);
     }
 
