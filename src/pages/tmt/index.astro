@@ -378,76 +378,7 @@ import Layout from '../../layouts/Layout.astro';
             }
 
             function getNextExpectedItem() {
-                let expectedItem;
-
-                switch(symbolType) {
-                    case 'numbers':
-                        expectedItem = currentIndex + 1;
-                        break;
-                    case 'letters':
-                        const letterIndex = currentIndex;
-                        expectedItem = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[letterIndex];
-                        break;
-                    case 'numbers-letters':
-                        if (currentIndex % 2 === 0) {
-                            // Even index: number
-                            expectedItem = Math.floor(currentIndex / 2) + 1;
-                        } else {
-                            // Odd index: letter
-                            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                            expectedItem = letters[Math.floor(currentIndex / 2)];
-                        }
-                        break;
-                    case 'letters-numbers':
-                        if (currentIndex % 2 === 0) {
-                            // Even index: letter
-                            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                            expectedItem = letters[Math.floor(currentIndex / 2)];
-                        } else {
-                            // Odd index: number
-                            expectedItem = Math.floor(currentIndex / 2) + 1;
-                        }
-                        break;
-                    default:
-                        expectedItem = currentIndex + 1;
-                }
-
-                return reverseOrder ? getReversedExpectedItem(expectedItem) : expectedItem;
-            }
-
-            function getReversedExpectedItem(currentExpected) {
-                // For reverse order, we need to calculate what the expected item should be
-                // based on the reversed trail data
-                const totalItems = trailData.length;
-
-                if (symbolType === 'numbers') {
-                    return totalItems - currentIndex;
-                } else if (symbolType === 'letters') {
-                    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                    return letters[totalItems - 1 - currentIndex];
-                } else {
-                    // For mixed modes, we need to check what's at the current position in the original order
-                    const originalOrder = generateOriginalTrailData();
-                    return originalOrder[currentIndex];
-                }
-            }
-
-            function generateOriginalTrailData() {
-                const numbers = Array.from({ length: Math.ceil(trailLength/2) }, (_, i) => i + 1);
-                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, Math.floor(trailLength/2)).split('');
-
-                switch(symbolType) {
-                    case 'numbers':
-                        return Array.from({ length: trailLength }, (_, i) => i + 1);
-                    case 'letters':
-                        return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, trailLength).split('');
-                    case 'numbers-letters':
-                        return numbers.flatMap((num, i) => [num, letters[i]]).slice(0, trailLength);
-                    case 'letters-numbers':
-                        return letters.flatMap((letter, i) => [letter, numbers[i]]).slice(0, trailLength);
-                    default:
-                        return Array.from({ length: trailLength }, (_, i) => i + 1);
-                }
+                return trailData[currentIndex];
             }
 
             // Test control functions

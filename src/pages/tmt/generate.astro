@@ -85,7 +85,7 @@ import FormInput from '../../components/FormInput.astro';
 
                             <div>
                                 <label class="flex items-center gap-2">
-                                    <input type="checkbox" id="allowWrongSelectionsCheck" class="text-primary" />
+                                    <input type="checkbox" id="allowWrongSelectionsCheck" checked class="text-primary" />
                                     <span class="text-foreground font-medium">Allow Wrong Selections</span>
                                 </label>
                                 <p class="text-sm text-muted-foreground mt-1 ml-6">
@@ -95,7 +95,7 @@ import FormInput from '../../components/FormInput.astro';
 
                             <div>
                                 <label class="flex items-center gap-2">
-                                    <input type="checkbox" id="showWrongSelectionsCheck" class="text-primary" />
+                                    <input type="checkbox" id="showWrongSelectionsCheck" checked class="text-primary" />
                                     <span class="text-foreground font-medium">Show Wrong Selections</span>
                                 </label>
                                 <p class="text-sm text-muted-foreground mt-1 ml-6">
@@ -177,7 +177,7 @@ import FormInput from '../../components/FormInput.astro';
                             ></textarea>
                             <p class="text-sm text-muted-foreground mt-2">
                                 Optional: Provide exact positions as percentage coordinates (0-100).
-                                Example: <code class="bg-secondary px-1 rounded">${"[{\"x\": 10, \"y\": 20}, {\"x\": 30, \"y\": 40}]"}</code>
+                                Example: <code class="bg-secondary px-1 rounded">{"[{\"x\": 10, \"y\": 20}, {\"x\": 30, \"y\": 40}]"}</code>
                                 where x: 10 means 10% from left, y: 20 means 20% from top.
                             </p>
                         </div>
