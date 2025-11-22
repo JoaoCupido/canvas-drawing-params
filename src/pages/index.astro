@@ -1,161 +1,104 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Skull, Pencil, Eraser, Undo2, Redo2, Trash2, Image, Grid, Settings } from '@lucide/astro';
 ---
 
-<Layout title="DrawCanvas - Drawing Tool" hideNavbar={true}>
-    <main class="min-h-screen bg-background">
-        <div class="min-h-screen relative h-screen w-screen">
-            <!-- Floating Toolbar -->
-            <div id="toolbar" class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-card border border-border rounded-lg shadow-lg max-w-[95vw] z-50">
-                <!-- Tab Navigation -->
-                <div id="tabNavigation" class="flex flex-wrap border-b border-border">
-                    <button id="generalTab" class="px-4 py-2 font-medium text-primary border-b-2 border-primary transition-colors flex items-center gap-2">
-                        <Settings class="w-4 h-4" />
-                    </button>
-                    <button id="backgroundTab" class="px-4 py-2 font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
-                        <Image class="w-4 h-4" />
-                    </button>
-                    <button id="gridTab" class="px-4 py-2 font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
-                        <Grid class="w-4 h-4" />
-                    </button>
-                </div>
-
-                <!-- Tab Content -->
-                <div id="tabContent" class="px-4">
-                    <!-- General Inputs Tab -->
-                    <div id="generalContent" class="tab-content flex flex-wrap items-center gap-4">
-                        <div id="toolDiv" class="flex items-center gap-2">
-                            <!-- Pencil Tool -->
-                            <button id="pencilBtn" class="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
-                                <Pencil class="w-4 h-4" />
-                            </button>
-
-                            <!-- Eraser Tool -->
-                            <button id="eraserBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors hidden flex items-center gap-2">
-                                <Eraser class="w-4 h-4" />
-                            </button>
-                        </div>
-
-                        <!-- Undo/Redo Buttons -->
-                        <div id="undoRedoControls" class="flex gap-0 hidden">
-                            <button id="undoBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 rounded-r-none" disabled>
-                                <Undo2 class="w-4 h-4" />
-                            </button>
-                            <button id="redoBtn" class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 rounded-l-none" disabled>
-                                <Redo2 class="w-4 h-4" />
-                            </button>
-                        </div>
-
-                        <!-- Size Control -->
-                        <div id="sizeControl" class="flex items-center gap-2">
-                            <label for="sizeSlider" class="text-sm text-muted-foreground">Size:</label>
-                            <input type="range" id="sizeSlider" min="1" max="50" value="5" class="w-32" />
-                            <span id="sizeValue" class="text-sm text-foreground ">5</span>
-                        </div>
-
-                        <!-- Color Picker -->
-                        <div id="colorPicker" class="flex items-center gap-2">
-                            <div id="colorButtons" class="grid gap-2"></div>
-                        </div>
-
-                        <!-- Clear Button -->
-                        {/*
-                          <button id="clearBtn" class="ml-auto px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors flex items-center gap-2">
-                            <Trash2 class="w-4 h-4" />
-                            Clear Canvas
-                          </button>
-                        */}
-                    </div>
-
-                    <!-- Background Inputs Tab -->
-                    <div id="backgroundContent" class="tab-content hidden flex flex-wrap items-center gap-4">
-                        <!-- Background Color -->
-                        <div id="bgColorControl" class="flex items-center gap-2 hidden">
-                            <label for="bgColorPicker" class="text-sm text-muted-foreground">BG Color:</label>
-                            <input type="color" id="bgColorPicker" value="#ffffff" class=" h-8 rounded border border-border" />
-                        </div>
-
-                        <!-- Background Opacity -->
-                        <div id="opacityControl" class="flex items-center gap-2 hidden">
-                            <label for="opacitySlider" class="text-sm text-muted-foreground">BG Image Opacity:</label>
-                            <input type="range" id="opacitySlider" min="0" max="100" value="50" class="w-32" />
-                            <span id="opacityValue" class="text-sm text-foreground ">50%</span>
-                        </div>
-
-                        <!-- Background Image Size -->
-                        <div id="bgSizeControl" class="flex items-center gap-2 hidden">
-                            <label for="bgSizeSlider" class="text-sm text-muted-foreground">BG Image Size:</label>
-                            <input type="range" id="bgSizeSlider" min="10" max="200" value="100" class="w-32" />
-                            <span id="bgSizeValue" class="text-sm text-foreground ">100%</span>
-                        </div>
-
-                        <!-- Background Position X -->
-                        <div id="bgPosXControl" class="flex items-center gap-2 hidden">
-                            <label for="bgPosXSlider" class="text-sm text-muted-foreground">BG Pos X:</label>
-                            <input type="range" id="bgPosXSlider" min="0" max="100" value="50" class="w-32" />
-                            <span id="bgPosXValue" class="text-sm text-foreground ">50%</span>
-                        </div>
-
-                        <!-- Background Position Y -->
-                        <div id="bgPosYControl" class="flex items-center gap-2 hidden">
-                            <label for="bgPosYSlider" class="text-sm text-muted-foreground">BG Pos Y:</label>
-                            <input type="range" id="bgPosYSlider" min="0" max="100" value="50" class="w-32" />
-                            <span id="bgPosYValue" class="text-sm text-foreground ">50%</span>
-                        </div>
-                    </div>
-
-                    <!-- Grid Inputs Tab -->
-                    <div id="gridContent" class="tab-content hidden flex flex-wrap items-center gap-4">
-                        <!-- Grid Toggle -->
-                        <div id="gridToggleDiv" class="hidden flex items-center gap-2">
-                            <label for="gridToggle" class="text-sm text-muted-foreground">Grid:</label>
-                            <input type="checkbox" id="gridToggle" class="w-4 h-4 text-primary rounded" />
-                        </div>
-
-                        <!-- Grid Size -->
-                        <div id="gridSizeDiv" class="hidden flex items-center gap-2">
-                            <label for="gridSize" class="text-sm text-muted-foreground">Cell Size:</label>
-                            <input type="range" id="gridSize" min="10" max="100" value="20" class="w-24" />
-                            <span id="gridSizeValue" class="text-sm text-foreground ">20</span>
-                        </div>
-
-                        <!-- Grid Color -->
-                        <div id="gridColorDiv" class="hidden flex items-center gap-2">
-                            <label for="gridColor" class="text-sm text-muted-foreground">Color:</label>
-                            <input type="color" id="gridColor" value="#cccccc" class=" h-8 rounded border border-border" />
-                        </div>
-
-                        <!-- Grid Opacity -->
-                        <div id="gridOpacityDiv" class="hidden flex items-center gap-2">
-                            <label for="gridOpacity" class="text-sm text-muted-foreground">Opacity:</label>
-                            <input type="range" id="gridOpacity" min="0" max="100" value="30" class="w-24" />
-                            <span id="gridOpacityValue" class="text-sm text-foreground ">30%</span>
-                        </div>
-
-                        <!-- Grid Style -->
-                        <div id="gridStyleDiv" class="hidden flex items-center gap-2">
-                            <label for="gridStyle" class="text-sm text-muted-foreground">Style:</label>
-                            <select id="gridStyle" class="px-2 py-1 bg-secondary border border-border rounded text-sm">
-                                <option value="solid">Solid</option>
-                                <option value="dotted">Dotted</option>
-                                <option value="dashed">Dashed</option>
-                                <option value="sparse">Sparse</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+<Layout title="Neuro Exercises - Main Menu">
+    <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+        <div class="min-h-screen mx-auto max-w-4xl">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-foreground mb-4">Neuro Exercises</h1>
+                <p class="text-muted-foreground text-lg">Select an exercise to begin</p>
             </div>
 
-            <!-- Canvas Container - Full Screen -->
-            <div class="absolute inset-0">
-                <canvas id="bgColorCanvas" class="absolute inset-0"></canvas>
-                <canvas id="bgImageCanvas" class="absolute inset-0"></canvas>
-                <canvas id="gridCanvas" class="absolute inset-0 pointer-events-none"></canvas>
-                <canvas id="drawingCanvas" class="absolute inset-0"></canvas>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Drawing Exercise Card -->
+                <div class="bg-card border border-border rounded-lg overflow-hidden">
+                    <a
+                            href="/canvas-drawing-params/drawing"
+                            class="block p-6 hover:bg-accent/50 transition-colors group"
+                    >
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Drawing Canvas</h3>
+                            <p class="text-muted-foreground">Free-form drawing with customizable tools</p>
+                        </div>
+                    </a>
+
+                    <!-- Subcards -->
+                    <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
+                        <a
+                                href="/canvas-drawing-params/drawing/docs"
+                                class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
+                        >
+                            <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                Documentation
+                            </div>
+                        </a>
+                        <a
+                                href="/canvas-drawing-params/drawing/generate"
+                                class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
+                        >
+                            <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                                </svg>
+                                Generate URL
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Trail Making Test Card -->
+                <div class="bg-card border border-border rounded-lg overflow-hidden">
+                    <a
+                            href="/canvas-drawing-params/tmt"
+                            class="block p-6 hover:bg-accent/50 transition-colors group"
+                    >
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Trail Making Test</h3>
+                            <p class="text-muted-foreground">Cognitive assessment connecting sequences</p>
+                        </div>
+                    </a>
+
+                    <!-- Subcards -->
+                    <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
+                        <a
+                                href="/canvas-drawing-params/tmt/docs"
+                                class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
+                        >
+                            <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                Documentation
+                            </div>
+                        </a>
+                        <a
+                                href="/canvas-drawing-params/tmt/generate"
+                                class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
+                        >
+                            <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                                </svg>
+                                Generate URL
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
-
-    <script is:inline src="/canvas-drawing-params/canvas-script.js"></script>
 </Layout>

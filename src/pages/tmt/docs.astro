@@ -1,0 +1,132 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ParameterDoc from '../../components/ParameterDoc.astro';
+---
+
+<Layout title="TMT API Documentation - Neuro Exercises">
+    <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+        <div class="min-h-screen mx-auto max-w-4xl">
+            <h1 class="text-4xl font-bold text-foreground mb-2">TMT API Documentation</h1>
+            <p class="text-muted-foreground mb-8">Learn how to configure the Trail Making Test using URL parameters</p>
+
+            <div class="space-y-8">
+                <ParameterDoc
+                        name="trailLength"
+                        description="Sets the total number of items in the trail. For numbers-letters mode, this should be an even number."
+                        type="Number"
+                        defaultValue="10"
+                        examples={["/?trailLength=8", "/?trailLength=16"]}
+                        codeExample="?trailLength=12"
+                />
+
+                <ParameterDoc
+                        name="numberRadius"
+                        description="Controls the size of the clickable circles in pixels."
+                        type="Number"
+                        defaultValue="30"
+                        examples={["/?numberRadius=25", "/?numberRadius=40"]}
+                        codeExample="?numberRadius=35"
+                />
+
+                <ParameterDoc
+                        name="symbolType"
+                        description="Defines the type and sequence of symbols. Options: numbers, letters, numbers-letters, letters-numbers."
+                        type="String"
+                        defaultValue="numbers"
+                        examples={["/?symbolType=letters", "/?symbolType=numbers-letters"]}
+                        codeExample="?symbolType=letters-numbers"
+                />
+
+                <ParameterDoc
+                        name="reverseOrder"
+                        description="When set to true, reverses the order of the symbols."
+                        type="Boolean (true/false)"
+                        defaultValue="false"
+                        examples={["/?reverseOrder=true", "/?symbolType=numbers&reverseOrder=true"]}
+                        codeExample="?reverseOrder=true"
+                />
+
+                <ParameterDoc
+                        name="showTimer"
+                        description="Shows or hides the timer display during the test."
+                        type="Boolean (true/false)"
+                        defaultValue="true"
+                        examples={["/?showTimer=false"]}
+                        codeExample="?showTimer=false"
+                />
+
+                <ParameterDoc
+                        name="customPositions"
+                        description="Sets custom positions for dots as percentage coordinates (0-100). Uses URL-encoded JSON array of {x, y} objects."
+                        type="URL-encoded JSON"
+                        defaultValue="None"
+                        examples={[]}
+                        codeExample="?customPositions=%5B%7B%22x%22%3A10%2C%22y%22%3A20%7D%2C%7B%22x%22%3A30%2C%22y%22%3A40%7D%5D"
+                />
+
+                <ParameterDoc
+                        name="bgImage"
+                        description="Sets a background image URL for the test canvas."
+                        type="URL-encoded image URL"
+                        defaultValue="None"
+                        examples={[]}
+                        codeExample="?bgImage=https://example.com/background.jpg"
+                />
+
+                <ParameterDoc
+                        name="bgColor"
+                        description="Sets the background color of the canvas. Use URL-encoded hex value."
+                        type="URL-encoded hex color"
+                        defaultValue="#ffffff"
+                        examples={[]}
+                        codeExample="?bgColor=%23000000"
+                />
+
+                <ParameterDoc
+                        name="bgOpacity"
+                        description="Controls the opacity of the background image (0-100)."
+                        type="Number (0-100)"
+                        defaultValue="50"
+                        examples={["/?bgOpacity=30", "/?bgOpacity=75"]}
+                        codeExample="?bgOpacity=25"
+                />
+
+                <!-- Complete Example -->
+                <div class="bg-primary/10 border border-primary rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">Complete Example</h2>
+                    <p class="text-muted-foreground mb-4">A full TMT configuration example with custom positions:</p>
+                    <div class="bg-secondary rounded-lg p-4 overflow-x-auto">
+                        <code class="text-sm text-foreground whitespace-nowrap">
+                            {"/tmt?trailLength=5&numberRadius=35&symbolType=numbers&reverseOrder=false&showTimer=true&customPositions=%5B%7B%22x%22%3A10%2C%22y%22%3A20%7D%2C%7B%22x%22%3A30%2C%22y%22%3A40%7D%2C%7B%22x%22%3A50%2C%22y%22%3A60%7D%2C%7B%22x%22%3A70%2C%22y%22%3A30%7D%2C%7B%22x%22%3A90%2C%22y%22%3A80%7D%5D"}
+                        </code>
+                    </div>
+                </div>
+
+                <!-- Custom Positions Format -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <h2 class="text-2xl font-bold text-foreground mb-3">Custom Positions Format</h2>
+                    <p class="text-muted-foreground mb-4">
+                        Custom positions use percentage-based coordinates (0-100) to ensure consistent placement across different screen sizes.
+                    </p>
+
+                    <div class="bg-secondary rounded-lg p-4 mb-4">
+                        <pre class="text-sm text-foreground"><code>${
+                            "[\n" +
+                            "                            {\"x\": 10, \"y\": 20},  // 10% from left, 20% from top\n" +
+                            "                            {\"x\": 30, \"y\": 40},  // 30% from left, 40% from top\n" +
+                            "                            {\"x\": 50, \"y\": 60},  // 50% from left, 60% from top\n" +
+                            "                            {\"x\": 70, \"y\": 30},  // 70% from left, 30% from top\n" +
+                            "                            {\"x\": 90, \"y\": 80}   // 90% from left, 80% from top\n" +
+                            "                        ]"
+                        }</code></pre>
+                    </div>
+
+                    <p class="text-muted-foreground">
+                        The number of positions should match the trail length. If fewer positions are provided,
+                        the remaining dots will be placed randomly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>

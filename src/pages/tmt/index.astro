@@ -1,0 +1,493 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Trail Making Test - Neuro Exercises" hideNavbar={true}>
+    <main class="min-h-screen bg-background relative">
+        <div class="absolute inset-0">
+            <!-- TMT Container -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <canvas id="trailCanvas" class="w-full h-full max-w-full max-h-full"></canvas>
+            </div>
+
+            <!-- Timer Display -->
+            <div id="timer" class="absolute top-4 right-4 bg-card border border-border rounded-lg px-4 py-2 text-foreground font-medium shadow-lg w-36 text-center">
+                0
+            </div>
+
+            <!-- Results Popup -->
+            <div id="popup" class="absolute inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+                <div class="bg-card border border-border rounded-lg p-8 w-1/3 h-1/3 mx-4 shadow-xl flex flex-col">
+                    <h3 class="text-2xl font-bold text-foreground mb-4">Test Completed!</h3>
+                    <div class="space-y-3 mb-6">
+                        <p id="popupTimer" class="text-foreground">Time: 0 seconds</p>
+                        <p id="popupErrors" class="text-foreground">Errors: 0</p>
+                    </div>
+                    <div class="flex gap-4 mt-auto">
+                        <button id="restartButton" class="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity">
+                            Restart Test
+                        </button>
+                        <a
+                                href="/canvas-drawing-params"
+                                class="flex-1 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors text-center"
+                        >
+                            Back to Menu
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script is:inline>
+        (async () => {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Configuration with URL parameters
+            const trailLength = parseInt(urlParams.get('trailLength')) || 10;
+            const numberRadius = parseInt(urlParams.get('numberRadius')) || 30;
+            const showTimer = urlParams.get('showTimer') !== 'false';
+            const symbolType = urlParams.get('symbolType') || 'numbers'; // 'numbers', 'letters', 'numbers-letters', 'letters-numbers'
+            const reverseOrder = urlParams.get('reverseOrder') === 'true'; // New parameter
+            const bgImage = urlParams.get('bgImage');
+            const bgColor = urlParams.get('bgColor')?.replace("%23", "#") || '#ffffff';
+            const bgOpacity = parseInt(urlParams.get('bgOpacity')) || 50;
+
+            // New: Custom dot positions parameter
+            const customPositions = urlParams.get('customPositions');
+
+            // Generate trail data based on symbol type
+            function generateTrailData() {
+                const numbers = Array.from({ length: Math.ceil(trailLength/2) }, (_, i) => i + 1);
+                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, Math.floor(trailLength/2)).split('');
+
+                switch(symbolType) {
+                    case 'numbers':
+                        return Array.from({ length: trailLength }, (_, i) => i + 1);
+                    case 'letters':
+                        return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, trailLength).split('');
+                    case 'numbers-letters':
+                        return numbers.flatMap((num, i) => [num, letters[i]]).slice(0, trailLength);
+                    case 'letters-numbers':
+                        return letters.flatMap((letter, i) => [letter, numbers[i]]).slice(0, trailLength);
+                    default:
+                        return Array.from({ length: trailLength }, (_, i) => i + 1);
+                }
+            }
+
+            const trailData = generateTrailData();
+
+            // Apply reverse order if needed
+            if (reverseOrder) {
+                trailData.reverse();
+            }
+
+            // Parse custom positions if provided
+            function parseCustomPositions(customPositionsString) {
+                if (!customPositionsString) return null;
+
+                try {
+                    // URL decode first, then parse JSON
+                    const decodedString = decodeURIComponent(customPositionsString);
+                    const positions = JSON.parse(decodedString);
+                    if (!Array.isArray(positions)) return null;
+
+                    // Validate structure
+                    const isValid = positions.every(pos =>
+                        pos &&
+                        typeof pos.x === 'number' &&
+                        typeof pos.y === 'number' &&
+                        pos.x >= 0 &&
+                        pos.y >= 0
+                    );
+
+                    return isValid ? positions : null;
+                } catch (error) {
+                    console.error('Error parsing custom positions:', error);
+                    return null;
+                }
+            }
+
+            const customPositionsArray = parseCustomPositions(customPositions);
+
+            // State variables
+            let currentIndex = 0;
+            let prevNumberX, prevNumberY;
+            let canvas = document.getElementById('trailCanvas');
+            let ctx = canvas.getContext('2d');
+            let selectedItems = [];
+            let errors = 0;
+            let startTime, endTime;
+            let popupTimer = 0;
+            let timerInterval;
+            let items = {};
+            let completeTherapyLog = [];
+            let bgImageElement = null;
+
+            // DOM Elements
+            const timerElement = document.getElementById('timer');
+            const popup = document.getElementById('popup');
+            const popupTimerElement = document.getElementById('popupTimer');
+            const popupErrorsElement = document.getElementById('popupErrors');
+            const restartButton = document.getElementById('restartButton');
+
+            // Show/hide timer based on URL parameter
+            if (!showTimer) {
+                timerElement.style.display = 'none';
+            }
+
+            // Load background image if provided
+            function loadBackgroundImage() {
+                if (!bgImage) return;
+
+                bgImageElement = new Image();
+                bgImageElement.crossOrigin = 'anonymous';
+                bgImageElement.onload = () => {
+                    drawBackground();
+                    drawItems();
+                };
+                bgImageElement.src = bgImage;
+            }
+
+            function drawBackground() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw background color
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw background image if loaded
+                if (bgImageElement && bgImageElement.complete) {
+                    ctx.globalAlpha = bgOpacity / 100;
+                    // Scale image to fit canvas while maintaining aspect ratio
+                    const scale = Math.max(canvas.width / bgImageElement.width, canvas.height / bgImageElement.height);
+                    const x = (canvas.width - bgImageElement.width * scale) / 2;
+                    const y = (canvas.height - bgImageElement.height * scale) / 2;
+                    ctx.drawImage(bgImageElement, x, y, bgImageElement.width * scale, bgImageElement.height * scale);
+                    ctx.globalAlpha = 1;
+                }
+            }
+
+            // Timer functions
+            function updateTimer() {
+                const currentTime = new Date();
+                const timeInSeconds = (currentTime - startTime) / 1000;
+                timerElement.textContent = `${timeInSeconds.toFixed(2)}`;
+                popupTimer = timeInSeconds;
+            }
+
+            function startTimer() {
+                startTime = new Date();
+                timerInterval = setInterval(updateTimer, 100);
+            }
+
+            function stopTimer() {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+            }
+
+            // UI functions
+            function showPopup() {
+                popupTimerElement.textContent = `Time: ${popupTimer.toFixed(2)}s`;
+                popupErrorsElement.textContent = `Errors: ${errors}`;
+                popup.classList.remove('hidden');
+            }
+
+            function hidePopup() {
+                popup.classList.add('hidden');
+            }
+
+            // Canvas functions
+            function resizeCanvas() {
+                const container = canvas.parentElement;
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+                drawBackground();
+                drawItems();
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            function createLine(x1, y1, x2, y2) {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = '#3b82f6';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            function createItem(x, y, item) {
+                // Draw circle
+                ctx.beginPath();
+                ctx.arc(x, y, numberRadius, 0, Math.PI * 2);
+                ctx.fillStyle = selectedItems.includes(item) ? '#6b7280' : '#ffffff';
+                ctx.fill();
+                ctx.strokeStyle = selectedItems.includes(item) ? '#4b5563' : '#374151';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.closePath();
+
+                // Draw text
+                ctx.font = 'bold 18px Arial';
+                ctx.fillStyle = selectedItems.includes(item) ? '#ffffff' : '#1f2937';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(item, x, y);
+            }
+
+            function checkOverlap(x, y, items) {
+                for (let item in items) {
+                    const itemX = items[item].x;
+                    const itemY = items[item].y;
+                    const distance = Math.sqrt((x - itemX) ** 2 + (y - itemY) ** 2);
+                    if (distance < numberRadius * 2.5) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function generateRandomPosition(items) {
+                let x, y;
+                let attempts = 0;
+                const maxAttempts = 100;
+
+                do {
+                    x = Math.floor(Math.random() * (canvas.width - 2 * numberRadius)) + numberRadius;
+                    y = Math.floor(Math.random() * (canvas.height - 2 * numberRadius)) + numberRadius;
+                    attempts++;
+                    if (attempts > maxAttempts) {
+                        break;
+                    }
+                } while (checkOverlap(x, y, items));
+
+                return { x, y };
+            }
+
+            function drawItems() {
+                drawBackground();
+                for (let item in items) {
+                    createItem(items[item].x, items[item].y, item);
+                }
+
+                // Draw connections between selected items
+                for (let i = 1; i < selectedItems.length; i++) {
+                    const prevItem = selectedItems[i - 1];
+                    const currentItem = selectedItems[i];
+                    if (items[prevItem] && items[currentItem]) {
+                        createLine(items[prevItem].x, items[prevItem].y, items[currentItem].x, items[currentItem].y);
+                    }
+                }
+            }
+
+            function initializeItems() {
+                items = {};
+                const shuffledData = [...trailData];
+
+                // Only shuffle if we don't have custom positions
+                if (!customPositionsArray) {
+                    shuffleArray(shuffledData);
+                }
+
+                for (let i = 0; i < shuffledData.length; i++) {
+                    let x, y;
+
+                    if (customPositionsArray && i < customPositionsArray.length) {
+                        // Use custom position (scale to current canvas size if needed)
+                        const customPos = customPositionsArray[i];
+                        x = (customPos.x / 100) * canvas.width; // Convert percentage to pixels
+                        y = (customPos.y / 100) * canvas.height;
+                    } else {
+                        // Generate random position
+                        const pos = generateRandomPosition(items);
+                        x = pos.x;
+                        y = pos.y;
+                    }
+
+                    items[shuffledData[i]] = { x, y };
+                }
+
+                drawItems();
+            }
+
+            function getNextExpectedItem() {
+                let expectedItem;
+
+                switch(symbolType) {
+                    case 'numbers':
+                        expectedItem = currentIndex + 1;
+                        break;
+                    case 'letters':
+                        const letterIndex = currentIndex;
+                        expectedItem = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[letterIndex];
+                        break;
+                    case 'numbers-letters':
+                        if (currentIndex % 2 === 0) {
+                            // Even index: number
+                            expectedItem = Math.floor(currentIndex / 2) + 1;
+                        } else {
+                            // Odd index: letter
+                            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                            expectedItem = letters[Math.floor(currentIndex / 2)];
+                        }
+                        break;
+                    case 'letters-numbers':
+                        if (currentIndex % 2 === 0) {
+                            // Even index: letter
+                            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                            expectedItem = letters[Math.floor(currentIndex / 2)];
+                        } else {
+                            // Odd index: number
+                            expectedItem = Math.floor(currentIndex / 2) + 1;
+                        }
+                        break;
+                    default:
+                        expectedItem = currentIndex + 1;
+                }
+
+                return reverseOrder ? getReversedExpectedItem(expectedItem) : expectedItem;
+            }
+
+            function getReversedExpectedItem(currentExpected) {
+                // For reverse order, we need to calculate what the expected item should be
+                // based on the reversed trail data
+                const totalItems = trailData.length;
+
+                if (symbolType === 'numbers') {
+                    return totalItems - currentIndex;
+                } else if (symbolType === 'letters') {
+                    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    return letters[totalItems - 1 - currentIndex];
+                } else {
+                    // For mixed modes, we need to check what's at the current position in the original order
+                    const originalOrder = generateOriginalTrailData();
+                    return originalOrder[currentIndex];
+                }
+            }
+
+            function generateOriginalTrailData() {
+                const numbers = Array.from({ length: Math.ceil(trailLength/2) }, (_, i) => i + 1);
+                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, Math.floor(trailLength/2)).split('');
+
+                switch(symbolType) {
+                    case 'numbers':
+                        return Array.from({ length: trailLength }, (_, i) => i + 1);
+                    case 'letters':
+                        return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, trailLength).split('');
+                    case 'numbers-letters':
+                        return numbers.flatMap((num, i) => [num, letters[i]]).slice(0, trailLength);
+                    case 'letters-numbers':
+                        return letters.flatMap((letter, i) => [letter, numbers[i]]).slice(0, trailLength);
+                    default:
+                        return Array.from({ length: trailLength }, (_, i) => i + 1);
+                }
+            }
+
+            // Test control functions
+            function startTest() {
+                currentIndex = 0;
+                selectedItems = [];
+                errors = 0;
+                popupTimer = 0;
+                timerElement.textContent = '0';
+                hidePopup();
+
+                initializeItems();
+                startTimer();
+            }
+
+            function endTest() {
+                stopTimer();
+                showPopup();
+            }
+
+            function handleClick(event) {
+                if (!startTime) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                for (let item in items) {
+                    const itemX = items[item].x;
+                    const itemY = items[item].y;
+                    const distance = Math.sqrt((x - itemX) ** 2 + (y - itemY) ** 2);
+
+                    if (distance <= numberRadius) {
+                        const expectedItem = getNextExpectedItem().toString();
+                        if (!selectedItems.includes(item)) {
+                            if (item === expectedItem) {
+                                selectedItems.push(item);
+
+                                if (currentIndex > 0) {
+                                    const prevItem = selectedItems[selectedItems.length - 2];
+                                    createLine(items[prevItem].x, items[prevItem].y, itemX, itemY);
+                                }
+
+                                prevNumberX = itemX;
+                                prevNumberY = itemY;
+                                createItem(itemX, itemY, item);
+
+                                completeTherapyLog.push({
+                                    state: "RIGHT",
+                                    item: item,
+                                    positionInTime: popupTimer
+                                });
+
+                                currentIndex++;
+                                if (currentIndex >= trailData.length) {
+                                    endTest();
+                                }
+                            } else {
+                                completeTherapyLog.push({
+                                    state: "WRONG",
+                                    item: item,
+                                    positionInTime: popupTimer
+                                });
+                                errors++;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // Event listeners
+            window.addEventListener('resize', resizeCanvas);
+            canvas.addEventListener('click', handleClick);
+            restartButton.addEventListener('click', startTest);
+
+            // Initialize
+            resizeCanvas();
+            loadBackgroundImage();
+            initializeItems();
+            startTest(); // Auto-start
+
+            // Simulated ORI Toolkit functions
+            window.electron = window.electron || {
+                fetch: async () => ({ json: async () => ({}) }),
+                fileSystem: {
+                    writeJSONFile: async () => console.log('Data saved (simulated)'),
+                    path: {
+                        join: (...parts) => parts.join('/')
+                    }
+                },
+                ori: {
+                    sessionDetails: async () => ({ username: 'Demo User' }),
+                    language: async () => 'en-US'
+                }
+            };
+
+        })();
+    </script>
+</Layout>

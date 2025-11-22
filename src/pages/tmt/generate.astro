@@ -1,0 +1,251 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FormInput from '../../components/FormInput.astro';
+---
+
+<Layout title="Generate TMT URL - Neuro Exercises">
+    <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+        <div class="min-h-screen mx-auto max-w-4xl">
+            <h1 class="text-4xl font-bold text-foreground mb-2">Generate TMT URL</h1>
+            <p class="text-muted-foreground mb-8">Configure your Trail Making Test and generate a shareable URL</p>
+
+            <div class="bg-card border border-border rounded-lg p-6 mb-8">
+                <form id="urlForm" class="space-y-6">
+                    <!-- Basic Settings -->
+                    <div class="border-b border-border pb-6">
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Basic Settings</h3>
+
+                        <FormInput
+                                id="trailLengthInput"
+                                label="Trail Length"
+                                type="number"
+                                value="10"
+                                min="4"
+                                max="20"
+                                note="Total number of items in the trail"
+                        />
+
+                        <FormInput
+                                id="numberRadiusInput"
+                                label="Circle Radius (pixels)"
+                                type="number"
+                                value="30"
+                                min="20"
+                                max="50"
+                                note="Size of the clickable circles"
+                        />
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-foreground mb-2">
+                                Symbol Type
+                            </label>
+                            <select
+                                    id="symbolTypeSelect"
+                                    class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                                <option value="numbers">Numbers Only (1-2-3-4...)</option>
+                                <option value="letters">Letters Only (A-B-C-D...)</option>
+                                <option value="numbers-letters">Numbers & Letters (1-A-2-B-3-C...)</option>
+                                <option value="letters-numbers">Letters & Numbers (A-1-B-2-C-3...)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="reverseOrderCheck" class="text-primary" />
+                                <span class="text-foreground font-medium">Reverse Order</span>
+                            </label>
+                            <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                When checked, symbols will appear in reverse order (e.g., 10-9-8... or Z-Y-X...)
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="showTimerCheck" checked class="text-primary" />
+                                <span class="text-foreground font-medium">Show Timer</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Background Settings -->
+                    <div class="border-b border-border pb-6">
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Background Settings</h3>
+
+                        <div class="mb-4">
+                            <label for="bgColorInput" class="block text-sm font-medium text-foreground mb-2">
+                                Background Color
+                            </label>
+                            <input
+                                    type="color"
+                                    id="bgColorInput"
+                                    value="#ffffff"
+                                    class="w-20 h-10 rounded border border-border"
+                            />
+                        </div>
+
+                        <FormInput
+                                id="bgImageInput"
+                                label="Background Image URL"
+                                type="url"
+                                placeholder="https://example.com/image.jpg"
+                                note="Optional: Add a background image"
+                                className="mb-4"
+                        />
+
+                        <FormInput
+                                id="bgOpacityInput"
+                                label="Background Image Opacity (0-100)"
+                                type="number"
+                                value="50"
+                                min="0"
+                                max="100"
+                                note="0 = transparent, 100 = fully opaque"
+                                className="mb-4"
+                        />
+                    </div>
+
+                    <!-- Custom Positions Settings -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Custom Dot Positions</h3>
+
+                        <div class="mb-4">
+                            <label for="customPositionsInput" class="block text-sm font-medium text-foreground mb-2">
+                                Custom Positions (JSON)
+                            </label>
+                            <textarea
+                                    id="customPositionsInput"
+                                    placeholder='[{"x": 10, "y": 20}, {"x": 30, "y": 40}, ...]'
+                                    class="w-full h-32 px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
+                            ></textarea>
+                            <p class="text-sm text-muted-foreground mt-2">
+                                Optional: Provide exact positions as percentage coordinates (0-100).
+                                Example: <code class="bg-secondary px-1 rounded">${"[{\"x\": 10, \"y\": 20}, {\"x\": 30, \"y\": 40}]"}</code>
+                                where x: 10 means 10% from left, y: 20 means 20% from top.
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="enableCustomPositionsCheck" class="text-primary" />
+                                <span class="text-foreground font-medium">Enable Custom Positions</span>
+                            </label>
+                            <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                When checked, custom positions will be used instead of random placement
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Generated URL -->
+            <div id="resultSection" class="bg-card border border-border rounded-lg p-6">
+                <h2 class="text-xl font-bold text-foreground mb-4">Generated URL</h2>
+
+                <div class="bg-secondary rounded-lg p-4 mb-4 overflow-x-auto">
+                    <code id="generatedUrl" class="text-sm text-foreground break-all"></code>
+                </div>
+
+                <div class="flex gap-4">
+                    <button
+                            id="copyBtn"
+                            class="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
+                    >
+                        Copy URL
+                    </button>
+                    <a
+                            id="openBtn"
+                            href="#"
+                            target="_blank"
+                            class="px-6 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors"
+                    >
+                        Open TMT
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script is:inline>
+        function generateTMTUrl() {
+            const baseUrl = window.location.origin + '/canvas-drawing-params/tmt';
+            const params = new URLSearchParams();
+
+            // Basic settings
+            params.set('trailLength', document.getElementById('trailLengthInput').value);
+            params.set('numberRadius', document.getElementById('numberRadiusInput').value);
+            params.set('symbolType', document.getElementById('symbolTypeSelect').value);
+            params.set('reverseOrder', document.getElementById('reverseOrderCheck').checked);
+            params.set('showTimer', document.getElementById('showTimerCheck').checked);
+
+            // Background settings
+            params.set('bgColor', document.getElementById('bgColorInput').value.replace('#', '%23'));
+
+            const bgImage = document.getElementById('bgImageInput').value;
+            if (bgImage) {
+                params.set('bgImage', encodeURIComponent(bgImage));
+            }
+
+            params.set('bgOpacity', document.getElementById('bgOpacityInput').value);
+
+            // Custom positions
+            const enableCustomPositions = document.getElementById('enableCustomPositionsCheck').checked;
+            const customPositions = document.getElementById('customPositionsInput').value;
+
+            if (enableCustomPositions && customPositions.trim()) {
+                try {
+                    // Validate JSON
+                    JSON.parse(customPositions);
+                    params.set('customPositions', encodeURIComponent(customPositions));
+                } catch (error) {
+                    alert('Invalid JSON format for custom positions');
+                    return baseUrl;
+                }
+            }
+
+            return baseUrl + '?' + params.toString();
+        }
+
+        function updateGeneratedUrl() {
+            const url = generateTMTUrl();
+            document.getElementById('generatedUrl').textContent = url;
+            document.getElementById('openBtn').href = url;
+        }
+
+        function copyToClipboard() {
+            const url = generateTMTUrl();
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listeners to all form elements
+            const formElements = document.querySelectorAll('#urlForm input, #urlForm select, #urlForm textarea');
+            formElements.forEach(element => {
+                element.addEventListener('input', updateGeneratedUrl);
+                element.addEventListener('change', updateGeneratedUrl);
+            });
+
+            document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
+
+            // Toggle custom positions field
+            document.getElementById('enableCustomPositionsCheck').addEventListener('change', function() {
+                document.getElementById('customPositionsInput').disabled = !this.checked;
+                updateGeneratedUrl();
+            });
+
+            // Disable custom positions input initially
+            document.getElementById('customPositionsInput').disabled = true;
+
+            // Generate initial URL
+            updateGeneratedUrl();
+        });
+    </script>
+</Layout>
