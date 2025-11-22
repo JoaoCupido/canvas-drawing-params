@@ -65,6 +65,51 @@ import ParameterDoc from '../../components/ParameterDoc.astro';
                 />
 
                 <ParameterDoc
+                        name="linesUnderDots"
+                        description="Controls whether connection lines appear under (true) or over (false) the dots."
+                        type="Boolean (true/false)"
+                        defaultValue="true"
+                        examples={["/?linesUnderDots=false"]}
+                        codeExample="?linesUnderDots=false"
+                />
+
+                <ParameterDoc
+                        name="allowWrongSelections"
+                        description="When true, wrong selections are recorded and visualized but the test continues. When false, wrong selections are counted as errors but not selected."
+                        type="Boolean (true/false)"
+                        defaultValue="false"
+                        examples={["/?allowWrongSelections=true"]}
+                        codeExample="?allowWrongSelections=true"
+                />
+
+                <ParameterDoc
+                        name="showWrongSelections"
+                        description="When true, wrong selections are visually shown as red in canvas. When false, wrong selections are visually shown as correct (still counts wrong in results data) in canvas."
+                        type="Boolean (true/false)"
+                        defaultValue="true"
+                        examples={["/?showWrongSelections=true"]}
+                        codeExample="?showWrongSelections=true"
+                />
+
+                <ParameterDoc
+                        name="hidePopupButtons"
+                        description="Hides the restart and menu buttons in the results popup."
+                        type="Boolean (true/false)"
+                        defaultValue="false"
+                        examples={["/?hidePopupButtons=true"]}
+                        codeExample="?hidePopupButtons=true"
+                />
+
+                <ParameterDoc
+                        name="hidePopupResults"
+                        description="Hides the time and errors display in the results popup."
+                        type="Boolean (true/false)"
+                        defaultValue="false"
+                        examples={["/?hidePopupResults=true"]}
+                        codeExample="?hidePopupResults=true"
+                />
+
+                <ParameterDoc
                         name="bgImage"
                         description="Sets a background image URL for the test canvas."
                         type="URL-encoded image URL"

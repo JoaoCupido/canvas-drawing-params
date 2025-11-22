@@ -68,6 +68,63 @@ import FormInput from '../../components/FormInput.astro';
                         </div>
                     </div>
 
+                    <!-- Add this section after the Background Settings -->
+                    <div class="border-b border-border pb-6">
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Advanced Settings</h3>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" id="linesUnderDotsCheck" checked class="text-primary" />
+                                    <span class="text-foreground font-medium">Lines Under Dots</span>
+                                </label>
+                                <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                    When checked, connection lines appear behind dots. When unchecked, lines appear over dots.
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" id="allowWrongSelectionsCheck" class="text-primary" />
+                                    <span class="text-foreground font-medium">Allow Wrong Selections</span>
+                                </label>
+                                <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                    When checked, wrong selections are recorded but the test continues. When unchecked, wrong selections are counted as errors but not selected.
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" id="showWrongSelectionsCheck" class="text-primary" />
+                                    <span class="text-foreground font-medium">Show Wrong Selections</span>
+                                </label>
+                                <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                    When true, wrong selections are visually shown as red in canvas. When false, wrong selections are visually shown as correct (still counts wrong in results data) in canvas.
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" id="hidePopupButtonsCheck" class="text-primary" />
+                                    <span class="text-foreground font-medium">Hide Popup Buttons</span>
+                                </label>
+                                <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                    When checked, the restart and menu buttons in the results popup are hidden.
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" id="hidePopupResultsCheck" class="text-primary" />
+                                    <span class="text-foreground font-medium">Hide Popup Results</span>
+                                </label>
+                                <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                    When checked, the time and errors display in the results popup are hidden.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Background Settings -->
                     <div class="border-b border-border pb-6">
                         <h3 class="text-lg font-semibold text-foreground mb-4">Background Settings</h3>
@@ -178,6 +235,13 @@ import FormInput from '../../components/FormInput.astro';
             params.set('reverseOrder', document.getElementById('reverseOrderCheck').checked);
             params.set('showTimer', document.getElementById('showTimerCheck').checked);
 
+            // Advanced settings
+            params.set('linesUnderDots', document.getElementById('linesUnderDotsCheck').checked);
+            params.set('allowWrongSelections', document.getElementById('allowWrongSelectionsCheck').checked);
+            params.set('showWrongSelections', document.getElementById('showWrongSelectionsCheck').checked);
+            params.set('hidePopupButtons', document.getElementById('hidePopupButtonsCheck').checked);
+            params.set('hidePopupResults', document.getElementById('hidePopupResultsCheck').checked);
+
             // Background settings
             params.set('bgColor', document.getElementById('bgColorInput').value.replace('#', '%23'));
 
@@ -194,7 +258,6 @@ import FormInput from '../../components/FormInput.astro';
 
             if (enableCustomPositions && customPositions.trim()) {
                 try {
-                    // Validate JSON
                     JSON.parse(customPositions);
                     params.set('customPositions', encodeURIComponent(customPositions));
                 } catch (error) {

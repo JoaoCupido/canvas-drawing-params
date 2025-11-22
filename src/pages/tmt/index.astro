@@ -17,7 +17,7 @@ import Layout from '../../layouts/Layout.astro';
 
             <!-- Results Popup -->
             <div id="popup" class="absolute inset-0 bg-black/50 flex items-center justify-center hidden z-50">
-                <div class="bg-card border border-border rounded-lg p-8 w-1/3 h-1/3 mx-4 shadow-xl flex flex-col">
+                <div class="bg-card border border-border rounded-lg p-8 w-1/3 h-1/3 mx-4 shadow-xl flex flex-col text-center justify-center">
                     <h3 class="text-2xl font-bold text-foreground mb-4">Test Completed!</h3>
                     <div class="space-y-3 mb-6">
                         <p id="popupTimer" class="text-foreground">Time: 0 seconds</p>
@@ -54,7 +54,14 @@ import Layout from '../../layouts/Layout.astro';
             const bgColor = urlParams.get('bgColor')?.replace("%23", "#") || '#ffffff';
             const bgOpacity = parseInt(urlParams.get('bgOpacity')) || 50;
 
-            // New: Custom dot positions parameter
+            // New parameters
+            const linesUnderDots = urlParams.get('linesUnderDots') !== 'false'; // Default: true (lines under dots)
+            const allowWrongSelections = urlParams.get('allowWrongSelections') === 'true'; // Default: false
+            const showWrongSelections = urlParams.get('showWrongSelections') !== 'false'; // Default: true
+            const hidePopupButtons = urlParams.get('hidePopupButtons') === 'true'; // Default: false
+            const hidePopupResults = urlParams.get('hidePopupResults') === 'true'; // Default: false
+
+            // Existing custom positions parameter
             const customPositions = urlParams.get('customPositions');
 
             // Generate trail data based on symbol type
@@ -116,7 +123,10 @@ import Layout from '../../layouts/Layout.astro';
             let prevNumberX, prevNumberY;
             let canvas = document.getElementById('trailCanvas');
             let ctx = canvas.getContext('2d');
-            let selectedItems = [];
+            let selectedItemsMeta = [];
+            function findSelectionMeta(itemId) {
+                return selectedItemsMeta.find(m => m.id === itemId) || null;
+            }
             let errors = 0;
             let startTime, endTime;
             let popupTimer = 0;
@@ -191,8 +201,23 @@ import Layout from '../../layouts/Layout.astro';
 
             // UI functions
             function showPopup() {
-                popupTimerElement.textContent = `Time: ${popupTimer.toFixed(2)}s`;
-                popupErrorsElement.textContent = `Errors: ${errors}`;
+                // Update results if not hidden
+                if (!hidePopupResults) {
+                    popupTimerElement.textContent = `Time: ${popupTimer.toFixed(2)}s`;
+                    popupErrorsElement.textContent = `Errors: ${errors}`;
+                    popupTimerElement.classList.remove('hidden');
+                    popupErrorsElement.classList.remove('hidden');
+                } else {
+                    popupTimerElement.classList.add('hidden');
+                    popupErrorsElement.classList.add('hidden');
+                }
+
+                // Hide buttons if configured
+                const buttonContainer = document.querySelector('#popup .flex.gap-4');
+                if (hidePopupButtons && buttonContainer) {
+                    buttonContainer.classList.add('hidden');
+                }
+
                 popup.classList.remove('hidden');
             }
 
@@ -227,19 +252,21 @@ import Layout from '../../layouts/Layout.astro';
             }
 
             function createItem(x, y, item) {
+                const meta = findSelectionMeta(item);
+                const isSelected = !!meta;
                 // Draw circle
                 ctx.beginPath();
                 ctx.arc(x, y, numberRadius, 0, Math.PI * 2);
-                ctx.fillStyle = selectedItems.includes(item) ? '#6b7280' : '#ffffff';
+                ctx.fillStyle = isSelected ? '#6b7280' : '#ffffff';
                 ctx.fill();
-                ctx.strokeStyle = selectedItems.includes(item) ? '#4b5563' : '#374151';
+                ctx.strokeStyle = isSelected ? '#4b5563' : '#374151';
                 ctx.lineWidth = 2;
                 ctx.stroke();
                 ctx.closePath();
 
                 // Draw text
                 ctx.font = 'bold 18px Arial';
-                ctx.fillStyle = selectedItems.includes(item) ? '#ffffff' : '#1f2937';
+                ctx.fillStyle = isSelected ? '#ffffff' : '#1f2937';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(item, x, y);
@@ -276,15 +303,45 @@ import Layout from '../../layouts/Layout.astro';
 
             function drawItems() {
                 drawBackground();
-                for (let item in items) {
-                    createItem(items[item].x, items[item].y, item);
+
+                // Always draw lines first if they should be under dots
+                if (linesUnderDots) {
+                    drawAllConnections();
                 }
 
-                // Draw connections between selected items
-                for (let i = 1; i < selectedItems.length; i++) {
-                    const prevItem = selectedItems[i - 1];
-                    const currentItem = selectedItems[i];
-                    if (items[prevItem] && items[currentItem]) {
+                for (let item in items) {
+                    const meta = findSelectionMeta(item);
+                    // CHANGED: Only show error styling if showWrongSelections is false OR if it's true but we still want to show errors
+                    if (meta && meta.isError && showWrongSelections) {
+                        // draw wrong item style only when wrong selections are not allowed
+                        createErrorItem(items[item].x, items[item].y, item);
+                    } else {
+                        // normal selected / unselected drawing handled by createItem
+                        createItem(items[item].x, items[item].y, item);
+                    }
+                }
+
+                // Draw lines last if they should be over dots
+                if (!linesUnderDots) {
+                    drawAllConnections();
+                }
+            }
+
+            // New helper function to draw all connections
+            function drawAllConnections() {
+                for (let i = 1; i < selectedItemsMeta.length; i++) {
+                    const prevMeta = selectedItemsMeta[i - 1];
+                    const currMeta = selectedItemsMeta[i];
+                    if (!prevMeta || !currMeta) continue;
+                    const prevItem = prevMeta.id;
+                    const currentItem = currMeta.id;
+
+                    if (!items[prevItem] || !items[currentItem]) continue;
+
+                    // If the current selection was an error, draw an error line to it.
+                    if (currMeta.isError && showWrongSelections) {
+                        createErrorLine(items[prevItem].x, items[prevItem].y, items[currentItem].x, items[currentItem].y);
+                    } else {
                         createLine(items[prevItem].x, items[prevItem].y, items[currentItem].x, items[currentItem].y);
                     }
                 }
@@ -396,7 +453,7 @@ import Layout from '../../layouts/Layout.astro';
             // Test control functions
             function startTest() {
                 currentIndex = 0;
-                selectedItems = [];
+                selectedItemsMeta = [];
                 errors = 0;
                 popupTimer = 0;
                 timerElement.textContent = '0';
@@ -425,41 +482,83 @@ import Layout from '../../layouts/Layout.astro';
 
                     if (distance <= numberRadius) {
                         const expectedItem = getNextExpectedItem().toString();
-                        if (!selectedItems.includes(item)) {
-                            if (item === expectedItem) {
-                                selectedItems.push(item);
 
-                                if (currentIndex > 0) {
-                                    const prevItem = selectedItems[selectedItems.length - 2];
-                                    createLine(items[prevItem].x, items[prevItem].y, itemX, itemY);
-                                }
+                        // ignore taps on already selected item
+                        if (findSelectionMeta(item)) {
+                            break;
+                        }
 
-                                prevNumberX = itemX;
-                                prevNumberY = itemY;
-                                createItem(itemX, itemY, item);
+                        if (item === expectedItem) {
+                            // Correct selection
+                            selectedItemsMeta.push({ id: item, isError: false });
 
-                                completeTherapyLog.push({
-                                    state: "RIGHT",
-                                    item: item,
-                                    positionInTime: popupTimer
-                                });
+                            completeTherapyLog.push({
+                                state: "RIGHT",
+                                item: item,
+                                positionInTime: popupTimer
+                            });
+
+                            currentIndex++;
+                            drawItems(); // full redraw to respect layering
+                            if (currentIndex >= trailData.length) {
+                                endTest();
+                            }
+                        } else {
+                            // Wrong selection
+                            completeTherapyLog.push({
+                                state: "WRONG",
+                                item: item,
+                                positionInTime: popupTimer
+                            });
+
+                            errors++;
+
+                            if (allowWrongSelections) {
+                                // Add wrong item to selection (flagged as error)
+                                selectedItemsMeta.push({ id: item, isError: true });
 
                                 currentIndex++;
+                                drawItems(); // full redraw to show red circle + dashed red line
                                 if (currentIndex >= trailData.length) {
                                     endTest();
                                 }
-                            } else {
-                                completeTherapyLog.push({
-                                    state: "WRONG",
-                                    item: item,
-                                    positionInTime: popupTimer
-                                });
-                                errors++;
                             }
                         }
+
                         break;
                     }
                 }
+            }
+
+            function createErrorLine(x1, y1, x2, y2) {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = '#ef4444'; // Red color for errors
+                ctx.lineWidth = 3;
+                ctx.setLineDash([5, 5]); // Dashed line for errors
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.closePath();
+            }
+
+            function createErrorItem(x, y, item) {
+                // Draw circle with error color
+                ctx.beginPath();
+                ctx.arc(x, y, numberRadius, 0, Math.PI * 2);
+                ctx.fillStyle = '#fecaca'; // Light red background
+                ctx.fill();
+                ctx.strokeStyle = '#dc2626'; // Dark red border
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.closePath();
+
+                // Draw text
+                ctx.font = 'bold 18px Arial';
+                ctx.fillStyle = '#dc2626'; // Dark red text
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(item, x, y);
             }
 
             // Event listeners
