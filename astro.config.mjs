@@ -6,5 +6,5 @@ export default defineConfig({
         plugins: [tailwindcss()],
     },
   site: 'https://joaocupido.github.io',
-  base: '/canvas-drawing-params',
+  base: '/neuro-exercises',
 });
