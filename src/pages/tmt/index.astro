@@ -397,6 +397,17 @@ import Layout from '../../layouts/Layout.astro';
             function endTest() {
                 stopTimer();
                 showPopup();
+
+                if (window.vuplex) {
+                    const sendData = {
+                        time: popupTimer.toFixed(2),
+                        errors: errors,
+                        log: completeTherapyLog,
+                    }
+                    window.vuplex.postMessage(JSON.stringify(sendData));
+                } else {
+                    console.log("VUPLEX bridge not available");
+                }
             }
 
             function handleClick(event) {
@@ -503,22 +514,6 @@ import Layout from '../../layouts/Layout.astro';
             loadBackgroundImage();
             initializeItems();
             startTest(); // Auto-start
-
-            // Simulated ORI Toolkit functions
-            window.electron = window.electron || {
-                fetch: async () => ({ json: async () => ({}) }),
-                fileSystem: {
-                    writeJSONFile: async () => console.log('Data saved (simulated)'),
-                    path: {
-                        join: (...parts) => parts.join('/')
-                    }
-                },
-                ori: {
-                    sessionDetails: async () => ({ username: 'Demo User' }),
-                    language: async () => 'en-US'
-                }
-            };
-
         })();
     </script>
 </Layout>
