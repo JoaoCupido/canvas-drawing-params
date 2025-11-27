@@ -107,7 +107,9 @@ import Layout from '../../layouts/Layout.astro';
                         typeof pos.x === 'number' &&
                         typeof pos.y === 'number' &&
                         pos.x >= 0 &&
-                        pos.y >= 0
+                        pos.y >= 0 &&
+                        pos.x <= 100 &&
+                        pos.y <= 100
                     );
 
                     return isValid ? positions : null;

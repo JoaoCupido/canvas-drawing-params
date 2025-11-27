@@ -182,13 +182,14 @@ import FormInput from '../../components/FormInput.astro';
                             </label>
                             <textarea
                                     id="customPositionsInput"
-                                    placeholder='[{"x": 10, "y": 20}, {"x": 30, "y": 40}, ...]'
+                                    placeholder='[{"x": 10.5, "y": 20.75}, {"x": 30.25, "y": 40.8}, ...]'
                                     class="w-full h-32 px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
                             ></textarea>
                             <p class="text-sm text-muted-foreground mt-2">
-                                Optional: Provide exact positions as percentage coordinates (0-100).
-                                Example: <code class="bg-secondary px-1 rounded">{"[{\"x\": 10, \"y\": 20}, {\"x\": 30, \"y\": 40}]"}</code>
-                                where x: 10 means 10% from left, y: 20 means 20% from top.
+                                Optional: Provide exact positions as percentage coordinates (0.00-100.00).
+                                Decimal values are supported for precise positioning.
+                                Example: <code class="bg-secondary px-1 rounded">{"[{\"x\": 10.5, \"y\": 20.75}, {\"x\": 30, \"y\": 40}]"}</code>
+                                where x: 10.5 means 10.5% from left, y: 20.75 means 20.75% from top.
                             </p>
                         </div>
 
@@ -311,16 +312,18 @@ import FormInput from '../../components/FormInput.astro';
             });
         }
 
-        // Add this function to handle random position generation
         function generateRandomPositions() {
             const trailLength = parseInt(document.getElementById('trailLengthInput').value);
             const positions = [];
 
             for (let i = 0; i < trailLength; i++) {
-                // Generate random positions with some padding from edges (5%-95% range)
-                const x = Math.floor(Math.random() * 90) + 5; // 5-95%
-                const y = Math.floor(Math.random() * 90) + 5; // 5-95%
-                positions.push({ x, y });
+                // Generate random positions with decimals (5.0-95.0% range)
+                const x = (Math.random() * 90 + 5).toFixed(2); // 5.00-95.00% with 2 decimals
+                const y = (Math.random() * 90 + 5).toFixed(2); // 5.00-95.00% with 2 decimals
+                positions.push({
+                    x: parseFloat(x),
+                    y: parseFloat(y)
+                });
             }
 
             document.getElementById('customPositionsInput').value = JSON.stringify(positions, null, 2);

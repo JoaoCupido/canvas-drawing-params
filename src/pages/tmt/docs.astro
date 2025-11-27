@@ -158,13 +158,14 @@ import ParameterDoc from '../../components/ParameterDoc.astro';
                 <div class="bg-card border border-border rounded-lg p-6">
                     <h2 class="text-2xl font-bold text-foreground mb-3">Custom Positions Format</h2>
                     <p class="text-muted-foreground mb-4">
-                        Custom positions use percentage-based coordinates (0-100) to ensure consistent placement across different screen sizes.
+                        Custom positions use percentage-based coordinates (0.00-100.00) to ensure consistent placement across different screen sizes.
+                        Decimal values are supported for precise positioning.
                     </p>
 
                     <div class="bg-secondary rounded-lg p-4 mb-4">
                         <pre class="text-sm text-foreground"><code>{
                             "[\n" +
-                            "  {\"x\": 10, \"y\": 20},  // 10% from left, 20% from top\n" +
+                            "  {\"x\": 10.2, \"y\": 20.5},  // 10.2% from left, 20.5% from top\n" +
                             "  {\"x\": 30, \"y\": 40},  // 30% from left, 40% from top\n" +
                             "  {\"x\": 50, \"y\": 60},  // 50% from left, 60% from top\n" +
                             "  {\"x\": 70, \"y\": 30},  // 70% from left, 30% from top\n" +
@@ -175,7 +176,7 @@ import ParameterDoc from '../../components/ParameterDoc.astro';
 
                     <p class="text-muted-foreground">
                         The number of positions should match the trail length. If fewer positions are provided,
-                        the remaining dots will be placed randomly.
+                        the remaining dots will be placed randomly. Decimal values up to 2 decimal places are recommended.
                     </p>
                 </div>
 
