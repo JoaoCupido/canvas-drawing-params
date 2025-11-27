@@ -1,0 +1,74 @@
+---
+// components/BackgroundDocs.astro
+import ParameterDoc from "./ParameterDoc.astro";
+---
+
+<div class="bg-card border border-border rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-foreground mb-3">Background Controls</h2>
+    <p class="text-muted-foreground mb-4">Controls background images, colors, and positioning for the canvas.</p>
+
+    <div class="space-y-8">
+        <ParameterDoc
+                name="bgImage"
+                description="Sets a background image URL for the canvas. The image will be scaled to cover the entire canvas."
+                type="URL-encoded image URL"
+                defaultValue="None"
+                examples={[]}
+                codeExample="?bgImage=https://example.com/image.jpg"
+        />
+
+        <ParameterDoc
+                name="isColoringBookImage"
+                description="When set to true, processes the background image to create a coloring book effect. Converts white background to transparent and keeps black lines for coloring."
+                type="Boolean (true/false)"
+                defaultValue="false"
+                examples={["/?bgImage=...&isColoringBookImage=true"]}
+                codeExample="?isColoringBookImage=true"
+        />
+
+        <ParameterDoc
+                name="bgOpacity"
+                description="Controls the opacity of the background image. Only works when bgImage is set."
+                type="Number (0-100)"
+                defaultValue="50"
+                examples={["/?bgImage=...&bgOpacity=30"]}
+                codeExample="?bgOpacity=75"
+        />
+
+        <ParameterDoc
+                name="bgImageSize"
+                description="Controls the size of the background image as a percentage of the canvas."
+                type="Number (10-200)"
+                defaultValue="100 (full size)"
+                examples={["/?bgImageSize=150"]}
+                codeExample="?bgImageSize=75"
+        />
+
+        <ParameterDoc
+                name="bgImagePosX"
+                description="Horizontal position of the background image (0-100%). 0% = left, 50% = center, 100% = right."
+                type="Number (0-100)"
+                defaultValue="50"
+                examples={["/?bgImage=...&bgImagePosX=25"]}
+                codeExample="?bgImagePosX=75"
+        />
+
+        <ParameterDoc
+                name="bgImagePosY"
+                description="Vertical position of the background image (0-100%). 0% = top, 50% = center, 100% = bottom."
+                type="Number (0-100)"
+                defaultValue="50"
+                examples={["/?bgImage=...&bgImagePosY=75"]}
+                codeExample="?bgImagePosY=25"
+        />
+
+        <ParameterDoc
+                name="bgColor"
+                description="Sets the background color of the canvas. Use URL-encoded hex value."
+                type="URL-encoded hex color"
+                defaultValue="#ffffff"
+                examples={[]}
+                codeExample="?bgColor=%23000000"
+        />
+    </div>
+</div>

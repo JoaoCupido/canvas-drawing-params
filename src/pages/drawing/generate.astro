@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import FormInput from '../../components/FormInput.astro';
+import BackgroundInputs from '../../components/BackgroundInputs.astro';
+import GridInputs from '../../components/GridInputs.astro';
 ---
 
 <Layout title="Generate Drawing URL - Neuro Exercises">
@@ -11,17 +13,22 @@ import FormInput from '../../components/FormInput.astro';
 
             <div class="bg-card border border-border rounded-lg p-6 mb-8">
                 <form id="urlForm" class="space-y-6">
-                    <FormInput
-                            id="sizeInput"
-                            label="Brush Size (1-50)"
-                            type="number"
-                            value="5"
-                            min="1"
-                            max="50"
-                    />
-
                     <!-- Colors Section -->
                     <div>
+                        <h3 class="text-lg font-semibold text-foreground mb-4">
+                            General Controls
+                        </h3>
+
+                        <FormInput
+                                id="sizeInput"
+                                label="Brush Size (1-50)"
+                                type="number"
+                                value="5"
+                                min="1"
+                                max="50"
+                                className="mb-4"
+                        />
+
                         <label class="block text-sm font-medium text-foreground mb-2">
                             Available Colors
                         </label>
@@ -44,8 +51,10 @@ import FormInput from '../../components/FormInput.astro';
                         />
                     </div>
 
+                    <hr class="my-4 h-0.5 bg-border" />
+
                     <!-- Input Controls Section -->
-                    <div class="border-t border-border pt-6">
+                    <div class="">
                         <h3 class="text-lg font-semibold text-foreground mb-4">Input Controls</h3>
 
                         <!-- Eraser Input -->
@@ -89,8 +98,10 @@ import FormInput from '../../components/FormInput.astro';
                         </div>
                     </div>
 
+                    <hr class="my-4 h-0.5 bg-border" />
+
                     <!-- Hide Toolbar Option -->
-                    <div class="border-t border-border pt-6">
+                    <div class="">
                         <h3 class="text-lg font-semibold text-foreground mb-4">Toolbar Settings</h3>
 
                         <div class="mb-4">
@@ -102,7 +113,7 @@ import FormInput from '../../components/FormInput.astro';
 
                         <!-- Toolbar Position (only show if not hiding toolbar) -->
                         <div id="toolbarPositionGroup">
-                            <label class="block text-sm font-medium text-foreground mb-2">
+                            <label class="block text-sm font-medium text-foreground mb-2" for="toolbarPositionSelect">
                                 Toolbar Position
                             </label>
                             <select
@@ -117,154 +128,15 @@ import FormInput from '../../components/FormInput.astro';
                         </div>
                     </div>
 
-                    <!-- Background Controls -->
-                    <div class="border-t border-border pt-6">
-                        <h3 class="text-lg font-semibold text-foreground mb-4">Background Settings</h3>
+                    <hr class="my-4 h-0.5 bg-border" />
 
-                        <!-- Background Color -->
-                        <div>
-                            <label for="bgColorInput" class="block text-sm font-medium text-foreground mb-2">
-                                Background Color
-                            </label>
-                            <input
-                                    type="color"
-                                    id="bgColorInput"
-                                    value="#ffffff"
-                                    class="w-20 h-10 rounded border border-border"
-                            />
-                        </div>
+                    <!-- Reusable Background Controls -->
+                    <BackgroundInputs />
 
-                        <!-- Background Image -->
-                        <FormInput
-                                id="bgImageInput"
-                                label="Background Image URL"
-                                type="url"
-                                placeholder="https://example.com/image.jpg"
-                                note="Optional: Add a background image"
-                                className="mb-4"
-                        />
+                    <hr class="my-4 h-0.5 bg-border" />
 
-                        <!-- Coloring Book Image Option -->
-                        <div class="mb-4">
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" id="coloringBookImageCheck" class="text-primary" />
-                                <span class="text-foreground font-medium">Coloring Book Image (transparent background)</span>
-                            </label>
-                            <p class="text-sm text-muted-foreground mt-1 ml-6">
-                                Converts white background to transparent, keeping black lines for coloring
-                            </p>
-                        </div>
-
-                        <!-- Background Opacity -->
-                        <FormInput
-                                id="bgOpacityInput"
-                                label="Background Opacity (0-100)"
-                                type="number"
-                                value="50"
-                                min="0"
-                                max="100"
-                                className="mb-4"
-                        />
-
-                        <!-- Background Size -->
-                        <FormInput
-                                id="bgImageSizeInput"
-                                label="Background Size (10-200%)"
-                                type="number"
-                                value="100"
-                                min="10"
-                                max="200"
-                                className="mb-4"
-                        />
-
-                        <!-- Background Position X -->
-                        <FormInput
-                                id="bgPosXInput"
-                                label="Background Position X (0-100%)"
-                                type="number"
-                                value="50"
-                                min="0"
-                                max="100"
-                                note="0% = left, 50% = center, 100% = right"
-                                className="mb-4"
-                        />
-
-                        <!-- Background Position Y -->
-                        <FormInput
-                                id="bgPosYInput"
-                                label="Background Position Y (0-100%)"
-                                type="number"
-                                value="50"
-                                min="0"
-                                max="100"
-                                note="0% = top, 50% = center, 100% = bottom"
-                                className="mb-4"
-                        />
-                    </div>
-
-                    <!-- Grid Controls -->
-                    <div class="border-t border-border pt-6">
-                        <h3 class="text-lg font-semibold text-foreground mb-4">Grid Settings</h3>
-
-                        <!-- Grid Enabled -->
-                        <div class="mb-4">
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" id="gridEnabledCheck" class="text-primary" />
-                                <span class="text-foreground font-medium">Enable Grid</span>
-                            </label>
-                        </div>
-
-                        <!-- Grid Color -->
-                        <div class="mb-4">
-                            <label for="gridColorInput" class="block text-sm font-medium text-foreground mb-2">
-                                Grid Color
-                            </label>
-                            <input
-                                    type="color"
-                                    id="gridColorInput"
-                                    value="#cccccc"
-                                    class="w-20 h-10 rounded border border-border"
-                            />
-                        </div>
-
-                        <!-- Grid Opacity -->
-                        <FormInput
-                                id="gridOpacityInput"
-                                label="Grid Opacity (0-100)"
-                                type="number"
-                                value="30"
-                                min="0"
-                                max="100"
-                                className="mb-4"
-                        />
-
-                        <!-- Grid Style -->
-                        <div class="mb-4">
-                            <label for="gridStyleSelect" class="block text-sm font-medium text-foreground mb-2">
-                                Grid Style
-                            </label>
-                            <select
-                                    id="gridStyleSelect"
-                                    class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                            >
-                                <option value="solid">Solid Lines</option>
-                                <option value="dotted">Dotted</option>
-                                <option value="dashed">Dashed</option>
-                                <option value="sparse">Sparse Lines</option>
-                            </select>
-                        </div>
-
-                        <!-- Grid Size -->
-                        <FormInput
-                                id="gridSizeInput"
-                                label="Grid Cell Size (10-100)"
-                                type="number"
-                                value="20"
-                                min="10"
-                                max="100"
-                                className="mb-4"
-                        />
-                    </div>
+                    <!-- Reusable Grid Controls -->
+                    <GridInputs />
                 </form>
             </div>
 
@@ -296,5 +168,5 @@ import FormInput from '../../components/FormInput.astro';
         </div>
     </main>
 
-    <script is:inline src="/neuro-exercises/generate-script.js"></script>
+    <script is:inline src="/neuro-exercises/DrawingGenerateScript.js"></script>
 </Layout>

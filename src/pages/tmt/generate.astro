@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import FormInput from '../../components/FormInput.astro';
+import BackgroundInputs from '../../components/BackgroundInputs.astro';
+import GridInputs from '../../components/GridInputs.astro';
 ---
 
 <Layout title="Generate TMT URL - Neuro Exercises">
@@ -12,7 +14,7 @@ import FormInput from '../../components/FormInput.astro';
             <div class="bg-card border border-border rounded-lg p-6 mb-8">
                 <form id="urlForm" class="space-y-6">
                     <!-- Basic Settings -->
-                    <div class="border-b border-border pb-6">
+                    <div class="">
                         <h3 class="text-lg font-semibold text-foreground mb-4">Basic Settings</h3>
 
                         <FormInput
@@ -23,6 +25,7 @@ import FormInput from '../../components/FormInput.astro';
                                 min="4"
                                 max="20"
                                 note="Total number of items in the trail"
+                                className="mb-4"
                         />
 
                         <FormInput
@@ -33,6 +36,7 @@ import FormInput from '../../components/FormInput.astro';
                                 min="20"
                                 max="50"
                                 note="Size of the clickable circles"
+                                className="mb-4"
                         />
 
                         <div class="mb-4">
@@ -68,8 +72,10 @@ import FormInput from '../../components/FormInput.astro';
                         </div>
                     </div>
 
+                    <hr class="my-4 h-0.5 bg-border" />
+
                     <!-- Add this section after the Background Settings -->
-                    <div class="border-b border-border pb-6">
+                    <div class="">
                         <h3 class="text-lg font-semibold text-foreground mb-4">Advanced Settings</h3>
 
                         <div class="space-y-4">
@@ -135,6 +141,18 @@ import FormInput from '../../components/FormInput.astro';
                         </div>
                     </div>
 
+                    <hr class="my-4 h-0.5 bg-border" />
+
+                    <!-- Reusable Background Controls -->
+                    <BackgroundInputs />
+
+                    <hr class="my-4 h-0.5 bg-border" />
+
+                    <!-- Reusable Grid Controls -->
+                    <GridInputs />
+
+                    <hr class="my-4 h-0.5 bg-border" />
+
                     <!-- Custom Positions Settings -->
                     <div>
                         <h3 class="text-lg font-semibold text-foreground mb-4">Custom Dot Positions</h3>
@@ -166,16 +184,6 @@ import FormInput from '../../components/FormInput.astro';
                             </button>
                             <p class="text-sm text-muted-foreground">
                                 Automatically generates random positions for the current trail length.
-                            </p>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" id="enableCustomPositionsCheck" class="text-primary" />
-                                <span class="text-foreground font-medium">Enable Custom Positions</span>
-                            </label>
-                            <p class="text-sm text-muted-foreground mt-1 ml-6">
-                                When checked, custom positions will be used instead of random placement
                             </p>
                         </div>
                     </div>
@@ -210,106 +218,5 @@ import FormInput from '../../components/FormInput.astro';
         </div>
     </main>
 
-    <script is:inline>
-        function generateTMTUrl() {
-            const baseUrl = window.location.origin + '/neuro-exercises/tmt';
-            const params = new URLSearchParams();
-
-            // Basic settings
-            params.set('trailLength', document.getElementById('trailLengthInput').value);
-            params.set('numberRadius', document.getElementById('numberRadiusInput').value);
-            params.set('symbolType', document.getElementById('symbolTypeSelect').value);
-            params.set('reverseOrder', document.getElementById('reverseOrderCheck').checked);
-            params.set('showTimer', document.getElementById('showTimerCheck').checked);
-
-            // Advanced settings
-            params.set('linesUnderDots', document.getElementById('linesUnderDotsCheck').checked);
-            params.set('allowWrongSelections', document.getElementById('allowWrongSelectionsCheck').checked);
-            params.set('showWrongSelections', document.getElementById('showWrongSelectionsCheck').checked);
-            params.set('hidePopupButtons', document.getElementById('hidePopupButtonsCheck').checked);
-            params.set('hidePopupResults', document.getElementById('hidePopupResultsCheck').checked);
-            params.set('hidePopupAll', document.getElementById('hidePopupAllCheck').checked);
-
-            // Custom positions
-            const enableCustomPositions = document.getElementById('enableCustomPositionsCheck').checked;
-            const customPositions = document.getElementById('customPositionsInput').value;
-
-            if (enableCustomPositions && customPositions.trim()) {
-                try {
-                    JSON.parse(customPositions);
-                    params.set('customPositions', encodeURIComponent(customPositions));
-                } catch (error) {
-                    alert('Invalid JSON format for custom positions');
-                    return baseUrl;
-                }
-            }
-
-            return baseUrl + '?' + params.toString();
-        }
-
-        function updateGeneratedUrl() {
-            const url = generateTMTUrl();
-            document.getElementById('generatedUrl').textContent = url;
-            document.getElementById('openBtn').href = url;
-        }
-
-        function copyToClipboard() {
-            const url = generateTMTUrl();
-            navigator.clipboard.writeText(url).then(() => {
-                const btn = document.getElementById('copyBtn');
-                const originalText = btn.textContent;
-                btn.textContent = 'Copied!';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            });
-        }
-
-        function generateRandomPositions() {
-            const trailLength = parseInt(document.getElementById('trailLengthInput').value);
-            const positions = [];
-
-            for (let i = 0; i < trailLength; i++) {
-                // Generate random positions with decimals (5.0-95.0% range)
-                const x = (Math.random() * 90 + 5).toFixed(2); // 5.00-95.00% with 2 decimals
-                const y = (Math.random() * 90 + 5).toFixed(2); // 5.00-95.00% with 2 decimals
-                positions.push({
-                    x: parseFloat(x),
-                    y: parseFloat(y)
-                });
-            }
-
-            document.getElementById('customPositionsInput').value = JSON.stringify(positions, null, 2);
-            document.getElementById('enableCustomPositionsCheck').checked = true;
-            document.getElementById('customPositionsInput').disabled = false;
-            updateGeneratedUrl();
-        }
-
-        // Add event listener in the DOMContentLoaded section:
-        document.getElementById('generateRandomPositionsBtn').addEventListener('click', generateRandomPositions);
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Add event listeners to all form elements
-            const formElements = document.querySelectorAll('#urlForm input, #urlForm select, #urlForm textarea');
-            formElements.forEach(element => {
-                element.addEventListener('input', updateGeneratedUrl);
-                element.addEventListener('change', updateGeneratedUrl);
-            });
-
-            document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
-
-            // Toggle custom positions field
-            document.getElementById('enableCustomPositionsCheck').addEventListener('change', function() {
-                document.getElementById('customPositionsInput').disabled = !this.checked;
-                updateGeneratedUrl();
-            });
-
-            // Disable custom positions input initially
-            document.getElementById('customPositionsInput').disabled = true;
-
-            // Generate initial URL
-            updateGeneratedUrl();
-        });
-    </script>
+    <script is:inline src="/neuro-exercises/TMTGenerateScript.js"></script>
 </Layout>

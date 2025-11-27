@@ -15,7 +15,7 @@ export interface FormInputProps {
 
 <div class={Astro.props.className}>
     <label for={Astro.props.id} class="block text-sm font-medium text-foreground mb-2">
-        {Astro.props.label}
+        {Astro.props.label} {Astro.props.note && <span class="text-xs text-muted-foreground mt-1">- {Astro.props.note}</span>}
     </label>
     <input
             type={Astro.props.type}
@@ -27,5 +27,4 @@ export interface FormInputProps {
             disabled={Astro.props.disabled}
             class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
     />
-    {Astro.props.note && <p class="text-xs text-muted-foreground mt-1">{Astro.props.note}</p>}
 </div>

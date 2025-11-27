@@ -1,0 +1,74 @@
+---
+// components/GridInputs.astro
+---
+
+<div class="">
+    <h3 class="text-lg font-semibold text-foreground mb-4">Grid Settings</h3>
+
+    <!-- Grid Enabled -->
+    <div class="mb-4">
+        <label class="flex items-center gap-2">
+            <input type="checkbox" id="gridEnabledCheck" class="text-primary" />
+            <span class="text-foreground font-medium">Enable Grid</span>
+        </label>
+    </div>
+
+    <!-- Grid Color -->
+    <div class="mb-4">
+        <label for="gridColorInput" class="block text-sm font-medium text-foreground mb-2">
+            Grid Color
+        </label>
+        <input
+                type="color"
+                id="gridColorInput"
+                value="#cccccc"
+                class="w-20 h-10 rounded border border-border"
+        />
+    </div>
+
+    <!-- Grid Opacity -->
+    <div class="mb-4">
+        <label for="gridOpacityInput" class="block text-sm font-medium text-foreground mb-2">
+            Grid Opacity (0-100)
+        </label>
+        <input
+                type="number"
+                id="gridOpacityInput"
+                value="30"
+                min="0"
+                max="100"
+                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+    </div>
+
+    <!-- Grid Style -->
+    <div class="mb-4">
+        <label for="gridStyleSelect" class="block text-sm font-medium text-foreground mb-2">
+            Grid Style
+        </label>
+        <select
+                id="gridStyleSelect"
+                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+            <option value="solid">Solid Lines</option>
+            <option value="dotted">Dotted</option>
+            <option value="dashed">Dashed</option>
+            <option value="sparse">Sparse Lines</option>
+        </select>
+    </div>
+
+    <!-- Grid Size -->
+    <div class="mb-4">
+        <label for="gridSizeInput" class="block text-sm font-medium text-foreground mb-2">
+            Grid Cell Size (10-100)
+        </label>
+        <input
+                type="number"
+                id="gridSizeInput"
+                value="20"
+                min="10"
+                max="100"
+                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+    </div>
+</div>

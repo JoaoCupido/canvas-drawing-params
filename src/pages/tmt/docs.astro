@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ParameterDoc from '../../components/ParameterDoc.astro';
+import BackgroundDocs from '../../components/BackgroundDocs.astro';
+import GridDocs from '../../components/GridDocs.astro';
 ---
 
 <Layout title="TMT API Documentation - Neuro Exercises">
@@ -55,14 +57,11 @@ import ParameterDoc from '../../components/ParameterDoc.astro';
                         codeExample="?showTimer=false"
                 />
 
-                <ParameterDoc
-                        name="customPositions"
-                        description="Sets custom positions for dots as percentage coordinates (0-100). Uses URL-encoded JSON array of {x, y} objects."
-                        type="URL-encoded JSON"
-                        defaultValue="None"
-                        examples={[]}
-                        codeExample="?customPositions=%5B%7B%22x%22%3A10%2C%22y%22%3A20%7D%2C%7B%22x%22%3A30%2C%22y%22%3A40%7D%5D"
-                />
+                <!-- Reusable Background Documentation -->
+                <BackgroundDocs />
+
+                <!-- Reusable Grid Documentation -->
+                <GridDocs />
 
                 <ParameterDoc
                         name="linesUnderDots"
@@ -119,12 +118,12 @@ import ParameterDoc from '../../components/ParameterDoc.astro';
                 />
 
                 <ParameterDoc
-                        name="enableCustomPositions"
-                        description="When checked, custom positions will be used instead of random placement."
-                        type="Boolean (true/false)"
-                        defaultValue="false"
-                        examples={["/?enableCustomPositions=true"]}
-                        codeExample="?enableCustomPositions=true"
+                        name="customPositions"
+                        description="Sets custom positions for dots as percentage coordinates (0-100). Uses URL-encoded JSON array of {x, y} objects."
+                        type="URL-encoded JSON"
+                        defaultValue="None"
+                        examples={[]}
+                        codeExample="?customPositions=%5B%7B%22x%22%3A10%2C%22y%22%3A20%7D%2C%7B%22x%22%3A30%2C%22y%22%3A40%7D%5D"
                 />
 
                 <!-- Custom Positions Format -->

@@ -1,0 +1,56 @@
+---
+// components/GridDocs.astro
+import ParameterDoc from "./ParameterDoc.astro";
+---
+
+<div class="bg-card border border-border rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-foreground mb-3">Grid Controls</h2>
+    <p class="text-muted-foreground mb-4">Adds a customizable grid overlay to the canvas.</p>
+
+    <div class="space-y-4">
+        <ParameterDoc
+                name="gridEnabled"
+                description="Enables or disables the grid overlay."
+                type="Boolean (true/false)"
+                defaultValue="false"
+                examples={["/?gridEnabled=true"]}
+                codeExample="?gridEnabled=true"
+        />
+
+        <ParameterDoc
+                name="gridColor"
+                description="Sets the grid color (URL-encoded hex value)."
+                type="URL-encoded hex color"
+                defaultValue="#cccccc"
+                examples={[]}
+                codeExample="?gridColor=%23ff0000"
+        />
+
+        <ParameterDoc
+                name="gridOpacity"
+                description="Sets the grid opacity (0-100)."
+                type="Number (0-100)"
+                defaultValue="30"
+                examples={[]}
+                codeExample="?gridOpacity=50"
+        />
+
+        <ParameterDoc
+                name="gridStyle"
+                description="Sets the grid line style."
+                type="String (solid, dotted, dashed, sparse)"
+                defaultValue="solid"
+                examples={[]}
+                codeExample="?gridStyle=dotted"
+        />
+
+        <ParameterDoc
+                name="gridSize"
+                description="Sets the grid cell size in pixels (10-100)."
+                type="Number (10-100)"
+                defaultValue="20"
+                examples={[]}
+                codeExample="?gridSize=30"
+        />
+    </div>
+</div>

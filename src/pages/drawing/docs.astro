@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ParameterDoc from '../../components/ParameterDoc.astro';
+import BackgroundDocs from '../../components/BackgroundDocs.astro';
+import GridDocs from '../../components/GridDocs.astro';
 ---
 
 <Layout title="Drawing API Documentation - Neuro Exercises">
@@ -46,121 +48,11 @@ import ParameterDoc from '../../components/ParameterDoc.astro';
                         codeExample="?toolbarPosition=right"
                 />
 
-                <ParameterDoc
-                        name="bgImage"
-                        description="Sets a background image URL for the canvas. The image will be scaled to cover the entire canvas."
-                        type="URL-encoded image URL"
-                        defaultValue="None"
-                        examples={[]}
-                        codeExample="?bgImage=https://example.com/image.jpg"
-                />
+                <!-- Reusable Background Documentation -->
+                <BackgroundDocs />
 
-                <ParameterDoc
-                        name="isColoringBookImage"
-                        description="When set to true, processes the background image to create a coloring book effect. Converts white background to transparent and keeps black lines for coloring."
-                        type="Boolean (true/false)"
-                        defaultValue="false"
-                        examples={["/?bgImage=...&isColoringBookImage=true"]}
-                        codeExample="?isColoringBookImage=true"
-                />
-
-                <ParameterDoc
-                        name="bgOpacity"
-                        description="Controls the opacity of the background image. Only works when bgImage is set."
-                        type="Number (0-100)"
-                        defaultValue="50"
-                        examples={["/?bgImage=...&bgOpacity=30"]}
-                        codeExample="?bgOpacity=75"
-                />
-
-                <ParameterDoc
-                        name="bgSize"
-                        description="Controls the size of the background image as a percentage of the canvas."
-                        type="Number (10-200)"
-                        defaultValue="100 (full size)"
-                        examples={["/?bgSize=150"]}
-                        codeExample="?bgSize=75"
-                />
-
-                <ParameterDoc
-                        name="bgImagePosX"
-                        description="Horizontal position of the background image (0-100%). 0% = left, 50% = center, 100% = right."
-                        type="Number (0-100)"
-                        defaultValue="50"
-                        examples={["/?bgImage=...&bgImagePosX=25"]}
-                        codeExample="?bgImagePosX=75"
-                />
-
-                <ParameterDoc
-                        name="bgImagePosY"
-                        description="Vertical position of the background image (0-100%). 0% = top, 50% = center, 100% = bottom."
-                        type="Number (0-100)"
-                        defaultValue="50"
-                        examples={["/?bgImage=...&bgImagePosY=75"]}
-                        codeExample="?bgImagePosY=25"
-                />
-
-                <ParameterDoc
-                        name="bgColor"
-                        description="Sets the background color of the canvas. Use URL-encoded hex value."
-                        type="URL-encoded hex color"
-                        defaultValue="#ffffff"
-                        examples={[]}
-                        codeExample="?bgColor=%23000000"
-                />
-
-                <!-- Grid Parameters Section -->
-                <div class="bg-card border border-border rounded-lg p-6">
-                    <h2 class="text-2xl font-bold text-foreground mb-3">Grid Controls</h2>
-                    <p class="text-muted-foreground mb-4">Adds a customizable grid overlay to the canvas.</p>
-
-                    <div class="space-y-4">
-                        <ParameterDoc
-                                name="gridEnabled"
-                                description="Enables or disables the grid overlay."
-                                type="Boolean (true/false)"
-                                defaultValue="false"
-                                examples={["/?gridEnabled=true"]}
-                                codeExample="?gridEnabled=true"
-                        />
-
-                        <ParameterDoc
-                                name="gridColor"
-                                description="Sets the grid color (URL-encoded hex value)."
-                                type="URL-encoded hex color"
-                                defaultValue="#cccccc"
-                                examples={[]}
-                                codeExample="?gridColor=%23ff0000"
-                        />
-
-                        <ParameterDoc
-                                name="gridOpacity"
-                                description="Sets the grid opacity (0-100)."
-                                type="Number (0-100)"
-                                defaultValue="30"
-                                examples={[]}
-                                codeExample="?gridOpacity=50"
-                        />
-
-                        <ParameterDoc
-                                name="gridStyle"
-                                description="Sets the grid line style."
-                                type="String (solid, dotted, dashed, sparse)"
-                                defaultValue="solid"
-                                examples={[]}
-                                codeExample="?gridStyle=dotted"
-                        />
-
-                        <ParameterDoc
-                                name="gridSize"
-                                description="Sets the grid cell size in pixels (10-100)."
-                                type="Number (10-100)"
-                                defaultValue="20"
-                                examples={[]}
-                                codeExample="?gridSize=30"
-                        />
-                    </div>
-                </div>
+                <!-- Reusable Grid Documentation -->
+                <GridDocs />
 
                 <!-- Show Inputs Parameter -->
                 <div class="bg-card border border-border rounded-lg p-6">

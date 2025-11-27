@@ -1,7 +1,15 @@
+import { BackgroundSettings } from "./BackgroundSettings.js";
+import { GridSettings } from "./GridSettings.js";
+
 // Canvas initialization and drawing logic
-class CanvasManager {
+class DrawingCanvasManager {
     constructor() {
         this.urlParams = new URLSearchParams(window.location.search);
+
+        // NEW: Load reusable settings
+        this.backgroundSettings = new BackgroundSettings(this.urlParams);
+        this.gridSettings = new GridSettings(this.urlParams);
+
         this.init();
     }
 
@@ -42,23 +50,6 @@ class CanvasManager {
         this.undoStack = [];
         this.redoStack = [];
         this.maxUndoSteps = 50;
-
-        // Bg Image state
-        this.bgOpacity = parseInt(this.urlParams.get('bgOpacity') || '50') / 100;
-        this.bgImageSize = parseInt(this.urlParams.get('bgImageSize') || '100');
-        this.bgColor = this.urlParams.get('bgColor')?.replace("%23", "#") || '#ffffff';
-        this.bgImagePosition = {
-            x: parseInt(this.urlParams.get('bgImagePosX') || '50'),
-            y: parseInt(this.urlParams.get('bgImagePosY') || '50')
-        };
-        this.isColoringBookImage = this.urlParams.get('isColoringBookImage') === 'true';
-
-        // Grid state
-        this.gridEnabled = this.urlParams.get('gridEnabled') === 'true';
-        this.gridColor = this.urlParams.get('gridColor')?.replace("%23", "#") || '#cccccc';
-        this.gridOpacity = parseInt(this.urlParams.get('gridOpacity') || '30') / 100;
-        this.gridStyle = this.urlParams.get('gridStyle') || 'solid';
-        this.gridCellSize = parseInt(this.urlParams.get('gridSize') || '20');
 
         // Toolbar position
         this.toolbarPosition = this.urlParams.get('toolbarPosition') || 'up';
@@ -425,12 +416,12 @@ class CanvasManager {
 
         if (this.urlParams.get('bgImage') && this.showInputs.backgroundInputs) {
             this.opacityControl.classList.remove('hidden');
-            this.opacitySlider.value = (this.bgOpacity * 100).toString();
-            this.opacityValue.textContent = `${Math.round(this.bgOpacity * 100)}%`;
+            this.opacitySlider.value = (this.backgroundSettings.bgOpacity * 100).toString();
+            this.opacityValue.textContent = `${Math.round(this.backgroundSettings.bgOpacity * 100)}%`;
         }
 
         this.opacitySlider.oninput = () => {
-            this.bgOpacity = parseInt(this.opacitySlider.value) / 100;
+            this.backgroundSettings.bgOpacity = parseInt(this.opacitySlider.value) / 100;
             this.opacityValue.textContent = `${this.opacitySlider.value}%`;
             this.loadBackgroundImage();
         };
@@ -442,13 +433,13 @@ class CanvasManager {
 
         if (this.urlParams.get('bgImage') && this.showInputs.backgroundInputs) {
             this.bgSizeControl.classList.remove('hidden');
-            this.bgSizeSlider.value = this.bgImageSize.toString();
-            this.bgSizeValue.textContent = `${this.bgImageSize}%`;
+            this.bgSizeSlider.value = this.backgroundSettings.bgImageSize.toString();
+            this.bgSizeValue.textContent = `${this.backgroundSettings.bgImageSize}%`;
         }
 
         this.bgSizeSlider.oninput = () => {
-            this.bgImageSize = parseInt(this.bgSizeSlider.value);
-            this.bgSizeValue.textContent = `${this.bgImageSize}%`;
+            this.backgroundSettings.bgImageSize = parseInt(this.bgSizeSlider.value);
+            this.bgSizeValue.textContent = `${this.backgroundSettings.bgImageSize}%`;
             this.loadBackgroundImage();
         };
 
@@ -458,10 +449,10 @@ class CanvasManager {
         if (this.showInputs.backgroundInputs) {
             this.bgColorControl.classList.remove('hidden');
         }
-        this.bgColorPicker.value = this.bgColor;
+        this.bgColorPicker.value = this.backgroundSettings.bgColor;
 
         this.bgColorPicker.oninput = () => {
-            this.bgColor = this.bgColorPicker.value;
+            this.backgroundSettings.bgColor = this.bgColorPicker.value;
             this.drawBackgroundColor();
             this.loadBackgroundImage();
         };
@@ -473,13 +464,13 @@ class CanvasManager {
 
         if (this.urlParams.get('bgImage') && this.showInputs.backgroundInputs) {
             this.bgPosXControl.classList.remove('hidden');
-            this.bgPosXSlider.value = this.bgImagePosition.x.toString();
-            this.bgPosXValue.textContent = `${this.bgImagePosition.x}%`;
+            this.bgPosXSlider.value = this.backgroundSettings.bgImagePosition.x.toString();
+            this.bgPosXValue.textContent = `${this.backgroundSettings.bgImagePosition.x}%`;
         }
 
         this.bgPosXSlider.oninput = () => {
-            this.bgImagePosition.x = parseInt(this.bgPosXSlider.value);
-            this.bgPosXValue.textContent = `${this.bgImagePosition.x}%`;
+            this.backgroundSettings.bgImagePosition.x = parseInt(this.bgPosXSlider.value);
+            this.bgPosXValue.textContent = `${this.backgroundSettings.bgImagePosition.x}%`;
             this.loadBackgroundImage();
         };
 
@@ -490,13 +481,13 @@ class CanvasManager {
 
         if (this.urlParams.get('bgImage') && this.showInputs.backgroundInputs) {
             this.bgPosYControl.classList.remove('hidden');
-            this.bgPosYSlider.value = this.bgImagePosition.y.toString();
-            this.bgPosYValue.textContent = `${this.bgImagePosition.y}%`;
+            this.bgPosYSlider.value = this.backgroundSettings.bgImagePosition.y.toString();
+            this.bgPosYValue.textContent = `${this.backgroundSettings.bgImagePosition.y}%`;
         }
 
         this.bgPosYSlider.oninput = () => {
-            this.bgImagePosition.y = parseInt(this.bgPosYSlider.value);
-            this.bgPosYValue.textContent = `${this.bgImagePosition.y}%`;
+            this.backgroundSettings.bgImagePosition.y = parseInt(this.bgPosYSlider.value);
+            this.bgPosYValue.textContent = `${this.backgroundSettings.bgImagePosition.y}%`;
             this.loadBackgroundImage();
         };
 
@@ -525,39 +516,39 @@ class CanvasManager {
         this.gridStyleSelect = document.getElementById('gridStyle');
 
         // Initialize grid controls
-        this.gridToggle.checked = this.gridEnabled;
-        this.gridSizeSlider.value = this.gridCellSize.toString();
-        this.gridSizeValue.textContent = this.gridCellSize.toString();
-        this.gridColorPicker.value = this.gridColor;
-        this.gridOpacitySlider.value = (this.gridOpacity * 100).toString();
-        this.gridOpacityValue.textContent = `${Math.round(this.gridOpacity * 100)}%`;
-        this.gridStyleSelect.value = this.gridStyle;
+        this.gridToggle.checked = this.gridSettings.gridEnabled;
+        this.gridSizeSlider.value = this.gridSettings.gridCellSize.toString();
+        this.gridSizeValue.textContent = this.gridSettings.gridCellSize.toString();
+        this.gridColorPicker.value = this.gridSettings.gridColor;
+        this.gridOpacitySlider.value = (this.gridSettings.gridOpacity * 100).toString();
+        this.gridOpacityValue.textContent = `${Math.round(this.gridSettings.gridOpacity * 100)}%`;
+        this.gridStyleSelect.value = this.gridSettings.gridStyle;
 
         // Grid event listeners
         this.gridToggle.onchange = () => {
-            this.gridEnabled = this.gridToggle.checked;
+            this.gridSettings.gridEnabled = this.gridToggle.checked;
             this.drawGrid();
         };
 
         this.gridSizeSlider.oninput = () => {
-            this.gridCellSize = parseInt(this.gridSizeSlider.value);
-            this.gridSizeValue.textContent = this.gridCellSize.toString();
+            this.gridSettings.gridCellSize = parseInt(this.gridSizeSlider.value);
+            this.gridSizeValue.textContent = this.gridSettings.gridCellSize.toString();
             this.drawGrid();
         };
 
         this.gridColorPicker.oninput = () => {
-            this.gridColor = this.gridColorPicker.value;
+            this.gridSettings.gridColor = this.gridColorPicker.value;
             this.drawGrid();
         };
 
         this.gridOpacitySlider.oninput = () => {
-            this.gridOpacity = parseInt(this.gridOpacitySlider.value) / 100;
+            this.gridSettings.gridOpacity = parseInt(this.gridOpacitySlider.value) / 100;
             this.gridOpacityValue.textContent = `${this.gridOpacitySlider.value}%`;
             this.drawGrid();
         };
 
         this.gridStyleSelect.onchange = () => {
-            this.gridStyle = this.gridStyleSelect.value;
+            this.gridSettings.gridStyle = this.gridStyleSelect.value;
             this.drawGrid();
         };
 
@@ -619,13 +610,13 @@ class CanvasManager {
         }
 
         // Redraw grid if enabled
-        if (this.gridEnabled) {
+        if (this.gridSettings.gridEnabled) {
             this.drawGrid();
         }
     }
 
     drawBackgroundColor() {
-        this.bgColorCtx.fillStyle = this.bgColor;
+        this.bgColorCtx.fillStyle = this.backgroundSettings.bgColor;
         this.bgColorCtx.fillRect(0, 0, this.bgColorCanvas.width, this.bgColorCanvas.height);
     }
 
@@ -640,9 +631,9 @@ class CanvasManager {
         img.crossOrigin = 'anonymous';
         img.onload = () => {
             this.bgImageCtx.clearRect(0, 0, this.bgImageCanvas.width, this.bgImageCanvas.height);
-            this.bgImageCtx.globalAlpha = this.bgOpacity;
+            this.bgImageCtx.globalAlpha = this.backgroundSettings.bgOpacity;
 
-            if (this.isColoringBookImage) {
+            if (this.backgroundSettings.isColoringBookImage) {
                 this.processColoringBookImage(img);
             } else {
                 this.drawRegularBackgroundImage(img);
@@ -697,10 +688,10 @@ class CanvasManager {
         const scale = Math.max(
             this.bgImageCanvas.width / tempCanvas.width,
             this.bgImageCanvas.height / tempCanvas.height
-        ) * (this.bgImageSize / 100);
+        ) * (this.backgroundSettings.bgImageSize / 100);
 
-        const x = (this.bgImageCanvas.width - tempCanvas.width * scale) * (this.bgImagePosition.x / 100);
-        const y = (this.bgImageCanvas.height - tempCanvas.height * scale) * (this.bgImagePosition.y / 100);
+        const x = (this.bgImageCanvas.width - tempCanvas.width * scale) * (this.backgroundSettings.bgImagePosition.x / 100);
+        const y = (this.bgImageCanvas.height - tempCanvas.height * scale) * (this.backgroundSettings.bgImagePosition.y / 100);
 
         // Draw processed image to background canvas
         this.bgImageCtx.drawImage(tempCanvas, x, y, tempCanvas.width * scale, tempCanvas.height * scale);
@@ -711,10 +702,10 @@ class CanvasManager {
         const scale = Math.max(
             this.bgImageCanvas.width / img.width,
             this.bgImageCanvas.height / img.height
-        ) * (this.bgImageSize / 100);
+        ) * (this.backgroundSettings.bgImageSize / 100);
 
-        const x = (this.bgImageCanvas.width - img.width * scale) * (this.bgImagePosition.x / 100);
-        const y = (this.bgImageCanvas.height - img.height * scale) * (this.bgImagePosition.y / 100);
+        const x = (this.bgImageCanvas.width - img.width * scale) * (this.backgroundSettings.bgImagePosition.x / 100);
+        const y = (this.bgImageCanvas.height - img.height * scale) * (this.backgroundSettings.bgImagePosition.y / 100);
 
         this.bgImageCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
     }
@@ -722,16 +713,16 @@ class CanvasManager {
     drawGrid() {
         this.gridCtx.clearRect(0, 0, this.gridCanvas.width, this.gridCanvas.height);
 
-        if (!this.gridEnabled) return;
+        if (!this.gridSettings.gridEnabled) return;
 
-        this.gridCtx.strokeStyle = this.gridColor;
-        this.gridCtx.globalAlpha = this.gridOpacity;
+        this.gridCtx.strokeStyle = this.gridSettings.gridColor;
+        this.gridCtx.globalAlpha = this.gridSettings.gridOpacity;
         this.gridCtx.lineWidth = 1;
 
         const width = this.gridCanvas.width;
         const height = this.gridCanvas.height;
 
-        switch (this.gridStyle) {
+        switch (this.gridSettings.gridStyle) {
             case 'solid':
                 this.drawSolidGrid(width, height);
                 break;
@@ -751,11 +742,11 @@ class CanvasManager {
 
     drawSolidGrid(width, height) {
         this.gridCtx.beginPath();
-        for (let x = 0; x <= width; x += this.gridCellSize) {
+        for (let x = 0; x <= width; x += this.gridSettings.gridCellSize) {
             this.gridCtx.moveTo(x, 0);
             this.gridCtx.lineTo(x, height);
         }
-        for (let y = 0; y <= height; y += this.gridCellSize) {
+        for (let y = 0; y <= height; y += this.gridSettings.gridCellSize) {
             this.gridCtx.moveTo(0, y);
             this.gridCtx.lineTo(width, y);
         }
@@ -763,9 +754,9 @@ class CanvasManager {
     }
 
     drawDottedGrid(width, height) {
-        this.gridCtx.fillStyle = this.gridColor;
-        for (let x = 0; x <= width; x += this.gridCellSize) {
-            for (let y = 0; y <= height; y += this.gridCellSize) {
+        this.gridCtx.fillStyle = this.gridSettings.gridColor;
+        for (let x = 0; x <= width; x += this.gridSettings.gridCellSize) {
+            for (let y = 0; y <= height; y += this.gridSettings.gridCellSize) {
                 this.gridCtx.beginPath();
                 this.gridCtx.arc(x, y, 1, 0, Math.PI * 2);
                 this.gridCtx.fill();
@@ -780,11 +771,11 @@ class CanvasManager {
         this.gridCtx.setLineDash([dashLength, gapLength]);
 
         this.gridCtx.beginPath();
-        for (let x = 0; x <= width; x += this.gridCellSize) {
+        for (let x = 0; x <= width; x += this.gridSettings.gridCellSize) {
             this.gridCtx.moveTo(x, 0);
             this.gridCtx.lineTo(x, height);
         }
-        for (let y = 0; y <= height; y += this.gridCellSize) {
+        for (let y = 0; y <= height; y += this.gridSettings.gridCellSize) {
             this.gridCtx.moveTo(0, y);
             this.gridCtx.lineTo(width, y);
         }
@@ -797,11 +788,11 @@ class CanvasManager {
         const sparseFactor = 4; // Draw every 4th line
 
         this.gridCtx.beginPath();
-        for (let x = 0; x <= width; x += this.gridCellSize * sparseFactor) {
+        for (let x = 0; x <= width; x += this.gridSettings.gridCellSize * sparseFactor) {
             this.gridCtx.moveTo(x, 0);
             this.gridCtx.lineTo(x, height);
         }
-        for (let y = 0; y <= height; y += this.gridCellSize * sparseFactor) {
+        for (let y = 0; y <= height; y += this.gridSettings.gridCellSize * sparseFactor) {
             this.gridCtx.moveTo(0, y);
             this.gridCtx.lineTo(width, y);
         }
@@ -853,5 +844,5 @@ class CanvasManager {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new CanvasManager();
+    new DrawingCanvasManager();
 });

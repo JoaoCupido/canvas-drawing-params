@@ -1,0 +1,107 @@
+---
+// components/BackgroundInputs.astro
+---
+
+<div class="">
+    <h3 class="text-lg font-semibold text-foreground mb-4">Background Settings</h3>
+
+    <!-- Background Color -->
+    <div class="mb-4">
+        <label for="bgColorInput" class="block text-sm font-medium text-foreground mb-2">
+            Background Color
+        </label>
+        <input
+                type="color"
+                id="bgColorInput"
+                value="#ffffff"
+                class="w-20 h-10 rounded border border-border"
+        />
+    </div>
+
+    <!-- Background Image -->
+    <div class="mb-4">
+        <label for="bgImageInput" class="block text-sm font-medium text-foreground mb-2">
+            Background Image URL
+        </label>
+        <input
+                type="url"
+                id="bgImageInput"
+                placeholder="https://example.com/image.jpg"
+                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <p class="text-sm text-muted-foreground mt-1">Optional: Add a background image</p>
+    </div>
+
+    <!-- Coloring Book Image Option -->
+    <div class="mb-4">
+        <label class="flex items-center gap-2">
+            <input type="checkbox" id="coloringBookImageCheck" class="text-primary" />
+            <span class="text-foreground font-medium">Coloring Book Image (transparent background)</span>
+        </label>
+        <p class="text-sm text-muted-foreground mt-1 ml-6">
+            Converts white background to transparent, keeping black lines for coloring
+        </p>
+    </div>
+
+    <!-- Background Opacity -->
+    <div class="mb-4">
+        <label for="bgOpacityInput" class="block text-sm font-medium text-foreground mb-2">
+            Background Opacity (0-100)
+        </label>
+        <input
+                type="number"
+                id="bgOpacityInput"
+                value="50"
+                min="0"
+                max="100"
+                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+    </div>
+
+    <!-- Background Size -->
+    <div class="mb-4">
+        <label for="bgImageSizeInput" class="block text-sm font-medium text-foreground mb-2">
+            Background Size (10-200%)
+        </label>
+        <input
+                type="number"
+                id="bgImageSizeInput"
+                value="100"
+                min="10"
+                max="200"
+                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+    </div>
+
+    <!-- Background Position X -->
+    <div class="mb-4">
+        <label for="bgPosXInput" class="block text-sm font-medium text-foreground mb-2">
+            Background Position X (0-100%)
+        </label>
+        <input
+                type="number"
+                id="bgPosXInput"
+                value="50"
+                min="0"
+                max="100"
+                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <p class="text-sm text-muted-foreground mt-1">0% = left, 50% = center, 100% = right</p>
+    </div>
+
+    <!-- Background Position Y -->
+    <div class="mb-4">
+        <label for="bgPosYInput" class="block text-sm font-medium text-foreground mb-2">
+            Background Position Y (0-100%)
+        </label>
+        <input
+                type="number"
+                id="bgPosYInput"
+                value="50"
+                min="0"
+                max="100"
+                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <p class="text-sm text-muted-foreground mt-1">0% = top, 50% = center, 100% = bottom</p>
+    </div>
+</div>
