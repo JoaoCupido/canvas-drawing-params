@@ -110,6 +110,15 @@ import ParameterDoc from '../../components/ParameterDoc.astro';
                 />
 
                 <ParameterDoc
+                        name="hidePopupAll"
+                        description="When set to true, completely hides the results popup after test completion."
+                        type="Boolean (true/false)"
+                        defaultValue="false"
+                        examples={["/?hidePopupAll=true"]}
+                        codeExample="?hidePopupAll=true"
+                />
+
+                <ParameterDoc
                         name="bgImage"
                         description="Sets a background image URL for the test canvas."
                         type="URL-encoded image URL"

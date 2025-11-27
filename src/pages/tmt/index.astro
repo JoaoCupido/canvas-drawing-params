@@ -60,6 +60,7 @@ import Layout from '../../layouts/Layout.astro';
             const showWrongSelections = urlParams.get('showWrongSelections') !== 'false'; // Default: true
             const hidePopupButtons = urlParams.get('hidePopupButtons') === 'true'; // Default: false
             const hidePopupResults = urlParams.get('hidePopupResults') === 'true'; // Default: false
+            const hidePopupAll = urlParams.get('hidePopupAll') === 'true';
 
             // Existing custom positions parameter
             const customPositions = urlParams.get('customPositions');
@@ -201,6 +202,8 @@ import Layout from '../../layouts/Layout.astro';
 
             // UI functions
             function showPopup() {
+                if (hidePopupAll) return;
+
                 // Update results if not hidden
                 if (!hidePopupResults) {
                     popupTimerElement.textContent = `Time: ${popupTimer.toFixed(2)}s`;

@@ -122,6 +122,16 @@ import FormInput from '../../components/FormInput.astro';
                                     When checked, the time and errors display in the results popup are hidden.
                                 </p>
                             </div>
+
+                            <div>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" id="hidePopupAllCheck" class="text-primary" />
+                                    <span class="text-foreground font-medium">Hide Popup Completely</span>
+                                </label>
+                                <p class="text-sm text-muted-foreground mt-1 ml-6">
+                                    When checked, the results popup will not be shown at all after test completion.
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -179,6 +189,19 @@ import FormInput from '../../components/FormInput.astro';
                                 Optional: Provide exact positions as percentage coordinates (0-100).
                                 Example: <code class="bg-secondary px-1 rounded">{"[{\"x\": 10, \"y\": 20}, {\"x\": 30, \"y\": 40}]"}</code>
                                 where x: 10 means 10% from left, y: 20 means 20% from top.
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <button
+                                    type="button"
+                                    id="generateRandomPositionsBtn"
+                                    class="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity mb-2"
+                            >
+                                Generate Random Positions
+                            </button>
+                            <p class="text-sm text-muted-foreground">
+                                Automatically generates random positions for the current trail length.
                             </p>
                         </div>
 
@@ -241,6 +264,7 @@ import FormInput from '../../components/FormInput.astro';
             params.set('showWrongSelections', document.getElementById('showWrongSelectionsCheck').checked);
             params.set('hidePopupButtons', document.getElementById('hidePopupButtonsCheck').checked);
             params.set('hidePopupResults', document.getElementById('hidePopupResultsCheck').checked);
+            params.set('hidePopupAll', document.getElementById('hidePopupAllCheck').checked);
 
             // Background settings
             params.set('bgColor', document.getElementById('bgColorInput').value.replace('#', '%23'));
@@ -286,6 +310,27 @@ import FormInput from '../../components/FormInput.astro';
                 }, 2000);
             });
         }
+
+        // Add this function to handle random position generation
+        function generateRandomPositions() {
+            const trailLength = parseInt(document.getElementById('trailLengthInput').value);
+            const positions = [];
+
+            for (let i = 0; i < trailLength; i++) {
+                // Generate random positions with some padding from edges (5%-95% range)
+                const x = Math.floor(Math.random() * 90) + 5; // 5-95%
+                const y = Math.floor(Math.random() * 90) + 5; // 5-95%
+                positions.push({ x, y });
+            }
+
+            document.getElementById('customPositionsInput').value = JSON.stringify(positions, null, 2);
+            document.getElementById('enableCustomPositionsCheck').checked = true;
+            document.getElementById('customPositionsInput').disabled = false;
+            updateGeneratedUrl();
+        }
+
+        // Add event listener in the DOMContentLoaded section:
+        document.getElementById('generateRandomPositionsBtn').addEventListener('click', generateRandomPositions);
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
