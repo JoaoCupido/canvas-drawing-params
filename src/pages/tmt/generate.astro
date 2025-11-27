@@ -135,43 +135,6 @@ import FormInput from '../../components/FormInput.astro';
                         </div>
                     </div>
 
-                    <!-- Background Settings -->
-                    <div class="border-b border-border pb-6">
-                        <h3 class="text-lg font-semibold text-foreground mb-4">Background Settings</h3>
-
-                        <div class="mb-4">
-                            <label for="bgColorInput" class="block text-sm font-medium text-foreground mb-2">
-                                Background Color
-                            </label>
-                            <input
-                                    type="color"
-                                    id="bgColorInput"
-                                    value="#ffffff"
-                                    class="w-20 h-10 rounded border border-border"
-                            />
-                        </div>
-
-                        <FormInput
-                                id="bgImageInput"
-                                label="Background Image URL"
-                                type="url"
-                                placeholder="https://example.com/image.jpg"
-                                note="Optional: Add a background image"
-                                className="mb-4"
-                        />
-
-                        <FormInput
-                                id="bgOpacityInput"
-                                label="Background Image Opacity (0-100)"
-                                type="number"
-                                value="50"
-                                min="0"
-                                max="100"
-                                note="0 = transparent, 100 = fully opaque"
-                                className="mb-4"
-                        />
-                    </div>
-
                     <!-- Custom Positions Settings -->
                     <div>
                         <h3 class="text-lg font-semibold text-foreground mb-4">Custom Dot Positions</h3>
@@ -266,16 +229,6 @@ import FormInput from '../../components/FormInput.astro';
             params.set('hidePopupButtons', document.getElementById('hidePopupButtonsCheck').checked);
             params.set('hidePopupResults', document.getElementById('hidePopupResultsCheck').checked);
             params.set('hidePopupAll', document.getElementById('hidePopupAllCheck').checked);
-
-            // Background settings
-            params.set('bgColor', document.getElementById('bgColorInput').value.replace('#', '%23'));
-
-            const bgImage = document.getElementById('bgImageInput').value;
-            if (bgImage) {
-                params.set('bgImage', encodeURIComponent(bgImage));
-            }
-
-            params.set('bgOpacity', document.getElementById('bgOpacityInput').value);
 
             // Custom positions
             const enableCustomPositions = document.getElementById('enableCustomPositionsCheck').checked;

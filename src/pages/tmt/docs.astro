@@ -119,33 +119,6 @@ import ParameterDoc from '../../components/ParameterDoc.astro';
                 />
 
                 <ParameterDoc
-                        name="bgImage"
-                        description="Sets a background image URL for the test canvas."
-                        type="URL-encoded image URL"
-                        defaultValue="None"
-                        examples={[]}
-                        codeExample="?bgImage=https://example.com/background.jpg"
-                />
-
-                <ParameterDoc
-                        name="bgColor"
-                        description="Sets the background color of the canvas. Use URL-encoded hex value."
-                        type="URL-encoded hex color"
-                        defaultValue="#ffffff"
-                        examples={[]}
-                        codeExample="?bgColor=%23000000"
-                />
-
-                <ParameterDoc
-                        name="bgOpacity"
-                        description="Controls the opacity of the background image (0-100)."
-                        type="Number (0-100)"
-                        defaultValue="50"
-                        examples={["/?bgOpacity=30", "/?bgOpacity=75"]}
-                        codeExample="?bgOpacity=25"
-                />
-
-                <ParameterDoc
                         name="enableCustomPositions"
                         description="When checked, custom positions will be used instead of random placement."
                         type="Boolean (true/false)"

@@ -50,9 +50,6 @@ import Layout from '../../layouts/Layout.astro';
             const showTimer = urlParams.get('showTimer') !== 'false';
             const symbolType = urlParams.get('symbolType') || 'numbers'; // 'numbers', 'letters', 'numbers-letters', 'letters-numbers'
             const reverseOrder = urlParams.get('reverseOrder') === 'true'; // New parameter
-            const bgImage = urlParams.get('bgImage');
-            const bgColor = urlParams.get('bgColor')?.replace("%23", "#") || '#ffffff';
-            const bgOpacity = parseInt(urlParams.get('bgOpacity')) || 50;
 
             // New parameters
             const linesUnderDots = urlParams.get('linesUnderDots') !== 'false'; // Default: true (lines under dots)
@@ -136,7 +133,6 @@ import Layout from '../../layouts/Layout.astro';
             let timerInterval;
             let items = {};
             let completeTherapyLog = [];
-            let bgImageElement = null;
 
             // DOM Elements
             const timerElement = document.getElementById('timer');
@@ -148,39 +144,6 @@ import Layout from '../../layouts/Layout.astro';
             // Show/hide timer based on URL parameter
             if (!showTimer) {
                 timerElement.style.display = 'none';
-            }
-
-            // Load background image if provided
-            function loadBackgroundImage() {
-                if (!bgImage) return;
-
-                bgImageElement = new Image();
-                bgImageElement.crossOrigin = 'anonymous';
-                bgImageElement.onload = () => {
-                    drawBackground();
-                    drawItems();
-                };
-                bgImageElement.src = bgImage;
-            }
-
-            function drawBackground() {
-                // Clear canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Draw background color
-                ctx.fillStyle = bgColor;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Draw background image if loaded
-                if (bgImageElement && bgImageElement.complete) {
-                    ctx.globalAlpha = bgOpacity / 100;
-                    // Scale image to fit canvas while maintaining aspect ratio
-                    const scale = Math.max(canvas.width / bgImageElement.width, canvas.height / bgImageElement.height);
-                    const x = (canvas.width - bgImageElement.width * scale) / 2;
-                    const y = (canvas.height - bgImageElement.height * scale) / 2;
-                    ctx.drawImage(bgImageElement, x, y, bgImageElement.width * scale, bgImageElement.height * scale);
-                    ctx.globalAlpha = 1;
-                }
             }
 
             // Timer functions
