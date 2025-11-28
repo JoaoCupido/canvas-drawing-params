@@ -6,8 +6,8 @@ export default defineConfig({
         plugins: [tailwindcss()],
     },
     build: {
-        assetsPrefix: '.',
+        assetsDir: '_astro',
     },
   site: 'https://joaocupido.github.io/neuro-exercises',
-  base: '/'
+  base: '/',
 });
