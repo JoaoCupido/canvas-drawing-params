@@ -1,3 +1,6 @@
 node_modules
 .idea
 .astro
+
+src-tauri/target/*
+dist
