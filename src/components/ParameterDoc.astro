@@ -9,28 +9,42 @@ export interface Parameter {
 }
 ---
 
-<div class="bg-card border border-border rounded-lg p-6">
-    <h2 class="text-2xl font-bold text-foreground mb-3">{Astro.props.name}</h2>
-    <p class="text-muted-foreground mb-4">{Astro.props.description}</p>
-
-    {Astro.props.codeExample && (
-            <div class="bg-secondary rounded-lg p-4 mb-4 overflow-x-auto">
-                <code class="text-sm text-foreground whitespace-nowrap">{Astro.props.codeExample}</code>
+<div class="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
+    <div class="flex items-start justify-between">
+        <div class="flex-1">
+            <div class="flex items-center gap-2 mb-2">
+                <h2 class="text-xl font-bold text-foreground">{Astro.props.name}</h2>
+                <span class="px-2 py-1 text-xs font-medium bg-primary/20 text-primary rounded-full">{Astro.props.type}</span>
             </div>
-    )}
+            <p class="text-muted-foreground mb-4">{Astro.props.description}</p>
 
-    <div class="space-y-2">
-        <p class="text-sm"><span class="text-muted-foreground">Type:</span> <span class="text-foreground">{Astro.props.type}</span></p>
-        <p class="text-sm"><span class="text-muted-foreground">Default:</span> <span class="text-foreground">{Astro.props.defaultValue}</span></p>
-        {Astro.props.examples.length > 0 && (
-                <>
-                    <p class="text-sm"><span class="text-muted-foreground">Examples:</span></p>
-                    <ul class="list-disc list-inside ml-4 space-y-1">
-                        {Astro.props.examples.map(example => (
-                                <li><code class="text-primary">{example}</code></li>
-                        ))}
-                    </ul>
-                </>
-        )}
+            {Astro.props.codeExample && (
+                <div class="bg-secondary rounded-lg p-4 mb-4 overflow-x-auto group relative">
+                    <code class="text-sm text-foreground font-mono">{Astro.props.codeExample}</code>
+                </div>
+            )}
+
+            <div class="space-y-3">
+                <div class="flex items-center">
+                    <span class="text-muted-foreground text-sm w-20">Default:</span>
+                    <span class="text-foreground font-mono text-sm bg-secondary px-2 py-1 rounded break-all">
+                        {Astro.props.defaultValue}
+                    </span>
+                </div>
+
+                {Astro.props.examples.length > 0 && (
+                    <div>
+                        <p class="text-muted-foreground text-sm mb-2">Examples:</p>
+                        <div class="flex flex-wrap gap-2">
+                            {Astro.props.examples.map(example => (
+                                <p class="text-primary text-sm font-mono bg-primary/10 px-3 py-1 rounded transition-colors">
+                                    {example}
+                                </p>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
     </div>
 </div>

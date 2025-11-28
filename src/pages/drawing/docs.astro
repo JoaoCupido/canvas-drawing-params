@@ -6,91 +6,201 @@ import GridDocs from '../../components/GridDocs.astro';
 ---
 
 <Layout title="Drawing API Documentation - Neuro Exercises">
-    <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
-        <div class="min-h-screen mx-auto max-w-4xl">
-            <h1 class="text-4xl font-bold text-foreground mb-2">Drawing API Documentation</h1>
-            <p class="text-muted-foreground mb-8">Learn how to configure the drawing canvas using URL parameters</p>
+    <main class="min-h-screen bg-background">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-border py-12 px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-4xl">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-3 h-3 rounded-full bg-primary"></div>
+                    <span class="text-sm font-medium text-primary">API Documentation</span>
+                </div>
+                <h1 class="text-4xl font-bold text-foreground mb-3">Drawing Canvas Configuration</h1>
+                <p class="text-muted-foreground text-lg max-w-2xl">
+                    Learn how to configure and control the drawing canvas through URL parameters for research,
+                    clinical use, or creative tasks.
+                </p>
 
-            <div class="space-y-8">
-                <ParameterDoc
-                        name="brushSize"
-                        description="Controls the default brush/eraser size in pixels."
-                        type="Number (1-50)"
-                        defaultValue="5"
-                        examples={["/?brushSize=15"]}
-                        codeExample="?brushSize=10"
-                />
+                <!-- Quick Navigation -->
+                <div class="flex flex-wrap gap-2 mt-6">
+                    <a href="#basic-parameters" class="text-sm bg-background hover:bg-secondary border border-border px-3 py-1.5 rounded-full transition-colors">
+                        Basic Parameters
+                    </a>
+                    <a href="#appearance" class="text-sm bg-background hover:bg-secondary border border-border px-3 py-1.5 rounded-full transition-colors">
+                        Appearance
+                    </a>
+                    <a href="#toolbar-settings" class="text-sm bg-background hover:bg-secondary border border-border px-3 py-1.5 rounded-full transition-colors">
+                        Toolbar
+                    </a>
+                    <a href="#advanced" class="text-sm bg-background hover:bg-secondary border border-border px-3 py-1.5 rounded-full transition-colors">
+                        Advanced
+                    </a>
+                </div>
+            </div>
+        </header>
 
-                <ParameterDoc
-                        name="colors"
-                        description="Defines which colors are available in the color picker. Use comma-separated hex values or '*' for all default colors."
-                        type="Comma-separated hex colors or '*'"
-                        defaultValue="8 default colors"
-                        examples={["/?colors=*", "/?colors=#ff0000,#00ff00"]}
-                        codeExample="?colors=#ff0000,#00ff00,#0000ff"
-                />
+        <div class="py-12 px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-4xl">
 
-                <ParameterDoc
-                        name="hideToolbar"
-                        description="When set to true, hides the entire toolbar for a minimal interface. Useful for kiosk mode or simplified drawing experience."
-                        type="Boolean (true/false)"
-                        defaultValue="false"
-                        examples={["/?hideToolbar=true"]}
-                        codeExample="?hideToolbar=true"
-                />
-
-                <ParameterDoc
-                        name="toolbarPosition"
-                        description="Sets the position of the toolbar. Options: up, down, left, right."
-                        type="String (up, down, left, right)"
-                        defaultValue="up"
-                        examples={["/?toolbarPosition=left"]}
-                        codeExample="?toolbarPosition=right"
-                />
-
-                <!-- Reusable Background Documentation -->
-                <BackgroundDocs />
-
-                <!-- Reusable Grid Documentation -->
-                <GridDocs />
-
-                <!-- Show Inputs Parameter -->
-                <div class="bg-card border border-border rounded-lg p-6">
-                    <h2 class="text-2xl font-bold text-foreground mb-3">Input Controls</h2>
-                    <p class="text-muted-foreground mb-4">Controls which input elements are visible in the toolbar using a JSON object.</p>
-
-                    <ParameterDoc
-                            name="showInputs"
-                            description="Controls visibility of input controls in the toolbar. Use a JSON object with boolean values for each control type."
-                            type="JSON Object"
-                            defaultValue='{"eraserInput":true,"cursorSizeInput":true,"enableUndoRedoInput":true,"backgroundInputs":true,"gridInputs":true}'
-                            examples={[]}
-                            codeExample='?showInputs={"eraserInput":false,"gridInputs":false}'
-                    />
-
-                    <div class="mt-4 space-y-2">
-                        <h4 class="font-semibold text-foreground">Properties:</h4>
-                        <ul class="list-disc list-inside space-y-1 text-muted-foreground">
-                            <li><code>eraserInput</code> - Shows/hides the eraser tool button</li>
-                            <li><code>cursorSizeInput</code> - Shows/hides the brush size slider</li>
-                            <li><code>enableUndoRedoInput</code> - Shows/hides undo/redo buttons</li>
-                            <li><code>backgroundInputs</code> - Shows/hides background color and image controls</li>
-                            <li><code>gridInputs</code> - Shows/hides grid configuration controls</li>
-                        </ul>
-                    </div>
+                <!-- Introduction -->
+                <div class="prose prose-lg max-w-none mb-12">
+                    <p class="text-muted-foreground">
+                        The Drawing API allows complete customization of the brush, toolbar, colors, background, grid,
+                        and interface behavior using URL parameters. These options support a wide range of experimental
+                        or educational use cases.
+                    </p>
                 </div>
 
-                <!-- Complete Example -->
-                <div class="bg-primary/10 border border-primary rounded-lg p-6">
-                    <h2 class="text-2xl font-bold text-foreground mb-3">Complete Example</h2>
-                    <p class="text-muted-foreground mb-4">Here's a full example combining all parameters:</p>
-                    <div class="bg-secondary rounded-lg p-4 overflow-x-auto">
-                        <code class="text-sm text-foreground whitespace-nowrap">
-                            {"/?brushSize=12&colors=#ff0000,#00ff00,#0000ff&toolbarPosition=left&bgImage=https://example.com/bg.jpg&bgOpacity=40&gridEnabled=true&gridColor=%23cccccc&gridOpacity=25&gridStyle=dotted&gridSize=25&showInputs={\"eraserInput\":false,\"cursorSizeInput\":true,\"enableUndoRedoInput\":true,\"backgroundInputs\":false,\"gridInputs\":true}"}
-                        </code>
-                    </div>
+                <div class="space-y-10">
+
+                    <!-- Basic Parameters -->
+                    <section id="basic-parameters">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-2 h-8 bg-primary rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-foreground">Basic Parameters</h2>
+                        </div>
+                        <p class="text-muted-foreground mb-6">Core parameters that define the drawing behavior.</p>
+
+                        <div class="space-y-6">
+                            <ParameterDoc
+                                    name="brushSize"
+                                    description="Controls the default brush/eraser size in pixels."
+                                    type="Number (1-50)"
+                                    defaultValue="5"
+                                    examples={["/?brushSize=15"]}
+                                    codeExample="?brushSize=10"
+                            />
+
+                            <ParameterDoc
+                                    name="colors"
+                                    description="Defines which colors are available in the color picker. Use comma-separated hex values or '*' for all default colors."
+                                    type="Comma-separated hex colors or '*'"
+                                    defaultValue="8 default colors"
+                                    examples={["/?colors=*", "/?colors=#ff0000,#00ff00"]}
+                                    codeExample="?colors=#ff0000,#00ff00,#0000ff"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- Appearance -->
+                    <section id="appearance">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-2 h-8 bg-primary rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-foreground">Appearance</h2>
+                        </div>
+                        <p class="text-muted-foreground mb-6">
+                            Parameters that affect how the canvas looks, including background and grid.
+                        </p>
+
+                        <div class="space-y-6">
+                            <!-- Background Controls -->
+                            <BackgroundDocs />
+
+                            <!-- Grid Controls -->
+                            <GridDocs />
+                        </div>
+                    </section>
+
+                    <!-- Toolbar Settings -->
+                    <section id="toolbar-settings">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-2 h-8 bg-primary rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-foreground">Toolbar Settings</h2>
+                        </div>
+                        <p class="text-muted-foreground mb-6">Parameters for configuring toolbar layout and visibility.</p>
+
+                        <div class="space-y-6">
+                            <ParameterDoc
+                                    name="hideToolbar"
+                                    description="When true, hides the entire toolbar for a minimal interface."
+                                    type="Boolean (true/false)"
+                                    defaultValue="false"
+                                    examples={["/?hideToolbar=true"]}
+                                    codeExample="?hideToolbar=true"
+                            />
+
+                            <ParameterDoc
+                                    name="toolbarPosition"
+                                    description="Sets the position of the toolbar. Options: up, down, left, right."
+                                    type="String"
+                                    defaultValue="up"
+                                    examples={["/?toolbarPosition=left"]}
+                                    codeExample="?toolbarPosition=right"
+                            />
+                        </div>
+
+                        <!-- Show Inputs JSON -->
+                        <div class="bg-card border border-border rounded-lg p-6 mt-8">
+                            <h3 class="text-xl font-bold text-foreground mb-3">Input Controls</h3>
+                            <p class="text-muted-foreground mb-4">
+                                Controls which input elements are visible in the toolbar using a JSON object.
+                            </p>
+
+                            <ParameterDoc
+                                    name="showInputs"
+                                    description="Controls visibility of input controls in the toolbar. Use a JSON object with boolean values for each control type."
+                                    type="JSON Object"
+                                    defaultValue='{"eraserInput":true,"cursorSizeInput":true,"enableUndoRedoInput":true,"backgroundInputs":true,"gridInputs":true}'
+                                    examples={[]}
+                                    codeExample='?showInputs={"eraserInput":false,"gridInputs":false}'
+                            />
+
+                            <div class="mt-4 space-y-2">
+                                <h4 class="font-semibold text-foreground">Properties:</h4>
+                                <ul class="list-disc list-inside space-y-1 text-muted-foreground">
+                                    <li><code>eraserInput</code> – Shows/hides the eraser tool button</li>
+                                    <li><code>cursorSizeInput</code> – Shows/hides the brush size slider</li>
+                                    <li><code>enableUndoRedoInput</code> – Shows/hides undo/redo buttons</li>
+                                    <li><code>backgroundInputs</code> – Shows/hides background color and image controls</li>
+                                    <li><code>gridInputs</code> – Shows/hides grid configuration controls</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Advanced -->
+                    <section id="advanced">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-2 h-8 bg-primary rounded-full"></div>
+                            <h2 class="text-2xl font-bold text-foreground">Advanced Configuration</h2>
+                        </div>
+                        <p class="text-muted-foreground mb-6">
+                            More advanced parameters for fully custom setups.
+                        </p>
+
+                        <!-- (Reserved for future advanced settings) -->
+                    </section>
+
+                    <!-- Complete Example -->
+                    <section>
+                        <div class="bg-primary/10 border border-primary rounded-lg p-6">
+                            <h2 class="text-2xl font-bold text-foreground mb-3">Complete Example</h2>
+                            <p class="text-muted-foreground mb-4">A full drawing configuration example:</p>
+
+                            <div class="bg-secondary rounded-lg p-4 overflow-x-auto">
+                                <code class="text-sm text-foreground whitespace-nowrap">
+                                    {"/?brushSize=12&colors=#ff0000,#00ff00,#0000ff&toolbarPosition=left&bgImage=https://example.com/bg.jpg&bgOpacity=40&gridEnabled=true&gridColor=%23cccccc&gridOpacity=25&gridStyle=dotted&gridSize=25&showInputs={\"eraserInput\":false,\"cursorSizeInput\":true,\"enableUndoRedoInput\":true,\"backgroundInputs\":false,\"gridInputs\":true}"}
+                                </code>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
     </main>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </Layout>
