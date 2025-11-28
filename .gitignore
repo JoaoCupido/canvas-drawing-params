@@ -15,7 +15,6 @@ dist
 /src-tauri/.cargo-lock
 /src-tauri/Cargo.lock
 /src-tauri/Cargo.toml.orig
-/src-tauri/Cargo.toml
 
 # Build output from bundler
 /src-tauri/bundled/
