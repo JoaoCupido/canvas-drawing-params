@@ -17,7 +17,7 @@ const baseUrl = import.meta.env.BASE_URL;
                 <!-- Drawing Exercise Card -->
                 <div class="bg-card border border-border rounded-lg overflow-hidden">
                     <a
-                            href={`${baseUrl}drawing`}
+                            href={`.${baseUrl}drawing`}
                             class="block p-6 hover:bg-accent/50 transition-colors group"
                     >
                         <div class="text-center">
@@ -32,7 +32,7 @@ const baseUrl = import.meta.env.BASE_URL;
                     <!-- Subcards -->
                     <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
                         <a
-                                href="/drawing/docs"
+                                href={`.${baseUrl}drawing/docs`}
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
@@ -41,7 +41,7 @@ const baseUrl = import.meta.env.BASE_URL;
                             </div>
                         </a>
                         <a
-                                href="/drawing/generate"
+                                href={`.${baseUrl}drawing/generate`}
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
@@ -55,7 +55,7 @@ const baseUrl = import.meta.env.BASE_URL;
                 <!-- Trail Making Test Card -->
                 <div class="bg-card border border-border rounded-lg overflow-hidden">
                     <a
-                            href="/tmt"
+                            href={`.${baseUrl}tmt`}
                             class="block p-6 hover:bg-accent/50 transition-colors group"
                     >
                         <div class="text-center">
@@ -70,7 +70,7 @@ const baseUrl = import.meta.env.BASE_URL;
                     <!-- Subcards -->
                     <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
                         <a
-                                href="/tmt/docs"
+                                href={`.${baseUrl}tmt/docs`}
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
@@ -79,7 +79,7 @@ const baseUrl = import.meta.env.BASE_URL;
                             </div>
                         </a>
                         <a
-                                href="/tmt/generate"
+                                href={`.${baseUrl}tmt/generate`}
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">

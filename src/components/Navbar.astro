@@ -1,6 +1,8 @@
 ---
 // components/Navbar.astro
 import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Home } from '@lucide/astro';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <nav class="border-b border-border bg-card">
@@ -8,7 +10,7 @@ import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Ho
         <div class="flex h-16 items-center justify-between md:justify-start w-full gap-8">
             <!-- Logo -->
             <div class="flex items-center gap-8">
-                <a href="/" class="text-xl font-bold text-primary flex items-center gap-2">
+                <a href={`.${baseUrl}`} class="text-xl font-bold text-primary flex items-center gap-2">
                     <Brain class="w-6 h-6" />
                     Neuro Exercises
                 </a>
@@ -24,15 +26,15 @@ import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Ho
                     </button>
                     <div class="absolute top-full left-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <div class="py-2">
-                            <a href="/drawing" class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                            <a href={`.${baseUrl}drawing`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
                                 <Pencil class="w-4 h-4" />
                                 Execute Exercise
                             </a>
-                            <a href="/drawing/docs" class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                            <a href={`.${baseUrl}drawing/docs`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
                                 <FileText class="w-4 h-4" />
                                 API Documentation
                             </a>
-                            <a href="/drawing/generate" class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                            <a href={`.${baseUrl}drawing/generate`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
                                 <Link class="w-4 h-4" />
                                 Generate URL
                             </a>
@@ -48,15 +50,15 @@ import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Ho
                     </button>
                     <div class="absolute top-full left-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <div class="py-2">
-                            <a href="/tmt" class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                            <a href={`.${baseUrl}tmt`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
                                 <Waypoints class="w-4 h-4" />
                                 Execute Exercise
                             </a>
-                            <a href="/tmt/docs" class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                            <a href={`.${baseUrl}tmt/docs`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
                                 <FileText class="w-4 h-4" />
                                 API Documentation
                             </a>
-                            <a href="/tmt/generate" class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                            <a href={`.${baseUrl}tmt/generate`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
                                 <Link class="w-4 h-4" />
                                 Generate URL
                             </a>
@@ -80,15 +82,15 @@ import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Ho
                 <!-- Drawing Mobile Menu -->
                 <div class="space-y-1">
                     <div class="px-3 py-2 text-sm font-semibold text-foreground">Drawing Exercise</div>
-                    <a href="/drawing" class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                    <a href={`.${baseUrl}drawing`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
                         <Pencil class="w-4 h-4" />
                         Execute Exercise
                     </a>
-                    <a href="/drawing/docs" class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                    <a href={`.${baseUrl}drawing/docs`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
                         <FileText class="w-4 h-4" />
                         API Documentation
                     </a>
-                    <a href="/drawing/generate" class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                    <a href={`.${baseUrl}drawing/generate`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
                         <Link class="w-4 h-4" />
                         Generate URL
                     </a>
@@ -97,15 +99,15 @@ import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Ho
                 <!-- TMT Mobile Menu -->
                 <div class="space-y-1">
                     <div class="px-3 py-2 text-sm font-semibold text-foreground">Trail Making Test</div>
-                    <a href="/tmt" class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                    <a href={`.${baseUrl}tmt`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
                         <Waypoints class="w-4 h-4" />
                         Execute Exercise
                     </a>
-                    <a href="/tmt/docs" class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                    <a href={`.${baseUrl}tmt/docs`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
                         <FileText class="w-4 h-4" />
                         API Documentation
                     </a>
-                    <a href="/tmt/generate" class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                    <a href={`.${baseUrl}tmt/generate`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
                         <Link class="w-4 h-4" />
                         Generate URL
                     </a>
@@ -114,7 +116,7 @@ import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Ho
                 <hr class="h-0.5 border-t-0 bg-border" />
 
                 <!-- Home Link -->
-                <a href="/" class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                <a href={`.${baseUrl}`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
                     <Home class="w-4 h-4" />
                     Home
                 </a>
