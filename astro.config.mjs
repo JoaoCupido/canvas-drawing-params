@@ -10,6 +10,6 @@ export default defineConfig({
     build: {
         assetsDir: '_astro',
     },
-    site: 'https://joaocupido.github.io/',
-    base: '/neuro-exercises/',
+    site: 'https://joaocupido.github.io/neuro-exercises/',
+    base: '/',
 });

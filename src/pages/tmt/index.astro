@@ -1,5 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Trail Making Test - Neuro Exercises" hideNavbar={true}>
@@ -42,5 +44,5 @@ import Layout from '../../layouts/Layout.astro';
         </div>
     </main>
 
-    <script type="module" is:inline src="/scripts/TMTCanvasManager.js"></script>
+    <script type="module" is:inline src={`.${baseUrl}/scripts/TMTCanvasManager.js`}></script>
 </Layout>
