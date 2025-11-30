@@ -5,6 +5,9 @@ export default defineConfig({
     vite: {
         plugins: [tailwindcss()],
     },
-  site: 'https://joaocupido.github.io',
-  base: '/neuro-exercises',
+    build: {
+        assetsDir: '_astro',
+    },
+  site: 'https://joaocupido.github.io/neuro-exercises',
+  base: '/',
 });

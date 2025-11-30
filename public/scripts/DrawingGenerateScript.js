@@ -1,12 +1,24 @@
-// TMTGenerateScript.js
 const form = document.getElementById('urlForm');
 const generatedUrlEl = document.getElementById('generatedUrl');
 const copyBtn = document.getElementById('copyBtn');
-const openBtn = document.getElementById('openBtn');
 const customColorsInput = document.getElementById('customColors');
 const colorModeRadios = document.querySelectorAll('input[name="colorMode"]');
 const hideToolbarCheck = document.getElementById('hideToolbarCheck');
 const toolbarPositionGroup = document.getElementById('toolbarPositionGroup');
+
+// Enable/disable custom colors input
+colorModeRadios.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        customColorsInput.disabled = e.target.value === 'all';
+        generateURL();
+    });
+});
+
+// Toggle toolbar position visibility
+hideToolbarCheck.addEventListener('change', (e) => {
+    toolbarPositionGroup.style.display = e.target.checked ? 'none' : 'block';
+    generateURL();
+});
 
 // Add event listeners to all form inputs
 form.addEventListener('input', generateURL);
@@ -27,25 +39,12 @@ function generateURL() {
 
 function getFormData() {
     return {
-        // TMT-specific data
-        trailLength: document.getElementById('trailLengthInput').value,
-        numberRadius: document.getElementById('numberRadiusInput').value,
-        symbolType: document.getElementById('symbolTypeSelect').value,
-        reverseOrder: document.getElementById('reverseOrderCheck').checked,
-        showTimer: document.getElementById('showTimerCheck').checked,
+        size: document.getElementById('sizeInput').value,
+        colorMode: document.querySelector('input[name="colorMode"]:checked').value,
+        customColors: customColorsInput.value,
+        toolbarPosition: document.getElementById('toolbarPositionSelect').value,
+        hideToolbar: document.getElementById('hideToolbarCheck').checked,
 
-        // TMT advanced settings
-        linesUnderDots: document.getElementById('linesUnderDotsCheck').checked,
-        allowWrongSelections: document.getElementById('allowWrongSelectionsCheck').checked,
-        showWrongSelections: document.getElementById('showWrongSelectionsCheck').checked,
-        hidePopupButtons: document.getElementById('hidePopupButtonsCheck').checked,
-        hidePopupResults: document.getElementById('hidePopupResultsCheck').checked,
-        hidePopupAll: document.getElementById('hidePopupAllCheck').checked,
-
-        // Custom positions
-        customPositions: document.getElementById('customPositionsInput').value,
-
-        // Background settings (reusable)
         bgColor: document.getElementById('bgColorInput').value,
         bgImage: document.getElementById('bgImageInput').value,
         isColoringBookImage: document.getElementById('coloringBookImageCheck').checked,
@@ -54,44 +53,39 @@ function getFormData() {
         bgPosX: document.getElementById('bgPosXInput').value,
         bgPosY: document.getElementById('bgPosYInput').value,
 
-        // Grid settings (reusable)
         gridEnabled: document.getElementById('gridEnabledCheck').checked,
         gridColor: document.getElementById('gridColorInput').value,
         gridOpacity: document.getElementById('gridOpacityInput').value,
         gridStyle: document.getElementById('gridStyleSelect').value,
-        gridSize: document.getElementById('gridSizeInput').value
+        gridSize: document.getElementById('gridSizeInput').value,
+        showInputs: {
+            eraserInput: document.getElementById('eraserInputCheck').checked,
+            cursorSizeInput: document.getElementById('cursorSizeInputCheck').checked,
+            enableUndoRedoInput: document.getElementById('undoRedoInputCheck').checked,
+            backgroundInputs: document.getElementById('backgroundInputsCheck').checked,
+            gridInputs: document.getElementById('gridInputsCheck').checked
+        }
     };
 }
 
 function buildURLParams(data) {
     const params = new URLSearchParams();
 
-    // TMT-specific parameters
-    if (data.trailLength && data.trailLength !== '10') params.append('trailLength', data.trailLength);
-    if (data.numberRadius && data.numberRadius !== '30') params.append('numberRadius', data.numberRadius);
-    if (data.symbolType && data.symbolType !== 'numbers') params.append('symbolType', data.symbolType);
-    if (data.reverseOrder) params.append('reverseOrder', 'true');
-    if (!data.showTimer) params.append('showTimer', 'false');
+    if (data.size && data.size !== '5') params.append('brushSize', data.size);
+    if (data.colorMode === 'all') params.append('colors', '*');
+    else if (data.customColors) params.append('colors', data.customColors);
 
-    // TMT advanced parameters
-    if (!data.linesUnderDots) params.append('linesUnderDots', 'false');
-    if (data.allowWrongSelections) params.append('allowWrongSelections', 'true');
-    if (!data.showWrongSelections) params.append('showWrongSelections', 'false');
-    if (data.hidePopupButtons) params.append('hidePopupButtons', 'true');
-    if (data.hidePopupResults) params.append('hidePopupResults', 'true');
-    if (data.hidePopupAll) params.append('hidePopupAll', 'true');
-
-    // Custom positions
-    if (data.customPositions.trim()) {
-        try {
-            JSON.parse(data.customPositions);
-            params.append('customPositions', encodeURIComponent(data.customPositions));
-        } catch (error) {
-            console.error('Invalid JSON format for custom positions');
-        }
+    // Toolbar position (only include if not default 'up' AND not hiding toolbar)
+    if (!data.hideToolbar && data.toolbarPosition && data.toolbarPosition !== 'up') {
+        params.append('toolbarPosition', data.toolbarPosition);
     }
 
-    // Background parameters (reusable)
+    // Hide toolbar parameter
+    if (data.hideToolbar) {
+        params.append('hideToolbar', 'true');
+    }
+
+    // Background color (always include if not default white)
     if (data.bgColor && data.bgColor !== '#ffffff') {
         params.append('bgColor', encodeURIComponent(data.bgColor));
     }
@@ -100,6 +94,8 @@ function buildURLParams(data) {
         params.append('bgImage', data.bgImage);
         if (data.bgOpacity && data.bgOpacity !== '50') params.append('bgOpacity', data.bgOpacity);
         if (data.bgImageSize && data.bgImageSize !== '100') params.append('bgImageSize', data.bgImageSize);
+
+        // Add position parameters if not default (50%)
         if (data.bgPosX && data.bgPosX !== '50') params.append('bgImagePosX', data.bgPosX);
         if (data.bgPosY && data.bgPosY !== '50') params.append('bgImagePosY', data.bgPosY);
     }
@@ -108,7 +104,6 @@ function buildURLParams(data) {
         params.append('isColoringBookImage', 'true');
     }
 
-    // Grid parameters (reusable)
     if (data.gridEnabled) {
         params.append('gridEnabled', 'true');
         params.append('gridColor', encodeURIComponent(data.gridColor));
@@ -117,17 +112,29 @@ function buildURLParams(data) {
         if (data.gridSize && data.gridSize !== '20') params.append('gridSize', data.gridSize);
     }
 
+    // Add showInputs as JSON if not all true
+    const defaultShowInputs = {
+        eraserInput: true,
+        cursorSizeInput: true,
+        enableUndoRedoInput: true,
+        backgroundInputs: true,
+        gridInputs: true
+    };
+
+    if (JSON.stringify(data.showInputs) !== JSON.stringify(defaultShowInputs)) {
+        params.append('showInputs', JSON.stringify(data.showInputs));
+    }
+
     return params;
 }
 
 function constructFullURL(params) {
-    const baseUrl = window.location.origin + '/neuro-exercises/tmt';
+    const baseUrl = window.location.origin + window.location.pathname.replace('/generate', '/');
     return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 }
 
 function displayResult(url) {
     generatedUrlEl.textContent = url;
-    openBtn.href = url;
 }
 
 async function copyToClipboard() {
@@ -142,24 +149,3 @@ async function copyToClipboard() {
         console.error('Failed to copy:', err);
     }
 }
-
-// Custom positions functionality
-function generateRandomPositions() {
-    const trailLength = parseInt(document.getElementById('trailLengthInput').value);
-    const positions = [];
-
-    for (let i = 0; i < trailLength; i++) {
-        const x = (Math.random() * 90 + 5).toFixed(2);
-        const y = (Math.random() * 90 + 5).toFixed(2);
-        positions.push({
-            x: parseFloat(x),
-            y: parseFloat(y)
-        });
-    }
-
-    document.getElementById('customPositionsInput').value = JSON.stringify(positions, null, 2);
-    generateURL();
-}
-
-// Add event listener for random positions button
-document.getElementById('generateRandomPositionsBtn').addEventListener('click', generateRandomPositions);

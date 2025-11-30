@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Pencil, FileText, Zap, Link, Waypoints } from '@lucide/astro';
 ---
 
 <Layout title="Neuro Exercises - Main Menu">
@@ -14,14 +15,12 @@ import Layout from '../layouts/Layout.astro';
                 <!-- Drawing Exercise Card -->
                 <div class="bg-card border border-border rounded-lg overflow-hidden">
                     <a
-                            href="/neuro-exercises/drawing"
+                            href="/drawing"
                             class="block p-6 hover:bg-accent/50 transition-colors group"
                     >
                         <div class="text-center">
                             <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                </svg>
+                                <Pencil class="w-8 h-8 text-primary" />
                             </div>
                             <h3 class="text-xl font-semibold text-foreground mb-2">Drawing Canvas</h3>
                             <p class="text-muted-foreground">Free-form drawing with customizable tools</p>
@@ -31,24 +30,20 @@ import Layout from '../layouts/Layout.astro';
                     <!-- Subcards -->
                     <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
                         <a
-                                href="/neuro-exercises/drawing/docs"
+                                href="/drawing/docs"
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
+                                <FileText class="w-4 h-4" />
                                 Documentation
                             </div>
                         </a>
                         <a
-                                href="/neuro-exercises/drawing/generate"
+                                href="/drawing/generate"
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                                </svg>
+                                <Link class="w-4 h-4" />
                                 Generate URL
                             </div>
                         </a>
@@ -58,14 +53,12 @@ import Layout from '../layouts/Layout.astro';
                 <!-- Trail Making Test Card -->
                 <div class="bg-card border border-border rounded-lg overflow-hidden">
                     <a
-                            href="/neuro-exercises/tmt"
+                            href="/tmt"
                             class="block p-6 hover:bg-accent/50 transition-colors group"
                     >
                         <div class="text-center">
                             <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                </svg>
+                                <Waypoints class="w-8 h-8 text-primary" />
                             </div>
                             <h3 class="text-xl font-semibold text-foreground mb-2">Trail Making Test</h3>
                             <p class="text-muted-foreground">Cognitive assessment connecting sequences</p>
@@ -75,24 +68,20 @@ import Layout from '../layouts/Layout.astro';
                     <!-- Subcards -->
                     <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
                         <a
-                                href="/neuro-exercises/tmt/docs"
+                                href="/tmt/docs"
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
+                                <FileText class="w-4 h-4" />
                                 Documentation
                             </div>
                         </a>
                         <a
-                                href="/neuro-exercises/tmt/generate"
+                                href="/tmt/generate"
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                                </svg>
+                                <Link class="w-4 h-4" />
                                 Generate URL
                             </div>
                         </a>

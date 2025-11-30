@@ -205,18 +205,60 @@ import GridInputs from '../../components/GridInputs.astro';
                     >
                         Copy URL
                     </button>
-                    <a
+                    <button
                             id="openBtn"
-                            href="#"
-                            target="_blank"
                             class="px-6 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors"
                     >
                         Open TMT
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     </main>
 
-    <script is:inline src="/neuro-exercises/TMTGenerateScript.js"></script>
+    <script>
+        import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+
+        export async function safeIsTauri() {
+            try {
+                const { isTauri } = await import('@tauri-apps/api/core');
+                return isTauri();
+            } catch {
+                return false; // Browser
+            }
+        }
+        const windowTauri = await safeIsTauri();
+
+        const openBtn = document.getElementById('openBtn');
+        const generatedUrlEl = document.getElementById('generatedUrl');
+
+        openBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            const url = generatedUrlEl.textContent.trim();
+            if (!url) return;
+
+            if (windowTauri) {
+                // Generate a unique window label
+                const label = `tmt-${Date.now()}`;
+
+                // Create the new window
+                const win = new WebviewWindow(label, {
+                    url
+                });
+
+                // Optional: handle events
+                win.once("tauri://created", () => {
+                    console.log("TMT window created");
+                });
+                win.once("tauri://error", (e) => {
+                    console.error("Window creation error:", e);
+                });
+            } else {
+                // Running in browser - open in new tab
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }
+        });
+    </script>
+    <script is:inline src="/scripts/TMTGenerateScript.js"></script>
 </Layout>

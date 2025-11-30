@@ -1,3 +1,19 @@
 node_modules
 .idea
 .astro
+dist
+
+# --- Tauri ---
+/src-tauri/target/
+/src-tauri/gen/
+
+# Optional: if you embed large files here
+/src-tauri/dist/
+
+# --- Rust/Cargo ---
+/src-tauri/.cargo-lock
+/src-tauri/Cargo.lock
+/src-tauri/Cargo.toml.orig
+
+# Build output from bundler
+/src-tauri/bundled/
