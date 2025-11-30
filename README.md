@@ -1,68 +1,85 @@
-# DrawCanvas - URL-Configurable Drawing App
+# Neuro Exercises
 
-A drawing canvas application built with Astro and Tailwind CSS that can be configured entirely through URL parameters.
+A collection of cognitive tools built with **Astro**, **Tailwind CSS**, and optional **Tauri** integration. It currently includes these interactive modules:
+
+* **🖌️ Drawing Tool** – A URL‑configurable drawing canvas
+* **🔗 Trail Making Test (TMT)** – A neuropsychological sequencing exercise
+
+The app can be used:
+
+* **Online**, with the help of GitHub Pages
+* **Locally**, with `npm run dev`
+* **As a desktop app**, using **Tauri**, which includes multiple execution modes
+
+---
 
 ## Features
 
-- 🎨 Drawing with customizable brush sizes and colors
-- 🧹 Optional eraser tool
-- 🖼️ Background image support with adjustable opacity
-- 🔗 URL-based configuration
-- 📱 Responsive design with touch support
-- 🌙 Modern dark theme
+### Drawing Tool
+
+* 🎨 Customizable brush sizes and colors
+* 🧹 Optional eraser mode
+* 🖼️ Background image support with opacity control
+* 🔲 Grid/pattern background option (new)
+* 🔗 Fully configurable through URL parameters
+* 📱 Touch‑friendly and responsive
+
+### Trail Making Test (TMT)
+
+* 🔢 Auto-generated TMT layout (nodes placed at random or fixed, based on user's request)
+* 🔤 Configurable symbol order: numbers / letters / mixed (new)
+* ⏱️ Built‑in timer
+* 🖼️ Background image support with opacity control (new)
+* 🔲 Grid/pattern background option (new)
+* 📝 Result logging (WIP) (new)
+* 📊 URL‑controlled configuration
+
+---
 
 ## Getting Started
 
 ### Development
 
-\`\`\`bash
+```bash
 npm install
 npm run dev
-\`\`\`
+```
 
-### Build
+---
 
-\`\`\`bash
-npm run build
-\`\`\`
+## Tauri Usage
 
-### Deploy to GitHub Pages
+The project also supports **Tauri**, allowing it to run as a full desktop application.
 
-1. Update `astro.config.mjs` with your GitHub username and repository name:
-   \`\`\`js
-   site: 'https://yourusername.github.io',
-   base: '/your-repo-name',
-   \`\`\`
+### 1. Local Tauri Development (served by Astro dev server)
 
-2. Build the project:
-   \`\`\`bash
-   npm run build
-   \`\`\`
+```bash
+npx tauri dev
+```
 
-3. Deploy the `dist` folder to GitHub Pages
+### 2. Tauri Build (production executable)
 
-## URL Parameters
+```bash
+npx tauri build
+```
 
-- `size` - Brush size (1-50, default: 5)
-- `colors` - Available colors (comma-separated hex or `*` for all)
-- `eraser` - Show eraser tool (true/false)
-- `bgImage` - Background image URL
-- `bgOpacity` - Background opacity (0-100, default: 50)
+### Localhost Exposure in Final Build
 
-### Example URLs
+The **final Tauri build** also exposes a local web server accessible externally:
 
-\`\`\`
-/?size=10&colors=*&eraser=true
-/?colors=#ff0000,#00ff00,#0000ff
-/?bgImage=https://example.com/bg.jpg&bgOpacity=30
-\`\`\`
+```
+http://localhost:9527/
+```
+
+This allows you to open the app in a browser even when running the desktop executable.
+
+---
 
 ## Pages
 
-- `/` - Drawing canvas
-- `/docs` - API documentation
-- `/generate` - URL generator tool
+* `/` – Home menu
+* `/drawing` – Drawing Canvas
+* `/tmt` – Trail Making Test
+* `/[drawing|tmt]/docs` – API documentation of certain tool
+* `/[drawing|tmt]/generate` – URL generator for certain tool
 
-## License
-
-MIT
