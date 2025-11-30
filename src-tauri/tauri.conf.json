@@ -5,7 +5,6 @@
   "identifier": "com.joaocupido.neuro-exercises",
   "build": {
     "frontendDist": "../dist",
-    "devUrl": "http://localhost:4321/neuro-exercises/",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
   },

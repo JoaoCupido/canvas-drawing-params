@@ -169,10 +169,18 @@ import GridInputs from '../../components/GridInputs.astro';
     <script>
         import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 
+        export async function safeIsTauri() {
+            try {
+                const { isTauri } = await import('@tauri-apps/api/core');
+                return isTauri();
+            } catch {
+                return false; // Browser
+            }
+        }
+        const windowTauri = await safeIsTauri();
+
         const openBtn = document.getElementById('openBtn');
         const generatedUrlEl = document.getElementById('generatedUrl');
-
-        const isTauri = '__TAURI__' in window;
 
         openBtn.addEventListener("click", (e) => {
             e.preventDefault();
@@ -180,7 +188,7 @@ import GridInputs from '../../components/GridInputs.astro';
             const url = generatedUrlEl.textContent.trim();
             if (!url) return;
 
-            if (isTauri) {
+            if (windowTauri) {
                 // Generate a unique window label
                 const label = `drawing-${Date.now()}`;
 
