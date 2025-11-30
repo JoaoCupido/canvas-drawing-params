@@ -210,5 +210,5 @@ import GridInputs from '../../components/GridInputs.astro';
             }
         });
     </script>
-    <script is:inline src="/scripts/DrawingGenerateScript.js"></script>
+    <script is:inline src={`${import.meta.env.BASE_URL}/scripts/DrawingGenerateScript.js`}></script>
 </Layout>
