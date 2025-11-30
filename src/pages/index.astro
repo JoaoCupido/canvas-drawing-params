@@ -1,8 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Pencil, FileText, Zap, Link, Waypoints } from '@lucide/astro';
-
-const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Neuro Exercises - Main Menu">
@@ -32,7 +30,7 @@ const baseUrl = import.meta.env.BASE_URL;
                     <!-- Subcards -->
                     <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
                         <a
-                                href={`.${baseUrl}drawing/docs`}
+                                href={`./drawing/docs`}
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
@@ -41,7 +39,7 @@ const baseUrl = import.meta.env.BASE_URL;
                             </div>
                         </a>
                         <a
-                                href={`.${baseUrl}drawing/generate`}
+                                href={`./drawing/generate`}
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
@@ -55,7 +53,7 @@ const baseUrl = import.meta.env.BASE_URL;
                 <!-- Trail Making Test Card -->
                 <div class="bg-card border border-border rounded-lg overflow-hidden">
                     <a
-                            href={`.${baseUrl}tmt`}
+                            href={`./tmt`}
                             class="block p-6 hover:bg-accent/50 transition-colors group"
                     >
                         <div class="text-center">
@@ -70,7 +68,7 @@ const baseUrl = import.meta.env.BASE_URL;
                     <!-- Subcards -->
                     <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
                         <a
-                                href={`.${baseUrl}tmt/docs`}
+                                href={`./tmt/docs`}
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
@@ -79,7 +77,7 @@ const baseUrl = import.meta.env.BASE_URL;
                             </div>
                         </a>
                         <a
-                                href={`.${baseUrl}tmt/generate`}
+                                href={`./tmt/generate`}
                                 class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
                         >
                             <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
