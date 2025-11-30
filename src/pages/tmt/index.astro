@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-const basePath = Astro.url.origin;
+import TMTCanvasManager from '../../scripts/TMTCanvasManager.js?url';
 ---
 
 <Layout title="Trail Making Test - Neuro Exercises" hideNavbar={true}>
@@ -44,5 +44,5 @@ const basePath = Astro.url.origin;
         </div>
     </main>
 
-    <script type="module" is:inline src={`${basePath}/scripts/TMTCanvasManager.js`}></script>
+    <script type="module" is:inline src={TMTCanvasManager}></script>
 </Layout>
