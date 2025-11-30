@@ -1,7 +1,6 @@
 const form = document.getElementById('urlForm');
 const generatedUrlEl = document.getElementById('generatedUrl');
 const copyBtn = document.getElementById('copyBtn');
-const openBtn = document.getElementById('openBtn');
 const customColorsInput = document.getElementById('customColors');
 const colorModeRadios = document.querySelectorAll('input[name="colorMode"]');
 const hideToolbarCheck = document.getElementById('hideToolbarCheck');
@@ -136,7 +135,6 @@ function constructFullURL(params) {
 
 function displayResult(url) {
     generatedUrlEl.textContent = url;
-    openBtn.href = url;
 }
 
 async function copyToClipboard() {
