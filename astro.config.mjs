@@ -1,6 +1,8 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from "@tailwindcss/vite";
 
+const isGithubPages = process.env.GITHUB_ACTIONS === 'true';
+
 export default defineConfig({
     vite: {
         plugins: [tailwindcss()],
@@ -8,6 +10,8 @@ export default defineConfig({
     build: {
         assetsDir: '_astro',
     },
-  site: 'https://joaocupido.github.io',
-  base: '/',
+    site: isGithubPages
+        ? 'https://joaocupido.github.io'
+        : 'http://localhost:3002',
+    base: isGithubPages ? '/neuro-exercises/' : '/',
 });
