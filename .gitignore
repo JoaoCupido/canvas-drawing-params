@@ -6,7 +6,6 @@ dist
 # --- Tauri ---
 /src-tauri/target/
 /src-tauri/gen/
-/src-tauri/icons
 
 # Optional: if you embed large files here
 /src-tauri/dist/
