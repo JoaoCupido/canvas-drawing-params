@@ -11,7 +11,7 @@ export default defineConfig({
         assetsDir: '_astro',
     },
     site: isGithubPages
-        ? 'https://joaocupido.github.io'
+        ? 'https://joaocupido.github.io/neuro-exercises/'
         : 'http://localhost:3002',
-    base: isGithubPages ? '/neuro-exercises/' : '/',
+    base: '/',
 });
