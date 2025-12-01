@@ -1,0 +1,137 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FormInput from '../../components/FormInput.astro';
+---
+
+<Layout title="Generate Camera URL - Neuro Exercises">
+    <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+        <div class="min-h-screen mx-auto max-w-4xl">
+            <h1 class="text-4xl font-bold text-foreground mb-2">Generate Camera URL</h1>
+            <p class="text-muted-foreground mb-8">
+                Configure your camera exercise and generate a shareable URL
+            </p>
+
+            <div class="bg-card border border-border rounded-lg p-6 mb-8">
+                <form id="urlForm" class="space-y-6">
+                    <!-- General Camera Settings -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-foreground mb-4">General Settings</h3>
+
+                        <label class="block text-sm font-medium text-foreground mb-2" for="gamemodeSelect">
+                            Game Mode
+                        </label>
+                        <select
+                                id="gamemodeSelect"
+                                class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary mb-4"
+                        >
+                            <option value="detectObject">Detect Object</option>
+                            <option value="detectFaceEmotion">Detect Face Emotion</option>
+                        </select>
+
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" id="fullscreenCheck" checked class="text-primary" />
+                            <span class="text-foreground font-medium">Fullscreen Camera</span>
+                        </label>
+                    </div>
+
+                    <hr class="my-4 h-0.5 bg-border" />
+
+                    <!-- Toolbar Settings -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Toolbar Settings</h3>
+
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" id="hideToolbarCheck" class="text-primary" />
+                            <span class="text-foreground font-medium">Hide Toolbar (minimal interface)</span>
+                        </label>
+
+                        <div id="toolbarPositionGroup">
+                            <label class="block text-sm font-medium text-foreground mb-2" for="toolbarPositionSelect">
+                                Toolbar Position
+                            </label>
+                            <select
+                                    id="toolbarPositionSelect"
+                                    class="w-full px-4 py-2 bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                                <option value="up">Top</option>
+                                <option value="down">Bottom</option>
+                                <option value="left">Left</option>
+                                <option value="right">Right</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Generated URL -->
+            <div id="resultSection" class="bg-card border border-border rounded-lg p-6">
+                <h2 class="text-xl font-bold text-foreground mb-4">Generated URL</h2>
+
+                <div class="bg-secondary rounded-lg p-4 mb-4 overflow-x-auto">
+                    <code id="generatedUrl" class="text-sm text-foreground break-all"></code>
+                </div>
+
+                <div class="flex gap-4">
+                    <button
+                            id="copyBtn"
+                            class="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
+                    >
+                        Copy URL
+                    </button>
+                    <button
+                            id="openBtn"
+                            class="px-6 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-accent transition-colors"
+                    >
+                        Open Camera
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+
+        async function safeIsTauri() {
+            try {
+                const { isTauri } = await import('@tauri-apps/api/core');
+                return isTauri();
+            } catch {
+                return false; // Browser
+            }
+        }
+        const windowTauri = await safeIsTauri();
+
+        const openBtn = document.getElementById('openBtn');
+        const generatedUrlEl = document.getElementById('generatedUrl');
+
+        openBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            const url = generatedUrlEl.textContent.trim();
+            if (!url) return;
+
+            if (windowTauri) {
+                // Generate a unique window label
+                const label = `drawing-${Date.now()}`;
+
+                // Create the new window
+                const win = new WebviewWindow(label, {
+                    url
+                });
+
+                // Optional: handle events
+                win.once("tauri://created", () => {
+                    console.log("Drawing window created");
+                });
+                win.once("tauri://error", (e) => {
+                    console.error("Window creation error:", e);
+                });
+            } else {
+                // Running in browser - open in new tab
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }
+        });
+    </script>
+    <script is:inline src={`${process.env.GITHUB_PAGES ? import.meta.env.BASE_URL : ""}/scripts/CameraGenerateScript.js`}></script>
+</Layout>

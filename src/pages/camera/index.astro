@@ -1,0 +1,13 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Camera Exercise" hideNavbar={true}>
+    <main class="min-h-screen bg-background relative overflow-hidden">
+        <video id="cameraFeed" autoplay playsinline muted class="fixed inset-0 w-full h-full object-cover"></video>
+
+        <canvas id="overlayCanvas" class="fixed inset-0 w-full h-full"></canvas>
+    </main>
+
+    <script type="module" is:inline src={`${process.env.GITHUB_PAGES ? import.meta.env.BASE_URL : ""}/scripts/CameraCanvasManager.js`}></script>
+</Layout>

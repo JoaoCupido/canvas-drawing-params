@@ -1,4 +1,4 @@
-import { Pencil, Waypoints, Zap, FileText } from "@lucide/astro";
+import { Pencil, Waypoints, Zap, FileText, Camera } from "@lucide/astro";
 
 /*
 export interface Exercise {
@@ -25,6 +25,14 @@ export const exercisesList = [
         description: "Cognitive assessment connecting sequences",
         icon: Waypoints,
         path: "./tmt"
+    },
+
+    {
+        id: "camera",
+        title: "Camera",
+        description: "DEBUG",
+        icon: Camera,
+        path: "./camera"
     },
 
     // Add more exercises later:
