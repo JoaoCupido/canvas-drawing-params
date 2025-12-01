@@ -15,5 +15,60 @@ import "../styles/globals.css";
 <body class="min-h-screen bg-background text-foreground">
 {!hideNavbar && <Navbar />}
 <slot />
+<script>
+    import { Menu, MenuItem, Submenu } from '@tauri-apps/api/menu';
+
+    async function safeIsTauri() {
+        try {
+            const { isTauri } = await import('@tauri-apps/api/core');
+            return isTauri();
+        } catch {
+            return false; // Browser
+        }
+    }
+
+    async function setupMenu() {
+        const windowTauri = await safeIsTauri();
+        if (!windowTauri) return; // Prevents running in normal browser
+
+        const goBack = await MenuItem.new({
+            id: "go-back",
+            text: "Go Back",
+            accelerator: "Alt+Left",
+            action: () => window.history.back(),
+        });
+
+        const goNext = await MenuItem.new({
+            id: "go-next",
+            text: "Go Next",
+            accelerator: "Alt+Right",
+            action: () => window.history.forward(),
+        });
+
+        const reload = await MenuItem.new({
+            id: "reload",
+            text: "Reload",
+            accelerator: "Ctrl+R",
+            action: () => window.location.reload(),
+        });
+
+        const navMenu = await Submenu.new({
+            id: "navigation",
+            text: "Navigation",
+            items: [goBack, goNext, reload],
+        });
+
+        const menu = await Menu.new({
+            items: [navMenu],
+        });
+
+        await menu.setAsAppMenu();
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        setupMenu();
+    });
+</script>
 </body>
 </html>

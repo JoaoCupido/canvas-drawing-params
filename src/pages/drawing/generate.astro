@@ -169,7 +169,7 @@ import GridInputs from '../../components/GridInputs.astro';
     <script>
         import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 
-        export async function safeIsTauri() {
+        async function safeIsTauri() {
             try {
                 const { isTauri } = await import('@tauri-apps/api/core');
                 return isTauri();
