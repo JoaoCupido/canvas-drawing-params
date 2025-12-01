@@ -1,6 +1,7 @@
 ---
 // components/Navbar.astro
 import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Home } from '@lucide/astro';
+import { exercisesList } from '../data/Exercises';
 ---
 
 <nav class="border-b border-border bg-card">
@@ -16,53 +17,30 @@ import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Ho
 
             <!-- Navigation Menu -->
             <div class="hidden md:flex items-center gap-6">
-                <!-- Drawing Exercise Dropdown -->
-                <div class="relative group">
-                    <button class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent">
-                        Drawing
-                        <ChevronDown class="w-4 h-4 transition-transform group-hover:rotate-180" />
-                    </button>
-                    <div class="absolute top-full left-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <div class="py-2">
-                            <a href={`./drawing`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
-                                <Pencil class="w-4 h-4" />
-                                Execute Exercise
-                            </a>
-                            <a href={`./drawing/docs`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
-                                <FileText class="w-4 h-4" />
-                                API Documentation
-                            </a>
-                            <a href={`./drawing/generate`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
-                                <Link class="w-4 h-4" />
-                                Generate URL
-                            </a>
+                {exercisesList.map((ex) => (
+                    <div class="relative group" id={ex.id}>
+                        <button class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent">
+                            {ex.title}
+                            <ChevronDown class="w-4 h-4 transition-transform group-hover:rotate-180" />
+                        </button>
+                        <div class="absolute top-full left-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-2">
+                                <a href={ex.path} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                                    <ex.icon class="w-4 h-4" />
+                                    Execute Exercise
+                                </a>
+                                <a href={ex.path + `/docs`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                                    <FileText class="w-4 h-4" />
+                                    API Documentation
+                                </a>
+                                <a href={ex.path + `/generate`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
+                                    <Link class="w-4 h-4" />
+                                    Generate URL
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- TMT Exercise Dropdown -->
-                <div class="relative group">
-                    <button class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent">
-                        Trail Making Test
-                        <ChevronDown class="w-4 h-4 transition-transform group-hover:rotate-180" />
-                    </button>
-                    <div class="absolute top-full left-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <div class="py-2">
-                            <a href={`./tmt`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
-                                <Waypoints class="w-4 h-4" />
-                                Execute Exercise
-                            </a>
-                            <a href={`./tmt/docs`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
-                                <FileText class="w-4 h-4" />
-                                API Documentation
-                            </a>
-                            <a href={`./tmt/generate`} class="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors">
-                                <Link class="w-4 h-4" />
-                                Generate URL
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                ))}
             </div>
 
             <!-- Mobile menu button -->
@@ -77,39 +55,25 @@ import { Pencil, FileText, Zap, Link, Waypoints, Brain, ChevronDown, Menu, X, Ho
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="md:hidden hidden border-t border-border py-4">
             <div class="space-y-2">
-                <!-- Drawing Mobile Menu -->
-                <div class="space-y-1">
-                    <div class="px-3 py-2 text-sm font-semibold text-foreground">Drawing Exercise</div>
-                    <a href={`./drawing`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
-                        <Pencil class="w-4 h-4" />
-                        Execute Exercise
-                    </a>
-                    <a href={`./drawing/docs`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
-                        <FileText class="w-4 h-4" />
-                        API Documentation
-                    </a>
-                    <a href={`./drawing/generate`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
-                        <Link class="w-4 h-4" />
-                        Generate URL
-                    </a>
-                </div>
-
-                <!-- TMT Mobile Menu -->
-                <div class="space-y-1">
-                    <div class="px-3 py-2 text-sm font-semibold text-foreground">Trail Making Test</div>
-                    <a href={`./tmt`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
-                        <Waypoints class="w-4 h-4" />
-                        Execute Exercise
-                    </a>
-                    <a href={`./tmt/docs`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
-                        <FileText class="w-4 h-4" />
-                        API Documentation
-                    </a>
-                    <a href={`./tmt/generate`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
-                        <Link class="w-4 h-4" />
-                        Generate URL
-                    </a>
-                </div>
+                {exercisesList.map((ex) => (
+                    <div class="space-y-1" id={ex.id}>
+                        <div class="px-3 py-2 text-sm font-semibold text-foreground">
+                            {ex.title}
+                        </div>
+                        <a href={ex.path} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                            <ex.icon class="w-4 h-4" />
+                            Execute Exercise
+                        </a>
+                        <a href={ex.path + `/docs`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                            <FileText class="w-4 h-4" />
+                            API Documentation
+                        </a>
+                        <a href={ex.path + `/generate`} class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors">
+                            <Link class="w-4 h-4" />
+                            Generate URL
+                        </a>
+                    </div>
+                ))}
 
                 <hr class="h-0.5 border-t-0 bg-border" />
 

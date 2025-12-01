@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Pencil, FileText, Zap, Link, Waypoints } from '@lucide/astro';
+import { exercisesList } from '../data/Exercises';
 ---
 
 <Layout title="Neuro Exercises - Main Menu">
@@ -11,82 +12,49 @@ import { Pencil, FileText, Zap, Link, Waypoints } from '@lucide/astro';
                 <p class="text-muted-foreground text-lg">Select an exercise to begin</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <!-- Drawing Exercise Card -->
-                <div class="bg-card border border-border rounded-lg overflow-hidden">
-                    <a
-                            href={`./drawing`}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                {exercisesList.map((ex) => (
+                    <div class="bg-card border border-border rounded-lg overflow-hidden" id={ex.id}>
+                        <a
+                            href={ex.path}
                             class="block p-6 hover:bg-accent/50 transition-colors group"
-                    >
-                        <div class="text-center">
-                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                <Pencil class="w-8 h-8 text-primary" />
+                        >
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <ex.icon class="w-8 h-8 text-primary" />
+                                </div>
+                                <h3 class="text-xl font-semibold text-foreground mb-2">
+                                    {ex.title}
+                                </h3>
+                                <p class="text-muted-foreground">
+                                    {ex.description}
+                                </p>
                             </div>
-                            <h3 class="text-xl font-semibold text-foreground mb-2">Drawing Canvas</h3>
-                            <p class="text-muted-foreground">Free-form drawing with customizable tools</p>
+                        </a>
+
+                        <!-- Subcards -->
+                        <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
+                            <a
+                                    href={ex.path + `/docs`}
+                                    class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
+                            >
+                                <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
+                                    <FileText class="w-4 h-4" />
+                                    Documentation
+                                </div>
+                            </a>
+                            <a
+                                    href={ex.path + `/generate`}
+                                    class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
+                            >
+                                <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
+                                    <Link class="w-4 h-4" />
+                                    Generate URL
+                                </div>
+                            </a>
                         </div>
-                    </a>
-
-                    <!-- Subcards -->
-                    <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
-                        <a
-                                href={`./drawing/docs`}
-                                class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
-                        >
-                            <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
-                                <FileText class="w-4 h-4" />
-                                Documentation
-                            </div>
-                        </a>
-                        <a
-                                href={`./drawing/generate`}
-                                class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
-                        >
-                            <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
-                                <Link class="w-4 h-4" />
-                                Generate URL
-                            </div>
-                        </a>
                     </div>
-                </div>
-
-                <!-- Trail Making Test Card -->
-                <div class="bg-card border border-border rounded-lg overflow-hidden">
-                    <a
-                            href={`./tmt`}
-                            class="block p-6 hover:bg-accent/50 transition-colors group"
-                    >
-                        <div class="text-center">
-                            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                <Waypoints class="w-8 h-8 text-primary" />
-                            </div>
-                            <h3 class="text-xl font-semibold text-foreground mb-2">Trail Making Test</h3>
-                            <p class="text-muted-foreground">Cognitive assessment connecting sequences</p>
-                        </div>
-                    </a>
-
-                    <!-- Subcards -->
-                    <div class="border-t border-border grid grid-cols-2 divide-x divide-border">
-                        <a
-                                href={`./tmt/docs`}
-                                class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
-                        >
-                            <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
-                                <FileText class="w-4 h-4" />
-                                Documentation
-                            </div>
-                        </a>
-                        <a
-                                href={`./tmt/generate`}
-                                class="p-4 text-center hover:bg-accent/30 transition-colors group/sub"
-                        >
-                            <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground group-hover/sub:text-foreground">
-                                <Link class="w-4 h-4" />
-                                Generate URL
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                ))}
             </div>
         </div>
     </main>
