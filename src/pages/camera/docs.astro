@@ -49,17 +49,15 @@ import GridDocs from "../../components/GridDocs.astro";
                         </div>
                         <p class="text-muted-foreground mb-6">Core parameters that define the camera exercise behavior.</p>
 
-
                         <div class="space-y-6">
                             <ParameterDoc
                                     name="gamemode"
-                                    description="Selects the detection mode. Options: detect-object, detect-emotion."
+                                    description="Selects the detection mode. Options: detectObject, detectFaceEmotion."
                                     type="String"
-                                    defaultValue="detect-object"
-                                    examples={['/?gamemode=detect-object', '/?gamemode=detect-emotion']}
-                                    codeExample="?gamemode=detect-emotion"
+                                    defaultValue="detectObject"
+                                    examples={['/?gamemode=detectObject', '/?gamemode=detectFaceEmotion']}
+                                    codeExample="?gamemode=detectFaceEmotion"
                             />
-
 
                             <ParameterDoc
                                     name="cameraFacing"
@@ -70,24 +68,40 @@ import GridDocs from "../../components/GridDocs.astro";
                                     codeExample="?cameraFacing=user"
                             />
 
-
-                            <ParameterDoc
-                                    name="debug"
-                                    description="Enable debug overlays like bounding boxes."
-                                    type="Boolean (true/false)"
-                                    defaultValue="false"
-                                    examples={['/?debug=true']}
-                                    codeExample="?debug=true"
-                            />
-
-
                             <ParameterDoc
                                     name="sensitivity"
                                     description="Detection sensitivity (0 to 1)."
                                     type="Number (0-1)"
-                                    defaultValue="0.5"
+                                    defaultValue="0.6"
                                     examples={['/?sensitivity=0.8']}
                                     codeExample="?sensitivity=0.8"
+                            />
+
+                            <ParameterDoc
+                                    name="displayHorizontal"
+                                    description="Controls the horizontal position of the predictions panel: left, center, or right."
+                                    type="String"
+                                    defaultValue="right"
+                                    examples={['/?displayHorizontal=center']}
+                                    codeExample="?displayHorizontal=left"
+                            />
+
+                            <ParameterDoc
+                                    name="displayVertical"
+                                    description="Controls the vertical position of the predictions panel: top, middle, or bottom."
+                                    type="String"
+                                    defaultValue="top"
+                                    examples={['/?displayVertical=bottom']}
+                                    codeExample="?displayVertical=middle"
+                            />
+
+                            <ParameterDoc
+                                    name="maxDisplayItems"
+                                    description="Maximum number of predictions shown simultaneously."
+                                    type="Number"
+                                    defaultValue="5"
+                                    examples={['/?maxDisplayItems=3']}
+                                    codeExample="?maxDisplayItems=8"
                             />
                         </div>
                     </section>
@@ -102,7 +116,7 @@ import GridDocs from "../../components/GridDocs.astro";
 
                             <div class="bg-secondary rounded-lg p-4 overflow-x-auto">
                                 <code class="text-sm text-foreground whitespace-nowrap">
-                                    {"/?gamemode=detect-emotion&cameraFacing=user&debug=true&sensitivity=0.7"}
+                                    {"/?gamemode=detectFaceEmotion&cameraFacing=user&sensitivity=0.7"}
                                 </code>
                             </div>
                         </div>

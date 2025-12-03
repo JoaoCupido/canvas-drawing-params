@@ -3,14 +3,6 @@
 const form = document.getElementById("urlForm");
 const generatedUrlEl = document.getElementById("generatedUrl");
 const copyBtn = document.getElementById("copyBtn");
-const hideToolbarCheck = document.getElementById("hideToolbarCheck");
-const toolbarPositionGroup = document.getElementById("toolbarPositionGroup");
-
-// Toggle toolbar position visibility
-hideToolbarCheck.addEventListener("change", (e) => {
-    toolbarPositionGroup.style.display = e.target.checked ? "none" : "block";
-    generateURL();
-});
 
 // Listen to all form changes
 form.addEventListener("input", generateURL);
@@ -20,16 +12,27 @@ copyBtn.addEventListener('click', copyToClipboard);
 
 function generateURL() {
     const gamemode = document.getElementById("gamemodeSelect").value;
-    const fullscreen = document.getElementById("fullscreenCheck").checked;
-    const hideToolbar = hideToolbarCheck.checked;
-    const toolbarPosition = document.getElementById("toolbarPositionSelect").value;
+    const sensitivity = document.getElementById("sensitivityInput").value;
+    const cameraFacing = document.getElementById("cameraFacingSelect").value;
+
+    // NEW FIELDS
+    const displayHorizontal = document.getElementById("displayHorizontalSelect")?.value;
+    const displayVertical = document.getElementById("displayVerticalSelect")?.value;
+    const maxDisplayItems = document.getElementById("maxDisplayItemsInput")?.value;
 
     const params = new URLSearchParams();
-    if (gamemode) params.append("gamemode", gamemode);
-    if (fullscreen) params.append("fullscreen", "true");
-    if (hideToolbar) params.append("hideToolbar", "true");
-    else if (toolbarPosition && toolbarPosition !== "up") params.append("toolbarPosition", toolbarPosition);
 
+    // Gamemode
+    if (gamemode) params.append("gamemode", gamemode);
+
+    if (sensitivity) params.append("sensitivity", sensitivity);
+    if (cameraFacing) params.append("cameraFacing", cameraFacing);
+
+    if (displayHorizontal) params.append("displayHorizontal", displayHorizontal);
+    if (displayVertical) params.append("displayVertical", displayVertical);
+    if (maxDisplayItems) params.append("maxDisplayItems", maxDisplayItems);
+
+    // Build final URL
     const baseUrl = window.location.origin + window.location.pathname.replace("/generate", "/");
     const fullUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 

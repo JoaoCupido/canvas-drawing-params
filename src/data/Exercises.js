@@ -30,7 +30,7 @@ export const exercisesList = [
     {
         id: "camera",
         title: "Camera",
-        description: "DEBUG",
+        description: "Real-time video analysis for object/emotion detection",
         icon: Camera,
         path: "./camera"
     },
